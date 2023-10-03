@@ -24,3 +24,4 @@ Vous allez alors préciser les modfications faites ici :
 Vous pouvez appuyer sur commit : 
 ![image](https://github.com/dylaninsa/Projet-Informatique/assets/146228702/7ea0054e-cdda-4bf4-94f5-16fb4ab11285)
 
+Si vous avez des question posez les moi.
