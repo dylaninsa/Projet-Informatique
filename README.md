@@ -10,7 +10,7 @@ Installer Git pour VSCode : [https://gitforwindows.org](https://git-scm.com/down
 
 Dans l'onglet 'extensions' de VSCode, télécharger ces extensions : 
 
-![image](https://github.com/dylaninsa/Projet-Info/assets/146228702/0a047873-5dc2-4815-9227-39e2cf066161)
+![image](https://github.com/dylaninsa/Projet-Informatique/assets/146228702/900c5a5e-630f-4289-a149-1f06857cf6bb)
 
 **Fonctionnement**
 
