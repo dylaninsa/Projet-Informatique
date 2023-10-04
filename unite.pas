@@ -5,11 +5,11 @@ Interface
 
 Const MAX = 50;
 
-Type Enviro = Set of (Manoir, INSA);
+Type Enviro = (Manoir, INSA);
 
-Type ListesCartes = Set of (Colonel_Moutarde, Docteur_Olive, Madame_Pervenche, Mademoiselle_Rose, Madame_Leblanc, Poignard, Chandelier, Revolver, Corde, Matraque, Clef_Anglaise, Cuisine, Grand_Salon, Petit_Salon, Salle_a_manger, Bureau, Bibliotheque, Veranda, Studio, Hall);
+Type ListeCartes = (Colonel_Moutarde, Docteur_Olive, Madame_Pervenche, Mademoiselle_Rose, Madame_Leblanc, Poignard, Chandelier, Revolver, Corde, Matraque, Clef_Anglaise, Cuisine, Grand_Salon, Petit_Salon, Salle_a_manger, Bureau, Bibliotheque, Veranda, Studio, Hall);
 
-Type Persos = Set of (Colonel_Moutarde, Docteur_Olive, Madame_Pervenche, Mademoiselle_Rose, Madame_Leblanc);
+Type Persos = (Moutarde, Olive, Pervenche, Rose, Leblanc);
 
 Type Coords = Array [1..2] of Integer;
 
@@ -22,7 +22,7 @@ end;
 
 Type ListeJoueurs = Array of Joueur;
 
-type Salle = Set of Coords;
+Type Salle = Array [1..MAX*MAX] of Coords;
 
 Type Plateau = record 
     grille : Array [0..MAX,0..MAX] of Integer;

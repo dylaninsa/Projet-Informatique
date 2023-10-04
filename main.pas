@@ -1,7 +1,14 @@
 program Cluedo;
 
+
 uses unite;
 
-begin
 
+//procedure
+
+
+var c : Integer;
+
+begin
+    
 end.
