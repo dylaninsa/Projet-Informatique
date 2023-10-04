@@ -44,13 +44,12 @@ begin
 end;
 
 
-
 var c : Integer;
 
 begin
     menu(c);
     case c of
-        1 : //lancerPartie();
+        //1 : lancerPartie();
         2 : afficherRegles();
         3 : quitter();
     end;
