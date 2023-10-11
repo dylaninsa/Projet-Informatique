@@ -1,7 +1,7 @@
 program Cluedo;
 
 
-uses unite;
+uses unite, configurationPartie;
 
 
 procedure menu(var c : Integer);
@@ -45,11 +45,14 @@ end;
 
 
 var c : Integer;
+    joueurs : ListeJoueurs;
+    plat : Plateau;
+    etui : ListeCartes;
 
 begin
     menu(c);
     case c of
-        //1 : lancerPartie();
+        1 : lancerPartie(joueurs, plat, etui);
         2 : afficherRegles();
         3 : quitter();
     end;
