@@ -9,15 +9,13 @@ Type Enviro = (Manoir, INSA);
 
 Type ListeCartes = (Colonel_Moutarde, Docteur_Olive, Madame_Pervenche, Mademoiselle_Rose, Madame_Leblanc, Poignard, Chandelier, Revolver, Corde, Matraque, Clef_Anglaise, Cuisine, Grand_Salon, Petit_Salon, Salle_a_manger, Bureau, Bibliotheque, Veranda, Studio, Hall);
 
-Type Persos = (Moutarde, Olive, Pervenche, Rose, Leblanc);
-
 Type Coords = Array [1..2] of Integer;
 
 Type Joueur = record
     enVie : Boolean;
-	cartes : ListeCartes;
+	cartes : set of ListeCartes;
 	pos : Coords;
-	perso : Persos;
+	perso : ListeCartes;
 end;
 
 Type ListeJoueurs = Array of Joueur;

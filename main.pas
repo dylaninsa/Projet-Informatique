@@ -47,7 +47,7 @@ end;
 var c : Integer;
     joueurs : ListeJoueurs;
     plat : Plateau;
-    etui : ListeCartes;
+    etui : Array [1..3] of ListeCartes;
 
 begin
     menu(c);
