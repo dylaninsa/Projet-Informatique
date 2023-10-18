@@ -175,7 +175,7 @@ begin
 end;
 
 
-
+//test 2
 //procedure creerPlateau(plateau, environnement);
 
 //procedure chargerPartie(var joueurs:ListeJoueurs; var plateau:Plateau; var etui:ListeCartes);
