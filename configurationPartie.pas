@@ -40,7 +40,7 @@ end;
 procedure nouvellePartie(var joueurs:ListeJoueurs; var plat:Plateau; var etui:Array of ListeCartes);
 
 var environnement : Enviro;
-    nb_j, i, j, k, l, c, r : Integer;
+    nb_j, i, j, k, l, c, r1, r2, r3 : Integer;
     cartes : set of ListeCartes;
     carte : ListeCartes;
     liste_cartes : Array of ListeCartes;
@@ -96,15 +96,15 @@ begin
     //    end;
     
     {Tirage de l'étui}
-    r := random(6);
-    etui[1] := liste_cartes[r];
-    Exclude(cartes, liste_cartes[r]);
-    r := random(7);
-    etui[2] := liste_cartes[r+5];
-    Exclude(cartes, liste_cartes[r+5]);
-    r := random(10);
-    etui[3] := liste_cartes[r+11];
-    Exclude(cartes, liste_cartes[r+11]);
+    r1 := random(5)+1;
+    etui[1] := liste_cartes[r1];
+    Exclude(cartes, liste_cartes[r1]);
+    r2 := random(6)+6;
+    etui[2] := liste_cartes[r2];
+    Exclude(cartes, liste_cartes[r2]);
+    r3 := random(9)+12;
+    etui[3] := liste_cartes[r3];
+    Exclude(cartes, liste_cartes[r3]);
 
     SetLength(liste_cartes, 17);
     j := 1;
