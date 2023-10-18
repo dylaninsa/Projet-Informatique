@@ -100,11 +100,11 @@ begin
     etui[1] := liste_cartes[r];
     Exclude(cartes, liste_cartes[r]);
     r := random(7);
-    etui[1] := liste_cartes[r+5];
-    Exclude(cartes, liste_cartes[r]);
+    etui[2] := liste_cartes[r+5];
+    Exclude(cartes, liste_cartes[r+5]);
     r := random(10);
-    etui[1] := liste_cartes[r+11];
-    Exclude(cartes, liste_cartes[r]);
+    etui[3] := liste_cartes[r+11];
+    Exclude(cartes, liste_cartes[r+11]);
 
     SetLength(liste_cartes, 17);
     j := 1;
@@ -118,7 +118,7 @@ begin
     {Mélange des cartes}
     for k := 1 to length(liste_cartes) do
         begin
-            r := random(length(liste_cartes)-k);
+            r := random(length(liste_cartes)-k)+k;
             mem := liste_cartes[r];
             liste_cartes[r] := liste_cartes[k];
             liste_cartes[k] := mem;
@@ -161,6 +161,8 @@ begin
     SetLength(joueurs, 0);
 
     {tests}
+    writeln('Etui');
+    for carte in etui do write(carte, ' ');
     writeln('j1');
     for carte in joueurs[1].cartes do write(carte, ' ');
     writeln('j2');
