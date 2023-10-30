@@ -23,5 +23,6 @@ Vous allez alors préciser les modfications faites ici :
 ![image](https://github.com/dylaninsa/Projet-Informatique/assets/146228702/44271ecd-11ab-468f-80c2-4d96f3f2dcd0) (pas trop long).
 Vous pouvez appuyer sur commit : 
 ![image](https://github.com/dylaninsa/Projet-Informatique/assets/146228702/7ea0054e-cdda-4bf4-94f5-16fb4ab11285)
+Refaites une dernière fois Ctrl + Maj + P, puis 'Git: Sync' pour envoyer les fichiers dur le GitHub.
 
 Si vous avez des question posez les moi.
