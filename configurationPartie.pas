@@ -84,17 +84,17 @@ begin
                     j := j+1;
                 end;
             for personnage := Colonel_Moutarde to Madame_Leblanc do Include(personnages, personnage);
+        end
+    else
+        begin
+            for carte := Monsieur_bredel to BU do 
+                begin
+                    Include(cartes, carte);
+                    liste_cartes[j] := carte;
+                    j := j+1;
+                end;
+            for personnage := Monsieur_Bredel to Infirmiere do Include(personnages, personnage);
         end;
-    //else
-    //    begin
-    //        for carte := Colonel_Moutarde to Hall do 
-    //            begin
-    //                Include(cartes, carte);
-    //                liste_cartes[j] := carte;
-    //                j = j+1;
-    //            end;
-    //        for personnage := Colonel_Moutarde to Madame_Leblanc do Include(personnages, personnage);
-    //    end;
 
 
     {Tirage aléatoire de l'étui de l'étui}
@@ -199,6 +199,7 @@ begin
             for carte in joueurs[i].cartes do write(carte, ' ');
             writeln();
         end;
+    
     
 
     {Libération espace mémoire}
