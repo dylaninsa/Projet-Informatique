@@ -20,7 +20,7 @@ end;
 
 Type ListeJoueurs = Array of Joueur;
 
-Type Salle = Array [1..MAX*MAX] of Coords;
+Type Salle = Array [1..25] of Coords;
 
 Type Plateau = record 
     grille : Array [0..MAX,0..MAX] of Integer;
