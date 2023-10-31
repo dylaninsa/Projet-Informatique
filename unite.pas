@@ -3,7 +3,12 @@ Unit unite;
 
 Interface
 
-Const MAX = 50;
+Const 
+    MAX = 50;
+    UP = #72;
+	DOWN = #80;
+	LEFT = #75;
+	RIGHT = #77;
 
 Type Enviro = (Manoir, INSA);
 
@@ -16,6 +21,7 @@ Type Joueur = record
 	cartes : set of ListeCartes;
 	pos : Coords;
 	perso : ListeCartes;
+    pion : Char;
 end;
 
 Type ListeJoueurs = Array of Joueur;
