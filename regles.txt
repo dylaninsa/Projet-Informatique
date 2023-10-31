@@ -19,17 +19,17 @@ II – L’ENQUÊTE
 (f) L’ACCUSATION
 
 I – MATÉRIEL
-5 Pions : ils correspondent aux six personnes se trouvant dans la villa au moment du crime :
-Pion jaune : Colonel MOUTARDE
-Vert : Docteur OLIVE
-Bleu : Madame PERVENCHE
-Rouge : Mademoiselle ROSE
-Blanc : Madame LEBLANC.
+5 Pions par mode : ils correspondent aux cinq personnes se trouvant dans la villa au moment du crime :
+Pion jaune : Colonel MOUTARDE / Cyril BREDEL
+Vert : Docteur OLIVE / Le Directeur
+Bleu : Madame PERVENCHE / Yohann LEPAILLEUR
+Rouge : Mademoiselle ROSE / Madame L'ARCHEVEQUE
+Blanc : Madame LEBLANC / L'Infirmière
 
-6 Armes : Poignard, Chandelier, Revolver, Corde, Matraque, Clef Anglaise.
+6 Armes par mode : Poignard, Chandelier, Revolver, Corde, Matraque, Clef Anglaise / Seringue, Moteur 4 temps, Alteres, Flacon Acide, Ordi, Pouf Rouge. Cafete, Amphi_Tillon, Infirmerie, Vestiaires, Labo, DUBRJ11, Bureau_du_directeur, Toilettes, BU
 
 20 Cartes :
-5 cartes représentent les six suspects
+5 cartes représentent les cinq suspects
 6 autres les armes
 9 différentes pièces de la villa.
 2 Dés.
@@ -74,3 +74,5 @@ Il compare ensuite secrètement son accusation avec le contenu de l’Etui :
 Si son accusation est juste, il le prouve en exposant les 3 cartes et son rapport. Il gagne la partie.
 Si son accusation est fausse, il remet les cartes dans l’Etui qu’il retourne au point X. Il reste en jeu pour démentir les « HYPOTHÈSES » éventuelles mais ne peut plus ni se déplacer, ni interroger, ni accuser.
 Chaque enquêteur ne peut faire qu’une seule ACCUSATION. Qu’il la fasse donc à bon escient !
+
+Amusez-vous bien !
