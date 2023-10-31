@@ -3,7 +3,7 @@ Unit configurationPartie;
 
 Interface
 
-uses unite, Crt, sysutils;
+uses unite, Crt, sysutils, partie, affichage;
 
 procedure lancerPartie(var joueurs:ListeJoueurs; var plat:Plateau; var etui:Array of ListeCartes);
 //procedure chargerPartie(var joueurs:ListeJoueurs; var plateau:Plateau; var etui:ListeCartes);
@@ -46,7 +46,6 @@ var environnement : Enviro;
     carte : ListeCartes;
     liste_cartes : Array of ListeCartes;
     personnage, p, mem : ListeCartes;
-    pos_init : Coords;
 
 begin
     Randomize;
@@ -68,7 +67,10 @@ begin
         2 : environnement := INSA;
     end;
 
+
+    {Création du plateau de jeu}
     creerPlateau(plat, environnement);
+
 
     {Mise en place des ensembles et des listes de cartes pour l'environnement choisi}
     SetLength(liste_cartes, 20);
@@ -137,8 +139,6 @@ begin
     writeln('Combien y a-t-il de joueurs ?');
     readln(nb_j);
     SetLength(joueurs, nb_j-1); 
-    pos_init[1] := 0; // à modif
-    pos_init[2] := 0; // à modif
 
 
     {Initialisation des joueurs et de leurs propriétés}
@@ -152,8 +152,59 @@ begin
             until (p in personnages);
             joueurs[i].perso := p;
             Exclude(personnages, joueurs[i].perso);
+            case p of
+                Colonel_Moutarde :  begin
+                                        joueurs[i].pos[1] := 2;
+                                        joueurs[i].pos[2] := 19;
+                                        joueurs[i].pion := 'M';
+                                    end;
+                Docteur_Olive :     begin
+                                        joueurs[i].pos[1] := 16;
+                                        joueurs[i].pos[2] := 2;
+                                        joueurs[i].pion := 'O';
+                                    end;
+                Madame_Pervenche :  begin
+                                        joueurs[i].pos[1] := 25;
+                                        joueurs[i].pos[2] := 8;
+                                        joueurs[i].pion := 'P';
+                                    end;
+                Mademoiselle_Rose : begin
+                                        joueurs[i].pos[1] := 9;
+                                        joueurs[i].pos[2] := 26;
+                                        joueurs[i].pion := 'R';
+                                    end;
+                Madame_Leblanc :    begin
+                                        joueurs[i].pos[1] := 11;
+                                        joueurs[i].pos[2] := 2;
+                                        joueurs[i].pion := 'L';
+                                    end;
+                Monsieur_Bredel :  begin
+                                        joueurs[i].pos[1] := 2;
+                                        joueurs[i].pos[2] := 19;
+                                        joueurs[i].pion := 'B';
+                                    end;
+                Madame_LArcheveque :     begin
+                                        joueurs[i].pos[1] := 16;
+                                        joueurs[i].pos[2] := 2;
+                                        joueurs[i].pion := 'A';
+                                    end;
+                Le_Directeur :  begin
+                                        joueurs[i].pos[1] := 25;
+                                        joueurs[i].pos[2] := 8;
+                                        joueurs[i].pion := 'D';
+                                    end;
+                Yohann_Lepailleur : begin
+                                        joueurs[i].pos[1] := 9;
+                                        joueurs[i].pos[2] := 26;
+                                        joueurs[i].pion := 'Y';
+                                    end;
+                Infirmiere :    begin
+                                        joueurs[i].pos[1] := 11;
+                                        joueurs[i].pos[2] := 2;
+                                        joueurs[i].pion := 'I';
+                                    end;
+            end;
             joueurs[i].enVie := True;
-            joueurs[i].pos := pos_init;
             joueurs[i].cartes := [];
         end;
 
@@ -190,6 +241,12 @@ begin
     {Libération espace mémoire}
     SetLength(liste_cartes, 0);
 
+
+    {Tests : affichage du plateau et déplacement d'un pion
+    affichage_plateau(plat);
+	deplacement(plat, joueurs);}
+
+
     {Tests : affichage de tous les attributs de tout les joueurs (à enlever plus tard)
     for i := 1 to nb_j do
         begin
@@ -208,10 +265,11 @@ begin
 end;
 
 
+
 procedure creerPlateau(var plat:Plateau; environnement:Enviro);
 
 var fic	: Text;
-   i, j	: Integer;
+   i, j : Integer;
    str	: string;
 
 begin
@@ -229,22 +287,6 @@ begin
 	            end;
 	            j := j+1;
         end;
-    
-
-    {Tests : Affichage de la grille (pas au bon endroit)}
-    ClrScr;
-	i := 1;
-	j := 1;
-	for i := 1 to 28 do
-		for j := 1 to 28 do
-			begin
-				case plat.grille[j][i] of
-					0 : write(' ');
-					1 : write('/');
-				end;
-				if (j = 28) then
-					writeln();
-			end;
     
 end;
 
