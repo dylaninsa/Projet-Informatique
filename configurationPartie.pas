@@ -3,12 +3,12 @@ Unit configurationPartie;
 
 Interface
 
-uses unite, Crt;
+uses unite, Crt, sysutils;
 
 procedure lancerPartie(var joueurs:ListeJoueurs; var plat:Plateau; var etui:Array of ListeCartes);
 //procedure chargerPartie(var joueurs:ListeJoueurs; var plateau:Plateau; var etui:ListeCartes);
 procedure nouvellePartie(var joueurs:ListeJoueurs; var plat:Plateau; var etui:Array of ListeCartes);
-//procedure creerPlateau(var plateau:Plateau; environnement:Enviro);
+procedure creerPlateau(var plat:Plateau; environnement:Enviro);
 
 
 Implementation
@@ -68,6 +68,7 @@ begin
         2 : environnement := INSA;
     end;
 
+    creerPlateau(plat, environnement);
 
     {Mise en place des ensembles et des listes de cartes pour l'environnement choisi}
     SetLength(liste_cartes, 20);
@@ -157,7 +158,7 @@ begin
         end;
 
 
-    {Tests : affichage des cartes mélangées et de l'étui (à enlever plus tard)}
+    {Tests : affichage des cartes mélangées et de l'étui (à enlever plus tard)
     writeln('Liste cartes mélangées');
     j := 0;
     for carte in liste_cartes do 
@@ -171,13 +172,12 @@ begin
     writeln();
     writeln(joueurs[1].perso);
     for carte in joueurs[1].cartes do write(carte, ' ');
-    writeln();
+    writeln();}
 
 
     {Distribution des cartes}
     for l := 0 to length(liste_cartes)-1 do
         begin
-            writeln(l, ' ', l mod nb_j, ' ', liste_cartes[l]);
             case l mod nb_j of
                 0 : if nb_j >= 1 then Include(joueurs[1].cartes, liste_cartes[l]);
                 1 : if nb_j >= 2 then Include(joueurs[2].cartes, liste_cartes[l]);
@@ -190,7 +190,7 @@ begin
     {Libération espace mémoire}
     SetLength(liste_cartes, 0);
 
-    {Tests : affichage de tous les attributs de tout les joueurs (à enlever plus tard)}
+    {Tests : affichage de tous les attributs de tout les joueurs (à enlever plus tard)
     for i := 1 to nb_j do
         begin
             writeln(joueurs[i].perso);
@@ -198,7 +198,7 @@ begin
             writeln(joueurs[i].pos[1], joueurs[i].pos[2]);
             for carte in joueurs[i].cartes do write(carte, ' ');
             writeln();
-        end;
+        end;}
     
     
 
@@ -208,7 +208,45 @@ begin
 end;
 
 
-//procedure creerPlateau(plateau, environnement);
+procedure creerPlateau(var plat:Plateau; environnement:Enviro);
+
+var fic	: Text;
+   i, j	: Integer;
+   str	: string;
+
+begin
+    {Chargement de la grille}
+    assign(fic, 'cluedo.txt');
+    reset(fic);
+    j := 1;
+    while (not eof(fic)) do
+        begin
+	        readln(fic,str);
+	        for i := 1 to 28 do
+		        case str[i] of
+			        '0' : plat.grille[i][j] := 0;
+			        '1' : plat.grille[i][j] := 1;
+	            end;
+	            j := j+1;
+        end;
+    
+
+    {Tests : Affichage de la grille (pas au bon endroit)}
+    ClrScr;
+	i := 1;
+	j := 1;
+	for i := 1 to 28 do
+		for j := 1 to 28 do
+			begin
+				case plat.grille[j][i] of
+					0 : write(' ');
+					1 : write('/');
+				end;
+				if (j = 28) then
+					writeln();
+			end;
+    
+end;
 
 //procedure chargerPartie(var joueurs:ListeJoueurs; var plateau:Plateau; var etui:ListeCartes);
 
