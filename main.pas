@@ -1,7 +1,7 @@
 program Cluedo;
 
 
-uses unite, configurationPartie;
+uses unite, configurationPartie, partie, affichage;
 
 
 procedure menu(var c : Integer);
