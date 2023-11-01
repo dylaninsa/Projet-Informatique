@@ -32,14 +32,14 @@ begin
     ClrScr;
 	i := 1;
 	j := 1;
-	for i := 1 to 28 do
-		for j := 1 to 28 do
+	for i := 1 to 27 do
+		for j := 1 to 26 do
 			begin
 				case plat.grille[j][i] of
 					0 : write(' ');
 					1 : write('/');
 				end;
-				if (j = 28) then
+				if (j = 26) then
 					writeln();
 			end;
 end;
@@ -67,7 +67,7 @@ begin
 						affiche(' ', cursorX, cursorY);
 						cursorY := cursorY - 1;
 					end;
-				DOWN : if ((cursorY + 1 <= 27) AND (plat.grille[cursorX][cursorY + 1] <> 1)) then 
+				DOWN : if ((cursorY + 1 <= 26) AND (plat.grille[cursorX][cursorY + 1] <> 1)) then 
 					begin
 						affiche(' ', cursorX, cursorY);
 						cursorY := cursorY + 1;
@@ -77,7 +77,7 @@ begin
 						affiche(' ', cursorX, cursorY);
 						cursorX := cursorX - 1;
 					end;
-				RIGHT : if ((cursorX + 1 <= 27) AND (plat.grille[cursorX + 1][cursorY] <> 1)) then 
+				RIGHT : if ((cursorX + 1 <= 25) AND (plat.grille[cursorX + 1][cursorY] <> 1)) then 
 					begin
 						affiche(' ', cursorX, cursorY);
 						cursorX := cursorX + 1;
