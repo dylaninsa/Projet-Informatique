@@ -138,7 +138,7 @@ begin
     {Choix du nombre de joueurs dans la partie}
     writeln('Combien y a-t-il de joueurs ?');
     readln(nb_j);
-    SetLength(joueurs, nb_j-1); 
+    SetLength(joueurs, nb_j); 
 
 
     {Initialisation des joueurs et de leurs propriétés}
@@ -242,9 +242,9 @@ begin
     SetLength(liste_cartes, 0);
 
 
-    {Tests : affichage du plateau et déplacement d'un pion
+    {Tests : affichage du plateau et déplacement d'un pion}
     affichage_plateau(plat);
-	deplacement(plat, joueurs);}
+	deplacement(plat, joueurs);
 
 
     {Tests : affichage de tous les attributs de tout les joueurs (à enlever plus tard)
@@ -270,24 +270,81 @@ procedure creerPlateau(var plat:Plateau; environnement:Enviro);
 
 var fic	: Text;
    i, j : Integer;
-   str	: string;
+   str, x, y, space, co : string;
+   carte : ListeCartes;
+   test : Coords; // à enlever plus tard
 
 begin
     {Chargement de la grille}
     assign(fic, 'cluedo.txt');
     reset(fic);
-    j := 1;
-    while (not eof(fic)) do
+    for j := 1 to 27 do
         begin
 	        readln(fic,str);
-	        for i := 1 to 28 do
+	        for i := 1 to 26 do
 		        case str[i] of
 			        '0' : plat.grille[i][j] := 0;
 			        '1' : plat.grille[i][j] := 1;
 	            end;
-	            j := j+1;
         end;
     
+
+    {Chargement des cases des salles}
+    readln(fic, space);
+    for i := 1 to 9 do
+        begin
+            readln(fic, str);
+            for j := 1 to StrToInt(str) do
+                begin
+                    readln(fic, co);
+                    if (co[2] = ' ') then
+                        begin
+                            x := Copy(co, 1, 1);
+                            if (co[4] = ' ') then
+                                y := Copy(co, 3, 1)
+                            else
+                                y := Copy(co, 3, 2);
+                        end
+                    else
+                        begin
+                            x := Copy(co, 1, 2);
+                            if (co[5] = ' ') then
+                                y := Copy(co, 4, 1)
+                            else
+                                y := Copy(co, 4, 2);
+                        end;
+                    plat.salles[i].cases[j][1] := StrToInt(x);
+                    plat.salles[i].cases[j][2] := StrToInt(y);
+                end;
+            readln(fic, space);
+        end;
+
+
+    {Chargement des noms des salles}
+    i := 1;
+    if environnement = Manoir then
+        for carte := Cuisine to Hall do
+            begin
+                plat.salles[i].nom := carte;
+                i := i+1;
+            end
+    else
+        for carte := Cafete to BU do
+            begin
+                plat.salles[i].nom := carte;
+                i := i+1;
+            end;
+    close(fic);
+
+
+    {Tests : Affichage des salles
+    for i := 1 to 9 do
+        begin
+            writeln(plat.salles[i].nom);
+            for test in plat.salles[i].cases do
+                write(test[1],' ',  test[2], ' / ');
+        end;}
+
 end;
 
 //procedure chargerPartie(var joueurs:ListeJoueurs; var plateau:Plateau; var etui:ListeCartes);
