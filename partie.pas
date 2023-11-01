@@ -6,7 +6,7 @@ Interface
 uses unite, Crt, affichage;
 
 
-procedure jeu(etui:Array of ListeCartes; plat:Plateau; var joueurs:ListeJoueurs);
+{procedure jeu(etui:Array of ListeCartes; plat:Plateau; var joueurs:ListeJoueurs);
 procedure tour(plat:Plateau; etui:Array of ListeCartes; var joueurs:ListeJoueurs; accusation:Boolean);
 procedure finPartie(joueurs:ListeJoueurs; accusation:Boolean);
 procedure quitterSauvegarder(joueurs:ListeJoueurs; plat:Plateau; etui:Array of ListeCartes; var sauvegarde:File);
@@ -15,14 +15,14 @@ procedure lancerDes(lancer:Integer);
 procedure afficherCartes(joueurs:ListeJoueurs);
 procedure faireHypothese(joueurs:ListeJoueurs; hypo:ListeCartes);
 procedure demandeJoueur(hypo:ListeCartes;joueurs:ListeJoueurs);
-procedure accusation(etui:Array of ListeCartes; var joueurs:ListeJoueurs; accusation:Boolean);
+procedure accusation(etui:Array of ListeCartes; var joueurs:ListeJoueurs; accusation:Boolean);}
 
 
 Implementation
 
 
 
-procedure jeu(etui:Array of ListeCartes; plat:Plateau; var joueurs:ListeJoueurs);
+{procedure jeu(etui:Array of ListeCartes; plat:Plateau; var joueurs:ListeJoueurs);
 
 var
 
@@ -40,7 +40,7 @@ procedure lancerDes(lancer:Integer);
 procedure afficherCartes(joueurs:ListeJoueurs);
 procedure faireHypothese(joueurs:ListeJoueurs; hypo:ListeCartes);
 procedure demandeJoueur(hypo:ListeCartes;joueurs:ListeJoueurs);
-procedure accusation(etui:Array of ListeCartes; var joueurs:ListeJoueurs; accusation:Boolean);
+procedure accusation(etui:Array of ListeCartes; var joueurs:ListeJoueurs; accusation:Boolean);}
 
 
 end.
