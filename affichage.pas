@@ -71,7 +71,7 @@ var carte : ListeCartes;
 begin
 	write('Voici vos cartes : ');
 	for carte in joueurs[j].cartes do
-		write(carte);
+		write(carte, ' ');
 	writeln();
 end;
 
@@ -81,6 +81,7 @@ procedure affichageDeplacement(move : Integer);
 
 begin
 	GotoXY(35, 15);
+	write('                              ');
 	write('Déplacements restants : ', move);
 end;
 
@@ -92,6 +93,7 @@ var carte : ListeCartes;
 
 begin
 	writeln(joueurs[j].perso, ', c''est à vous !');
+
 	write('Voici les cartes en commun entre vos cartes et celles de l''hypothèse acuelle : ');
 	for carte in commun do
 		write(carte, ' ');
