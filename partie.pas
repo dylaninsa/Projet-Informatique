@@ -205,10 +205,12 @@ procedure deplacement(var plat : Plateau; lancer : Integer; var joueurs : ListeJ
 var key : Char;
 	move, i : Integer;
     co : Coords;
+    bouge : Boolean;
 
 begin
     {Affichage du plateau}
     move := lancer;
+    bouge := False;
     affichagePlateau(plat, joueurs);
     affichageDeplacement(move);
 
@@ -232,6 +234,7 @@ begin
                                                     joueurs[j_actif].pos[2] := co[2];
                                                     move := move - 1;
                                                     plat.salles[1].nb_j := plat.salles[1].nb_j - 1;
+                                                    bouge := True;
                                                 end;
                                         end;
                                     UP : 
@@ -244,9 +247,10 @@ begin
                                             move := move - 1;
                                             plat.salles[1].nb_j := plat.salles[1].nb_j - 1;
                                             plat.salles[8].nb_j := plat.salles[8].nb_j + 1;
+                                            bouge := True;
                                         end;
                                 end;
-                                until ((key = DOWN) OR (key = UP));
+                                until (bouge);
                         end;
                 Grand_Salon : 
                         begin
@@ -265,6 +269,7 @@ begin
                                                     joueurs[j_actif].pos[2] := co[2];
                                                     move := move - 1;
                                                     plat.salles[2].nb_j := plat.salles[2].nb_j - 1;
+                                                    bouge := True;
                                                 end;
                                         end;
                                     UP :
@@ -278,6 +283,7 @@ begin
                                                     joueurs[j_actif].pos[2] := co[2];
                                                     move := move - 1;
                                                     plat.salles[2].nb_j := plat.salles[2].nb_j - 1;
+                                                    bouge := True;
                                                 end;
                                         end;
                                     LEFT : 
@@ -291,6 +297,7 @@ begin
                                                     joueurs[j_actif].pos[2] := co[2];
                                                     move := move - 1;
                                                     plat.salles[2].nb_j := plat.salles[2].nb_j - 1;
+                                                    bouge := True;
                                                 end;
                                         end;
                                     RIGHT :
@@ -304,10 +311,11 @@ begin
                                                     joueurs[j_actif].pos[2] := co[2];
                                                     move := move - 1;
                                                     plat.salles[2].nb_j := plat.salles[2].nb_j - 1;
+                                                    bouge := True;
                                                 end;
                                         end;
                                 end;
-                                until ((key = DOWN) OR (key = UP) OR (key = LEFT) OR (key = RIGHT));
+                                until (bouge);
                         end;
                 Petit_Salon : 
                         begin
@@ -325,6 +333,7 @@ begin
                                                     joueurs[j_actif].pos[2] := co[2];
                                                     move := move - 1;
                                                     plat.salles[3].nb_j := plat.salles[3].nb_j - 1;
+                                                    bouge := True;
                                                 end;
                                         end;
                                     UP : 
@@ -337,9 +346,10 @@ begin
                                             move := move - 1;
                                             plat.salles[3].nb_j := plat.salles[3].nb_j - 1;
                                             plat.salles[7].nb_j := plat.salles[7].nb_j + 1;
+                                            bouge := True;
                                         end;
                                 end;
-                                until ((key = DOWN) OR (key = UP));
+                                until (bouge);
                         end;
                 Salle_a_manger : 
                         begin
@@ -357,6 +367,7 @@ begin
                                                     joueurs[j_actif].pos[2] := co[2];
                                                     move := move - 1;
                                                     plat.salles[4].nb_j := plat.salles[4].nb_j - 1;
+                                                    bouge := True;
                                                 end;
                                         end;
                                     RIGHT :
@@ -370,10 +381,11 @@ begin
                                                     joueurs[j_actif].pos[2] := co[2];
                                                     move := move - 1;
                                                     plat.salles[4].nb_j := plat.salles[4].nb_j - 1;
+                                                    bouge := True;
                                                 end;
                                         end;
                                 end;
-                                until ((key = DOWN) OR (key = RIGHT));
+                                until (bouge);
                         end;
                 Bureau : 
                         begin
@@ -391,6 +403,7 @@ begin
                                                     joueurs[j_actif].pos[2] := co[2];
                                                     move := move - 1;
                                                     plat.salles[5].nb_j := plat.salles[5].nb_j - 1;
+                                                    bouge := True;
                                                 end;
                                         end;
                                     LEFT :
@@ -404,10 +417,11 @@ begin
                                                     joueurs[j_actif].pos[2] := co[2];
                                                     move := move - 1;
                                                     plat.salles[5].nb_j := plat.salles[5].nb_j - 1;
+                                                    bouge := True;
                                                 end;
                                         end;
                                 end;
-                                until ((key = DOWN) OR (key = RIGHT));
+                                until (bouge);
                         end;
                 Bibliotheque : 
                         begin
@@ -425,6 +439,7 @@ begin
                                                     joueurs[j_actif].pos[2] := co[2];
                                                     move := move - 1;
                                                     plat.salles[6].nb_j := plat.salles[6].nb_j - 1;
+                                                    bouge := True;
                                                 end;
                                         end;
                                     LEFT :
@@ -438,10 +453,11 @@ begin
                                                     joueurs[j_actif].pos[2] := co[2];
                                                     move := move - 1;
                                                     plat.salles[6].nb_j := plat.salles[6].nb_j - 1;
+                                                    bouge := True;
                                                 end;
                                         end;
                                 end;
-                                until ((key = DOWN) OR (key = RIGHT));
+                                until (bouge);
                         end;
                 Veranda : 
                         begin
@@ -459,6 +475,7 @@ begin
                                                     joueurs[j_actif].pos[2] := co[2];
                                                     move := move - 1;
                                                     plat.salles[7].nb_j := plat.salles[7].nb_j - 1;
+                                                    bouge := True;
                                                 end;
                                         end;
                                     DOWN : 
@@ -471,9 +488,10 @@ begin
                                             move := move - 1;
                                             plat.salles[7].nb_j := plat.salles[7].nb_j - 1;
                                             plat.salles[3].nb_j := plat.salles[3].nb_j + 1;
+                                            bouge := True;
                                         end;
                                 end;
-                                until ((key = DOWN) OR (key = UP));
+                                until (bouge);
                         end;
                 Studio : 
                         begin
@@ -491,6 +509,7 @@ begin
                                                     joueurs[j_actif].pos[2] := co[2];
                                                     move := move - 1;
                                                     plat.salles[8].nb_j := plat.salles[8].nb_j - 1;
+                                                    bouge := True;
                                                 end;
                                         end;
                                     DOWN : 
@@ -503,9 +522,10 @@ begin
                                             move := move - 1;
                                             plat.salles[8].nb_j := plat.salles[8].nb_j - 1;
                                             plat.salles[1].nb_j := plat.salles[1].nb_j + 1;
+                                            bouge := True;
                                         end;
                                 end;
-                                until ((key = DOWN) OR (key = UP));
+                                until (bouge);
                         end;
                 Hall : 
                         begin
@@ -523,6 +543,7 @@ begin
                                                     joueurs[j_actif].pos[2] := co[2];
                                                     move := move - 1;
                                                     plat.salles[9].nb_j := plat.salles[9].nb_j - 1;
+                                                    bouge := True;
                                                 end;
                                         end;
                                     LEFT : 
@@ -536,6 +557,7 @@ begin
                                                     joueurs[j_actif].pos[2] := co[2];
                                                     move := move - 1;
                                                     plat.salles[9].nb_j := plat.salles[9].nb_j - 1;
+                                                    bouge := True;
                                                 end;
                                         end;
                                     RIGHT :
@@ -549,10 +571,11 @@ begin
                                                     joueurs[j_actif].pos[2] := co[2];
                                                     move := move - 1;
                                                     plat.salles[9].nb_j := plat.salles[9].nb_j - 1;
+                                                    bouge := True;
                                                 end;
                                         end;
                                 end;
-                                until ((key = DOWN) OR (key = UP) OR (key = LEFT) OR (key = RIGHT));
+                                until (bouge);
                         end;
             end;
         end;
