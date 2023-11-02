@@ -1,7 +1,7 @@
 program Cluedo;
 
 
-uses unite, configurationPartie, partie, affichage;
+uses unite, Crt, configurationPartie, partie, affichage;
 
 
 procedure menu(var c : Integer);
@@ -50,6 +50,7 @@ var c : Integer;
     etui : Array [1..3] of ListeCartes;
 
 begin
+    ClrScr;
     menu(c);
     case c of
         1 : lancerPartie(joueurs, plat, etui);
