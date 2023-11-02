@@ -7,8 +7,11 @@ uses unite, Crt;
 
 
 procedure affiche(c : Char; posX, posY : Integer);
-procedure affichage_plateau(plat : Plateau);
-procedure deplacement(plat : Plateau; joueurs : ListeJoueurs);
+procedure affichagePlateau(plat : Plateau; joueurs : ListeJoueurs);
+procedure affichageDes(de1 : Integer; de2 : Integer);
+procedure affichageCartes(joueurs : ListeJoueurs; j : Integer);
+procedure affichageDeplacement(move : Integer);
+procedure affichageMontrerCartes(commun : Array of ListeCartes; joueurs : ListeJoueurs; j : Integer; var reveal : ListeCartes);
 
 
 
@@ -23,7 +26,7 @@ end;
 
 
 
-procedure affichage_plateau(plat : Plateau);
+procedure affichagePlateau(plat : Plateau; joueurs : ListeJoueurs);
 
 var i, j : Integer;
 
@@ -42,49 +45,60 @@ begin
 				if (j = 26) then
 					writeln();
 			end;
+
+
+	for i := 1 to length(joueurs) do
+		begin
+			GotoXY(joueurs[i].pos[1], joueurs[i].pos[2]);
+			write(joueurs[i].pion);
+		end;
 end;
 
     
 
-
-procedure deplacement(plat : Plateau; joueurs : ListeJoueurs);
-
-var key : Char;
-	cursorX, cursorY : Integer;
+procedure affichageDes(de1 : Integer; de2 : Integer);
 
 begin
-    {Tests : Déplacements}
-    cursorX := joueurs[1].pos[1];
-    cursorY := joueurs[1].pos[2];
-
-    repeat
-		begin
-			affiche(joueurs[1].pion, cursorX, cursorY);
-			key := readKey();
-			case key of
-				UP : if ((cursorY - 1 >= 2) AND (plat.grille[cursorX][cursorY - 1] <> 1)) then 
-					begin
-						affiche(' ', cursorX, cursorY);
-						cursorY := cursorY - 1;
-					end;
-				DOWN : if ((cursorY + 1 <= 26) AND (plat.grille[cursorX][cursorY + 1] <> 1)) then 
-					begin
-						affiche(' ', cursorX, cursorY);
-						cursorY := cursorY + 1;
-					end;
-				LEFT : if ((cursorX - 1 >= 2) AND (plat.grille[cursorX - 1][cursorY] <> 1)) then 
-					begin
-						affiche(' ', cursorX, cursorY);
-						cursorX := cursorX - 1;
-					end;
-				RIGHT : if ((cursorX + 1 <= 25) AND (plat.grille[cursorX + 1][cursorY] <> 1)) then 
-					begin
-						affiche(' ', cursorX, cursorY);
-						cursorX := cursorX + 1;
-					end;
-			end ;
-		end;
-		until (key = #113);
+	writeln('Le premier dé a pour valeur ', de1, ' et le second ', de2, '. Le nombre de déplacement total est donc de ', de1+de2, '.');
 end;
+
+
+
+procedure affichageCartes(joueurs : ListeJoueurs; j : Integer);
+
+var carte : ListeCartes;
+
+begin
+	write('Voici vos cartes : ');
+	for carte in joueurs[j].cartes do
+		write(carte);
+	writeln();
+end;
+
+
+
+procedure affichageDeplacement(move : Integer);
+
+begin
+	GotoXY(35, 15);
+	write('Déplacements restants : ', move);
+end;
+
+
+
+procedure affichageMontrerCartes(commun : Array of ListeCartes; joueurs : ListeJoueurs; j : Integer; var reveal : ListeCartes);
+
+var carte : ListeCartes;
+
+begin
+	writeln(joueurs[j].perso, ', c''est à vous !');
+	write('Voici les cartes en commun entre vos cartes et celles de l''hypothèse acuelle : ');
+	for carte in commun do
+		write(carte, ' ');
+	writeln();
+	write('Quelle carte voulez-vous montrer ? ');
+	readln(reveal);
+end;
+
 
 end.
