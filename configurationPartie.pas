@@ -242,9 +242,7 @@ begin
     SetLength(liste_cartes, 0);
 
 
-    {Tests : affichage du plateau et déplacement d'un pion}
-    affichage_plateau(plat);
-	deplacement(plat, joueurs);
+    jeu(etui, plat, joueurs);
 
 
     {Tests : affichage de tous les attributs de tout les joueurs (à enlever plus tard)
