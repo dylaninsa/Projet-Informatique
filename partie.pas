@@ -80,11 +80,15 @@ procedure tour(plat : Plateau; etui : Array of ListeCartes; var joueurs : ListeJ
 
 var c, lancer : Integer;
     hypo : Array [1..3] of ListeCartes;
+    continue : Char;
 
 begin
     ClrScr;
     writeln('C''est à ', joueurs[j_actif].perso, ' de jouer !');
     affichageCartes(joueurs, j_actif);
+    repeat
+        continue := readKey();
+        until (continue = #32);
     
     if (estDansSalle(joueurs, plat, j_actif)) then
         begin
@@ -145,13 +149,14 @@ var key : Char;
 	cursorX, cursorY, move : Integer;
 
 begin
-    cursorX := joueurs[j_actif].pos[1];
-    cursorY := joueurs[j_actif].pos[2];
     move := lancer;
     affichagePlateau(plat, joueurs);
 
     repeat
 		begin
+            Delay(500);
+            cursorX := joueurs[j_actif].pos[1];
+            cursorY := joueurs[j_actif].pos[2];
             affichageDeplacement(move);
 			affiche(joueurs[1].pion, cursorX, cursorY);
 			key := readKey();
@@ -160,22 +165,22 @@ begin
 				UP : if ((cursorY - 1 >= 2) AND (plat.grille[cursorX][cursorY - 1] <> 1)) then 
 					begin
 						affiche(' ', cursorX, cursorY);
-						cursorY := cursorY - 1;
+                        joueurs[j_actif].pos[2] := joueurs[j_actif].pos[2] - 1;
 					end;
 				DOWN : if ((cursorY + 1 <= 26) AND (plat.grille[cursorX][cursorY + 1] <> 1)) then 
 					begin
 						affiche(' ', cursorX, cursorY);
-						cursorY := cursorY + 1;
+                        joueurs[j_actif].pos[2] := joueurs[j_actif].pos[2] + 1;
 					end;
 				LEFT : if ((cursorX - 1 >= 2) AND (plat.grille[cursorX - 1][cursorY] <> 1)) then 
 					begin
 						affiche(' ', cursorX, cursorY);
-						cursorX := cursorX - 1;
+                        joueurs[j_actif].pos[1] := joueurs[j_actif].pos[1] - 1;
 					end;
 				RIGHT : if ((cursorX + 1 <= 25) AND (plat.grille[cursorX + 1][cursorY] <> 1)) then 
 					begin
 						affiche(' ', cursorX, cursorY);
-						cursorX := cursorX + 1;
+                        joueurs[j_actif].pos[1] := joueurs[j_actif].pos[1] + 1;
 					end;
 			end ;
 		end;
@@ -187,6 +192,7 @@ end;
 procedure lancerDes(var lancer : Integer);
 
 var de1, de2 : Integer;
+    continue : Char;
 
 begin
     Randomize;
@@ -196,6 +202,10 @@ begin
     
     affichageDes(de1, de2);
 
+    repeat
+        continue := readKey();
+        until (continue = #32);
+
     lancer := de1 + de2;
 end;
 
@@ -203,32 +213,34 @@ end;
 
 procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCartes);
 
-var g : ListeCartes;
+var g1, g2, g3 : ListeCartes;
 
 begin 
+    ClrScr;
     writeln('Vous allez formuler une hypothèse !');
 
     write('Selon vous, qui pourrait-être l''assassin ? ');
-    readln(g);
-    hypo[1] := g;
+    readln(g1);
+    hypo[1] := g1;
 
     write('Selon vous, quelle pourrait-être l''arme du crime ? ');
-    readln(g);
-    hypo[2] := g;
+    readln(g2);
+    hypo[2] := g2;
 
     write('Selon vous, dans quelle salle l''assassinat aurait-il pu avoir lieu  ? ');
-    readln(g);
-    hypo[3] := g;
+    readln(g3);
+    hypo[3] := g3;
 end;
 
 
 
 procedure demandeJoueur(hypo : array of ListeCartes; joueurs : ListeJoueurs; j_actif : Integer);
 
-var i, j, k : Integer;
+var i, j, k, l, nb : Integer;
     montrer : Boolean;
-    commun : Array [1..3] of ListeCartes;
-    reveal : ListeCartes;
+    commun : Array of ListeCartes;
+    temp : set of ListeCartes;
+    reveal, carte : ListeCartes;
 
 begin
     i := 1;
@@ -239,17 +251,39 @@ begin
             j := length(joueurs) - (length(joueurs) - i)
         else
             j := j_actif + i;
-
+        writeln(hypo[3]);
+        writeln(length(hypo));
+        temp := [];
         for k := 1 to 3 do
             begin
+                write(hypo[k], ' ');
                 if (hypo[k] in joueurs[j].cartes) then
-                    commun[k] := hypo[k];
+                    begin
+                        Include(temp, hypo[k]);
+                        writeln('In');
+                    end
+                else
+                    writeln('Out');
             end;
+        writeln('Oui');
 
-        if ((commun[1] = hypo[1]) OR (commun[2] = hypo[2]) OR (commun[2] = hypo[2])) then
+        nb := 0;
+        for carte in temp do
+            nb := nb + 1;
+
+        if (nb <> 0) then
             begin
+                SetLength(commun, nb);
+                l := 1;
+                for carte in temp do
+                    begin
+                        commun[l] := carte;
+                        l := l + 1;
+                    end;
+
                 affichageMontrerCartes(commun, joueurs, j, reveal);
                 montrer := True;
+                SetLength(commun, 0);
             end
         else
             writeln(joueurs[j].perso, ' n''as aucune des cartes de votre hypothèse.');
