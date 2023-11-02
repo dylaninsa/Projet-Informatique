@@ -209,7 +209,7 @@ begin
         end;
 
 
-    {Tests : affichage des cartes mélangées et de l'étui (à enlever plus tard)
+    {Tests : affichage des cartes mélangées (à enlever plus tard)
     writeln('Liste cartes mélangées');
     j := 0;
     for carte in liste_cartes do 
@@ -217,13 +217,13 @@ begin
             write(j, ':', carte, ' ');
             j := j+1;
         end;
-    writeln();
+    writeln();}
+
+
+    {Tests : affichage de l'étui (à enlever plus tard)}
     writeln('Etui');
     for carte in etui do write(carte, ' ');
-    writeln();
-    writeln(joueurs[1].perso);
-    for carte in joueurs[1].cartes do write(carte, ' ');
-    writeln();}
+    Delay(5000);
 
 
     {Distribution des cartes}
