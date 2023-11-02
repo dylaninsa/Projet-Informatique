@@ -29,11 +29,12 @@ Si vous avez des question posez les moi.
 
 **Fonctionnalités à implémenter :**
 
-- Sortir des salles
 - Obliger le lieu de l'hypothèse à être la salle dans laquelle le pion se trouve
 - Vérifier que chaque élément des hypothèses et accusations soient bien de la bonne catégorie (meurtrier, arme, lieu)
-- Vérifier que l'accusation corresponde à l'étui
 - Sauvegarder / Charger partie
 - Fiches de chaque personnage
-- Passages secrets
-- Une salle = Une case => différentes cases si plusieurs pions dans une même salle / sortir des salles par les différentres portes
+- Une salle = Une case => différentes cases si plusieurs pions dans une même salle
+
+**Bugs à corriger :**
+
+- Vérifier que l'accusation corresponde à l'étui
