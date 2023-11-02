@@ -335,6 +335,11 @@ begin
     close(fic);
 
 
+    {Chargement du nombre de joueurs par salle}
+    for i := 1 to 9 do
+        plat.salles[i].nb_j := 0;
+
+
     {Tests : Affichage des salles
     for i := 1 to 9 do
         begin
