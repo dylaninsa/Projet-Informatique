@@ -6,19 +6,21 @@ Interface
 uses unite, Crt, affichage;
 
 
-procedure jeu(var etui : Array of ListeCartes; plat : Plateau; var joueurs : ListeJoueurs);
-procedure tour(plat : Plateau; var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer);
+procedure jeu(var etui : Array of ListeCartes; var plat : Plateau; var joueurs : ListeJoueurs);
+procedure tour(var plat : Plateau; var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer);
 procedure finPartie(joueurs : ListeJoueurs; accusation : Boolean; var j_actif : Integer; var etui : Array of ListeCartes);
 {procedure quitterSauvegarder(joueurs:ListeJoueurs; plat:Plateau; var etui:Array of ListeCartes; var sauvegarde:File);}
 procedure deplacement(var plat : Plateau; lancer : Integer; var joueurs : ListeJoueurs; j_actif : Integer);
 procedure lancerDes(var lancer : Integer);
-procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : Array of ListeCartes);
+procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCartes; plat : Plateau; j_actif : Integer);
 procedure demandeJoueur(var hypo : Array of ListeCartes;joueurs : ListeJoueurs; j_actif : Integer);
 procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer);
+procedure placementSalle(var joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer);
 function estDansSalle(joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer) : Boolean;
-function estDansLaSalle(joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer) : ListeCartes;
+function estDansLaSalle(joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer) : Integer;
 function joueursEnVie(joueurs : ListeJoueurs) : Integer;
 function caseEstLibre(joueurs : ListeJoueurs; plat : Plateau; co : Coords) : Boolean;
+function joueursDansLaSalle(joueurs : ListeJoueurs; plat : Plateau; salle : Integer) : Integer;
 
 
 Implementation
@@ -40,7 +42,7 @@ end;
 
 
 
-procedure jeu(var etui : Array of ListeCartes; plat : Plateau; var joueurs : ListeJoueurs);
+procedure jeu(var etui : Array of ListeCartes; var plat : Plateau; var joueurs : ListeJoueurs);
 
 var j_actif : Integer;
     accusation : Boolean;
@@ -102,7 +104,7 @@ end;
 
 
 
-function estDansLaSalle(joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer) : ListeCartes;
+function estDansLaSalle(joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer) : Integer;
 
 var co : Coords;
     i : Integer;
@@ -110,22 +112,23 @@ var co : Coords;
 begin
     {Renvoie la salle dans laquelle le joueur se trouve}
     i := 1;
+    estDansLaSalle := 0;
     repeat
         begin
             for co in plat.salles[i].cases do
                 begin
                     if ((co[1] = joueurs[j_actif].pos[1]) AND (co[2] = joueurs[j_actif].pos[2])) then
-                        estDansLaSalle := plat.salles[i].nom;
+                        estDansLaSalle := i;
                 end;
             i := i + 1;
         end;
-        until (i = 10);        
+        until (estDansLaSalle <> 0);        
 
 end;
 
 
 
-procedure tour(plat : Plateau; var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer);
+procedure tour(var plat : Plateau; var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer);
 
 var c, lancer : Integer;
     hypo : Array [1..3] of ListeCartes;
@@ -171,13 +174,13 @@ begin
                         if (estDansSalle(joueurs, plat, j_actif)) then
                             begin
                                 affichageCartes(joueurs, j_actif);
-                                faireHypothese(joueurs, hypo);
+                                faireHypothese(joueurs, hypo, plat, j_actif);
                                 demandeJoueur(hypo, joueurs, j_actif);
                             end;
                     end;
                 2 : begin
                         affichageCartes(joueurs, j_actif);
-                        faireHypothese(joueurs, hypo);
+                        faireHypothese(joueurs, hypo, plat, j_actif);
                         demandeJoueur(hypo, joueurs, j_actif);
                     end;
                 3 : begin
@@ -192,7 +195,7 @@ begin
             if (estDansSalle(joueurs, plat, j_actif)) then
                 begin
                     affichageCartes(joueurs, j_actif);
-                    faireHypothese(joueurs, hypo);
+                    faireHypothese(joueurs, hypo, plat, j_actif);
                     demandeJoueur(hypo, joueurs, j_actif);
                 end;
         end;
@@ -203,7 +206,7 @@ end;
 procedure deplacement(var plat : Plateau; lancer : Integer; var joueurs : ListeJoueurs; j_actif : Integer);
 
 var key : Char;
-	move, i : Integer;
+	move : Integer;
     co : Coords;
     bouge : Boolean;
 
@@ -218,365 +221,364 @@ begin
     if estDansSalle(joueurs, plat, j_actif) then
         begin
             case estDansLaSalle(joueurs, plat, j_actif) of
-                Cuisine : 
-                        begin
-                            repeat
-                                key := readKey();
-                                case key of 
-                                    DOWN : 
-                                        begin
-                                            co[1] := 6;
-                                            co[2] := 9;
-                                            if (caseEstLibre(joueurs, plat, co)) then
-                                                begin
-                                                    affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                    joueurs[j_actif].pos[1] := co[1];
-                                                    joueurs[j_actif].pos[2] := co[2];
-                                                    move := move - 1;
-                                                    plat.salles[1].nb_j := plat.salles[1].nb_j - 1;
-                                                    bouge := True;
-                                                end;
-                                        end;
-                                    UP : 
-                                        begin
-                                            co[1] := 20;
-                                            co[2] := 23;
-                                            affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                            joueurs[j_actif].pos[1] := co[1];
-                                            joueurs[j_actif].pos[2] := co[2];
-                                            move := move - 1;
-                                            plat.salles[1].nb_j := plat.salles[1].nb_j - 1;
-                                            plat.salles[8].nb_j := plat.salles[8].nb_j + 1;
-                                            bouge := True;
-                                        end;
-                                end;
-                                until (bouge);
-                        end;
-                Grand_Salon : 
-                        begin
-
-                            repeat
-                                key := readKey();
-                                case key of 
-                                    DOWN : 
-                                        begin
-                                            co[1] := 11;
-                                            co[2] := 10;
-                                            if (caseEstLibre(joueurs, plat, co)) then
-                                                begin
-                                                    affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                    joueurs[j_actif].pos[1] := co[1];
-                                                    joueurs[j_actif].pos[2] := co[2];
-                                                    move := move - 1;
-                                                    plat.salles[2].nb_j := plat.salles[2].nb_j - 1;
-                                                    bouge := True;
-                                                end;
-                                        end;
-                                    UP :
-                                        begin
-                                            co[1] := 16;
-                                            co[2] := 10;
-                                            if (caseEstLibre(joueurs, plat, co)) then
-                                                begin
-                                                    affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                    joueurs[j_actif].pos[1] := co[1];
-                                                    joueurs[j_actif].pos[2] := co[2];
-                                                    move := move - 1;
-                                                    plat.salles[2].nb_j := plat.salles[2].nb_j - 1;
-                                                    bouge := True;
-                                                end;
-                                        end;
-                                    LEFT : 
-                                        begin
-                                            co[1] := 9;
-                                            co[2] := 7;
-                                            if (caseEstLibre(joueurs, plat, co)) then
-                                                begin
-                                                    affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                    joueurs[j_actif].pos[1] := co[1];
-                                                    joueurs[j_actif].pos[2] := co[2];
-                                                    move := move - 1;
-                                                    plat.salles[2].nb_j := plat.salles[2].nb_j - 1;
-                                                    bouge := True;
-                                                end;
-                                        end;
-                                    RIGHT :
-                                        begin
-                                            co[1] := 18;
-                                            co[2] := 7;
-                                            if (caseEstLibre(joueurs, plat, co)) then
-                                                begin
-                                                    affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                    joueurs[j_actif].pos[1] := co[1];
-                                                    joueurs[j_actif].pos[2] := co[2];
-                                                    move := move - 1;
-                                                    plat.salles[2].nb_j := plat.salles[2].nb_j - 1;
-                                                    bouge := True;
-                                                end;
-                                        end;
-                                end;
-                                until (bouge);
-                        end;
-                Petit_Salon : 
-                        begin
-                            repeat
-                                key := readKey();
-                                case key of 
-                                    DOWN : 
-                                        begin
-                                            co[1] := 21;
-                                            co[2] := 7;
-                                            if (caseEstLibre(joueurs, plat, co)) then
-                                                begin
-                                                    affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                    joueurs[j_actif].pos[1] := co[1];
-                                                    joueurs[j_actif].pos[2] := co[2];
-                                                    move := move - 1;
-                                                    plat.salles[3].nb_j := plat.salles[3].nb_j - 1;
-                                                    bouge := True;
-                                                end;
-                                        end;
-                                    UP : 
-                                        begin
-                                            co[1] := 7;
-                                            co[2] := 21;
-                                            affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                            joueurs[j_actif].pos[1] := co[1];
-                                            joueurs[j_actif].pos[2] := co[2];
-                                            move := move - 1;
-                                            plat.salles[3].nb_j := plat.salles[3].nb_j - 1;
-                                            plat.salles[7].nb_j := plat.salles[7].nb_j + 1;
-                                            bouge := True;
-                                        end;
-                                end;
-                                until (bouge);
-                        end;
-                Salle_a_manger : 
-                        begin
-                            repeat
-                                key := readKey();
-                                case key of 
-                                    DOWN : 
-                                        begin
-                                            co[1] := 8;
-                                            co[2] := 18;
-                                            if (caseEstLibre(joueurs, plat, co)) then
-                                                begin
-                                                    affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                    joueurs[j_actif].pos[1] := co[1];
-                                                    joueurs[j_actif].pos[2] := co[2];
-                                                    move := move - 1;
-                                                    plat.salles[4].nb_j := plat.salles[4].nb_j - 1;
-                                                    bouge := True;
-                                                end;
-                                        end;
-                                    RIGHT :
-                                        begin
-                                            co[1] := 10;
-                                            co[2] := 14;
-                                            if (caseEstLibre(joueurs, plat, co)) then
-                                                begin
-                                                    affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                    joueurs[j_actif].pos[1] := co[1];
-                                                    joueurs[j_actif].pos[2] := co[2];
-                                                    move := move - 1;
-                                                    plat.salles[4].nb_j := plat.salles[4].nb_j - 1;
-                                                    bouge := True;
-                                                end;
-                                        end;
-                                end;
-                                until (bouge);
-                        end;
-                Bureau : 
-                        begin
-                            repeat
-                                key := readKey();
-                                case key of 
-                                    DOWN : 
-                                        begin
-                                            co[1] := 24;
-                                            co[2] := 15;
-                                            if (caseEstLibre(joueurs, plat, co)) then
-                                                begin
-                                                    affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                    joueurs[j_actif].pos[1] := co[1];
-                                                    joueurs[j_actif].pos[2] := co[2];
-                                                    move := move - 1;
-                                                    plat.salles[5].nb_j := plat.salles[5].nb_j - 1;
-                                                    bouge := True;
-                                                end;
-                                        end;
-                                    LEFT :
-                                        begin
-                                            co[1] := 19;
-                                            co[2] := 11;
-                                            if (caseEstLibre(joueurs, plat, co)) then
-                                                begin
-                                                    affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                    joueurs[j_actif].pos[1] := co[1];
-                                                    joueurs[j_actif].pos[2] := co[2];
-                                                    move := move - 1;
-                                                    plat.salles[5].nb_j := plat.salles[5].nb_j - 1;
-                                                    bouge := True;
-                                                end;
-                                        end;
-                                end;
-                                until (bouge);
-                        end;
-                Bibliotheque : 
-                        begin
-                            repeat
-                                key := readKey();
-                                case key of 
-                                    UP : 
-                                        begin
-                                            co[1] := 22;
-                                            co[2] := 15;
-                                            if (caseEstLibre(joueurs, plat, co)) then
-                                                begin
-                                                    affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                    joueurs[j_actif].pos[1] := co[1];
-                                                    joueurs[j_actif].pos[2] := co[2];
-                                                    move := move - 1;
-                                                    plat.salles[6].nb_j := plat.salles[6].nb_j - 1;
-                                                    bouge := True;
-                                                end;
-                                        end;
-                                    LEFT :
-                                        begin
-                                            co[1] := 18;
-                                            co[2] := 18;
-                                            if (caseEstLibre(joueurs, plat, co)) then
-                                                begin
-                                                    affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                    joueurs[j_actif].pos[1] := co[1];
-                                                    joueurs[j_actif].pos[2] := co[2];
-                                                    move := move - 1;
-                                                    plat.salles[6].nb_j := plat.salles[6].nb_j - 1;
-                                                    bouge := True;
-                                                end;
-                                        end;
-                                end;
-                                until (bouge);
-                        end;
-                Veranda : 
-                        begin
-                            repeat
-                                key := readKey();
-                                case key of 
-                                    UP : 
-                                        begin
-                                            co[1] := 7;
-                                            co[2] := 20;
-                                            if (caseEstLibre(joueurs, plat, co)) then
-                                                begin
-                                                    affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                    joueurs[j_actif].pos[1] := co[1];
-                                                    joueurs[j_actif].pos[2] := co[2];
-                                                    move := move - 1;
-                                                    plat.salles[7].nb_j := plat.salles[7].nb_j - 1;
-                                                    bouge := True;
-                                                end;
-                                        end;
-                                    DOWN : 
-                                        begin
-                                            co[1] := 21;
-                                            co[2] := 6;
-                                            affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                            joueurs[j_actif].pos[1] := co[1];
-                                            joueurs[j_actif].pos[2] := co[2];
-                                            move := move - 1;
-                                            plat.salles[7].nb_j := plat.salles[7].nb_j - 1;
-                                            plat.salles[3].nb_j := plat.salles[3].nb_j + 1;
-                                            bouge := True;
-                                        end;
-                                end;
-                                until (bouge);
-                        end;
-                Studio : 
-                        begin
-                            repeat
-                                key := readKey();
-                                case key of 
-                                    UP : 
-                                        begin
-                                            co[1] := 20;
-                                            co[2] := 22;
-                                            if (caseEstLibre(joueurs, plat, co)) then
-                                                begin
-                                                    affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                    joueurs[j_actif].pos[1] := co[1];
-                                                    joueurs[j_actif].pos[2] := co[2];
-                                                    move := move - 1;
-                                                    plat.salles[8].nb_j := plat.salles[8].nb_j - 1;
-                                                    bouge := True;
-                                                end;
-                                        end;
-                                    DOWN : 
-                                        begin
-                                            co[1] := 6;
-                                            co[2] := 8;
-                                            affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                            joueurs[j_actif].pos[1] := co[1];
-                                            joueurs[j_actif].pos[2] := co[2];
-                                            move := move - 1;
-                                            plat.salles[8].nb_j := plat.salles[8].nb_j - 1;
-                                            plat.salles[1].nb_j := plat.salles[1].nb_j + 1;
-                                            bouge := True;
-                                        end;
-                                end;
-                                until (bouge);
-                        end;
-                Hall : 
-                        begin
-                            repeat
-                                key := readKey();
-                                case key of 
-                                    UP :
-                                        begin
-                                            co[1] := 14;
-                                            co[2] := 19;
-                                            if (caseEstLibre(joueurs, plat, co)) then
-                                                begin
-                                                    affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                    joueurs[j_actif].pos[1] := co[1];
-                                                    joueurs[j_actif].pos[2] := co[2];
-                                                    move := move - 1;
-                                                    plat.salles[9].nb_j := plat.salles[9].nb_j - 1;
-                                                    bouge := True;
-                                                end;
-                                        end;
-                                    LEFT : 
-                                        begin
-                                            co[1] := 13;
-                                            co[2] := 19;
-                                            if (caseEstLibre(joueurs, plat, co)) then
-                                                begin
-                                                    affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                    joueurs[j_actif].pos[1] := co[1];
-                                                    joueurs[j_actif].pos[2] := co[2];
-                                                    move := move - 1;
-                                                    plat.salles[9].nb_j := plat.salles[9].nb_j - 1;
-                                                    bouge := True;
-                                                end;
-                                        end;
-                                    RIGHT :
-                                        begin
-                                            co[1] := 17;
-                                            co[2] := 22;
-                                            if (caseEstLibre(joueurs, plat, co)) then
-                                                begin
-                                                    affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                    joueurs[j_actif].pos[1] := co[1];
-                                                    joueurs[j_actif].pos[2] := co[2];
-                                                    move := move - 1;
-                                                    plat.salles[9].nb_j := plat.salles[9].nb_j - 1;
-                                                    bouge := True;
-                                                end;
-                                        end;
-                                end;
-                                until (bouge);
-                        end;
+                1 : 
+                    begin
+                        repeat
+                            key := readKey();
+                            case key of 
+                                DOWN : 
+                                    begin
+                                        co[1] := 6;
+                                        co[2] := 9;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[1].nb_j := plat.salles[1].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                                UP : 
+                                    begin
+                                        co[1] := 20;
+                                        co[2] := 23;
+                                        affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                        joueurs[j_actif].pos[1] := co[1];
+                                        joueurs[j_actif].pos[2] := co[2];
+                                        move := move - 1;
+                                        plat.salles[1].nb_j := plat.salles[1].nb_j - 1;
+                                        plat.salles[8].nb_j := plat.salles[8].nb_j + 1;
+                                        bouge := True;
+                                    end;
+                            end;
+                            until (bouge);
+                    end;
+                2 : 
+                    begin
+                        repeat
+                            key := readKey();
+                            case key of 
+                                DOWN : 
+                                    begin
+                                        co[1] := 11;
+                                        co[2] := 10;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[2].nb_j := plat.salles[2].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                                UP :
+                                    begin
+                                        co[1] := 16;
+                                        co[2] := 10;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[2].nb_j := plat.salles[2].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                                LEFT : 
+                                    begin
+                                        co[1] := 9;
+                                        co[2] := 7;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[2].nb_j := plat.salles[2].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                                RIGHT :
+                                    begin
+                                        co[1] := 18;
+                                        co[2] := 7;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[2].nb_j := plat.salles[2].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                            end;
+                            until (bouge);
+                    end;
+                3 : 
+                    begin
+                        repeat
+                            key := readKey();
+                            case key of 
+                                DOWN : 
+                                    begin
+                                        co[1] := 21;
+                                        co[2] := 7;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[3].nb_j := plat.salles[3].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                                UP : 
+                                    begin
+                                        co[1] := 7;
+                                        co[2] := 21;
+                                        affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                        joueurs[j_actif].pos[1] := co[1];
+                                        joueurs[j_actif].pos[2] := co[2];
+                                        move := move - 1;
+                                        plat.salles[3].nb_j := plat.salles[3].nb_j - 1;
+                                        plat.salles[7].nb_j := plat.salles[7].nb_j + 1;
+                                        bouge := True;
+                                    end;
+                            end;
+                            until (bouge);
+                    end;
+                4 : 
+                    begin
+                        repeat
+                            key := readKey();
+                            case key of 
+                                DOWN : 
+                                    begin
+                                        co[1] := 8;
+                                        co[2] := 18;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[4].nb_j := plat.salles[4].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                                RIGHT :
+                                    begin
+                                        co[1] := 10;
+                                        co[2] := 14;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[4].nb_j := plat.salles[4].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                            end;
+                            until (bouge);
+                    end;
+                5 : 
+                    begin
+                        repeat
+                            key := readKey();
+                            case key of 
+                                DOWN : 
+                                    begin
+                                        co[1] := 24;
+                                        co[2] := 15;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[5].nb_j := plat.salles[5].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                                LEFT :
+                                    begin
+                                        co[1] := 19;
+                                        co[2] := 11;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[5].nb_j := plat.salles[5].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                            end;
+                            until (bouge);
+                    end;
+                6 : 
+                    begin
+                        repeat
+                            key := readKey();
+                            case key of 
+                                UP : 
+                                    begin
+                                        co[1] := 22;
+                                        co[2] := 15;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[6].nb_j := plat.salles[6].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                                LEFT :
+                                    begin
+                                        co[1] := 18;
+                                        co[2] := 18;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[6].nb_j := plat.salles[6].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                            end;
+                            until (bouge);
+                    end;
+                7 : 
+                    begin
+                        repeat
+                            key := readKey();
+                            case key of 
+                                UP : 
+                                    begin
+                                        co[1] := 7;
+                                        co[2] := 20;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[7].nb_j := plat.salles[7].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                                DOWN : 
+                                    begin
+                                        co[1] := 21;
+                                        co[2] := 6;
+                                        affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                        joueurs[j_actif].pos[1] := co[1];
+                                        joueurs[j_actif].pos[2] := co[2];
+                                        move := move - 1;
+                                        plat.salles[7].nb_j := plat.salles[7].nb_j - 1;
+                                        plat.salles[3].nb_j := plat.salles[3].nb_j + 1;
+                                        bouge := True;
+                                    end;
+                            end;
+                            until (bouge);
+                    end;
+                8 :
+                    begin
+                        repeat
+                            key := readKey();
+                            case key of 
+                                UP : 
+                                    begin
+                                        co[1] := 20;
+                                        co[2] := 22;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[8].nb_j := plat.salles[8].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                                DOWN : 
+                                    begin
+                                        co[1] := 6;
+                                        co[2] := 8;
+                                        affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                        joueurs[j_actif].pos[1] := co[1];
+                                        joueurs[j_actif].pos[2] := co[2];
+                                        move := move - 1;
+                                        plat.salles[8].nb_j := plat.salles[8].nb_j - 1;
+                                        plat.salles[1].nb_j := plat.salles[1].nb_j + 1;
+                                        bouge := True;
+                                    end;
+                            end;
+                            until (bouge);
+                    end;
+                9 : 
+                    begin
+                        repeat
+                            key := readKey();
+                            case key of 
+                                UP :
+                                    begin
+                                        co[1] := 14;
+                                        co[2] := 19;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[9].nb_j := plat.salles[9].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                                LEFT : 
+                                    begin
+                                        co[1] := 13;
+                                        co[2] := 19;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[9].nb_j := plat.salles[9].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                                RIGHT :
+                                    begin
+                                        co[1] := 17;
+                                        co[2] := 22;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[9].nb_j := plat.salles[9].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                            end;
+                            until (bouge);
+                    end;
             end;
         end;
 
@@ -641,14 +643,11 @@ begin
 
             {Ajout d'un joueur dans la salle}
             if estDansSalle(joueurs, plat, j_actif) then
-                begin
-                    for i := 1 to 9 do
-                        if (plat.salles[i].nom = estDansLaSalle(joueurs, plat, j_actif)) then
-                            plat.salles[i].nb_j := plat.salles[i].nb_j + 1;
-                end;
+                plat.salles[estDansLaSalle(joueurs, plat, j_actif)].nb_j := plat.salles[estDansLaSalle(joueurs, plat, j_actif)].nb_j + 1;
         end;
         
     
+    placementSalle(joueurs, plat, j_actif);
     affiche(joueurs[j_actif].pion, joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
     affichageDeplacement(move);
     Delay(500);
@@ -682,9 +681,9 @@ end;
 
 
 
-procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCartes);
+procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCartes; plat : Plateau; j_actif : Integer);
 
-var g1, g2, g3 : ListeCartes;
+var g1, g2 : ListeCartes;
 
 begin 
     {Enregistre les éléments de l'hypothèse}
@@ -698,9 +697,7 @@ begin
     readln(g2);
     hypo[2] := g2;
 
-    write('Selon vous, dans quelle salle l''assassinat aurait-il pu avoir lieu  ? ');
-    readln(g3);
-    hypo[3] := g3;
+    hypo[3] := plat.salles[estDansLaSalle(joueurs, plat, j_actif)].nom;
 end;
 
 
@@ -869,6 +866,272 @@ begin
             if ((co[1] = joueurs[i].pos[1]) AND (co[2] = joueurs[i].pos[2])) then
                 caseEstLibre := False;
         end;
+end;
+
+
+
+function joueursDansLaSalle(joueurs : ListeJoueurs; plat : Plateau; salle : Integer) : Integer;
+
+begin
+    joueursDansLaSalle := plat.salles[salle].nb_j;
+end;
+
+
+
+procedure placementSalle(var joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer);
+
+var co : Coords;
+
+begin
+	if estDansSalle(joueurs, plat, j_actif) then
+        begin
+            affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+			case estDansLaSalle(joueurs, plat, j_actif) of
+                1 : 
+                    begin
+						co[1] := 2;
+						co[2] := 5;
+                        case joueursDansLaSalle(joueurs, plat, 1) of
+							0 : begin
+									joueurs[j_actif].pos[1] := co[1];
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							1 :	begin
+									joueurs[j_actif].pos[1] := co[1] + 1;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							2 : begin
+									joueurs[j_actif].pos[1] := co[1] + 2;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							3 : begin
+									joueurs[j_actif].pos[1] := co[1] + 3;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							4 : begin
+									joueurs[j_actif].pos[1] := co[1] + 4;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+						end;
+                    end;
+                2 : 
+                    begin
+						co[1] := 11;
+						co[2] := 6;
+                        case joueursDansLaSalle(joueurs, plat, 2) of
+							0 : begin
+									joueurs[j_actif].pos[1] := co[1];
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							1 :	begin
+									joueurs[j_actif].pos[1] := co[1] + 1;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							2 : begin
+									joueurs[j_actif].pos[1] := co[1] + 2;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							3 : begin
+									joueurs[j_actif].pos[1] := co[1] + 3;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							4 : begin
+									joueurs[j_actif].pos[1] := co[1] + 4;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+						end;
+                    end;
+                3 : 
+                    begin
+                        co[1] := 21;
+						co[2] := 4;
+                        case joueursDansLaSalle(joueurs, plat, 3) of
+							0 : begin
+									joueurs[j_actif].pos[1] := co[1];
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							1 :	begin
+									joueurs[j_actif].pos[1] := co[1] + 1;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							2 : begin
+									joueurs[j_actif].pos[1] := co[1] + 2;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							3 : begin
+									joueurs[j_actif].pos[1] := co[1] + 3;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							4 : begin
+									joueurs[j_actif].pos[1] := co[1] + 4;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+						end;
+                    end;
+                4 : 
+                    begin
+                        co[1] := 3;
+						co[2] := 14;
+                        case joueursDansLaSalle(joueurs, plat, 4) of
+							0 : begin
+									joueurs[j_actif].pos[1] := co[1];
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							1 :	begin
+									joueurs[j_actif].pos[1] := co[1] + 1;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							2 : begin
+									joueurs[j_actif].pos[1] := co[1] + 2;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							3 : begin
+									joueurs[j_actif].pos[1] := co[1] + 3;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							4 : begin
+									joueurs[j_actif].pos[1] := co[1] + 4;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+						end;
+                    end;
+                5 : 
+                    begin
+                        co[1] := 21;
+						co[2] := 12;
+                        case joueursDansLaSalle(joueurs, plat, 5) of
+							0 : begin
+									joueurs[j_actif].pos[1] := co[1];
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							1 :	begin
+									joueurs[j_actif].pos[1] := co[1] + 1;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							2 : begin
+									joueurs[j_actif].pos[1] := co[1] + 2;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							3 : begin
+									joueurs[j_actif].pos[1] := co[1] + 3;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							4 : begin
+									joueurs[j_actif].pos[1] := co[1] + 4;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+						end;
+                    end;
+                6 : 
+                    begin
+                        co[1] := 21;
+						co[2] := 18;
+                        case joueursDansLaSalle(joueurs, plat, 6) of
+							0 : begin
+									joueurs[j_actif].pos[1] := co[1];
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							1 :	begin
+									joueurs[j_actif].pos[1] := co[1] + 1;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							2 : begin
+									joueurs[j_actif].pos[1] := co[1] + 2;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							3 : begin
+									joueurs[j_actif].pos[1] := co[1] + 3;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							4 : begin
+									joueurs[j_actif].pos[1] := co[1] + 4;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+						end;
+                    end;
+                7 : 
+                    begin
+                        co[1] := 3;
+						co[2] := 24;
+                        case joueursDansLaSalle(joueurs, plat, 7) of
+							0 : begin
+									joueurs[j_actif].pos[1] := co[1];
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							1 :	begin
+									joueurs[j_actif].pos[1] := co[1] + 1;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							2 : begin
+									joueurs[j_actif].pos[1] := co[1] + 2;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							3 : begin
+									joueurs[j_actif].pos[1] := co[1] + 3;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							4 : begin
+									joueurs[j_actif].pos[1] := co[1] + 4;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+						end;
+                    end;
+                8 : 
+                    begin
+                        co[1] := 21;
+						co[2] := 25;
+                        case joueursDansLaSalle(joueurs, plat, 8) of
+							0 : begin
+									joueurs[j_actif].pos[1] := co[1];
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							1 :	begin
+									joueurs[j_actif].pos[1] := co[1] + 1;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							2 : begin
+									joueurs[j_actif].pos[1] := co[1] + 2;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							3 : begin
+									joueurs[j_actif].pos[1] := co[1] + 3;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							4 : begin
+									joueurs[j_actif].pos[1] := co[1] + 4;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+						end;
+                    end;
+                9 : 
+                    begin
+                        co[1] := 12;
+						co[2] := 24;
+                        case joueursDansLaSalle(joueurs, plat, 9) of
+							0 : begin
+									joueurs[j_actif].pos[1] := co[1];
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							1 :	begin
+									joueurs[j_actif].pos[1] := co[1] + 1;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							2 : begin
+									joueurs[j_actif].pos[1] := co[1] + 2;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							3 : begin
+									joueurs[j_actif].pos[1] := co[1] + 3;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							4 : begin
+									joueurs[j_actif].pos[1] := co[1] + 1;
+									joueurs[j_actif].pos[2] := co[2] + 1;
+								end;
+						end;
+                    end;
+			end;
+		end;
 end;
 
 
