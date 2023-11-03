@@ -35,5 +35,4 @@ Si vous avez des question posez les moi.
 
 **Bugs à corriger :**
 
-- Vérifier que l'accusation corresponde à l'étui
 - Repositionner les pions dans une salle si un pion sort de celle-ci
