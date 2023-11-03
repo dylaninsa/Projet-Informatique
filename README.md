@@ -29,12 +29,11 @@ Si vous avez des question posez les moi.
 
 **Fonctionnalités à implémenter :**
 
-- Obliger le lieu de l'hypothèse à être la salle dans laquelle le pion se trouve
 - Vérifier que chaque élément des hypothèses et accusations soient bien de la bonne catégorie (meurtrier, arme, lieu)
 - Sauvegarder / Charger partie
 - Fiches de chaque personnage
-- Une salle = Une case => différentes cases si plusieurs pions dans une même salle
 
 **Bugs à corriger :**
 
 - Vérifier que l'accusation corresponde à l'étui
+- Repositionner les pions dans une salle si un pion sort de celle-ci
