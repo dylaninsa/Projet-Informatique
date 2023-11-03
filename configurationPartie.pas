@@ -242,7 +242,7 @@ begin
     SetLength(liste_cartes, 0);
 
 
-    jeu(etui, plat, joueurs);
+    jeu(etui, plat, joueurs, environnement);
 
 
     {Tests : affichage de tous les attributs de tout les joueurs (à enlever plus tard)
@@ -256,7 +256,6 @@ begin
         end;}
     
     
-
     {Libération espace mémoire}
     SetLength(joueurs, 0); // le laisser à la fin de cette procédure
 
@@ -332,6 +331,9 @@ begin
                 plat.salles[i].nom := carte;
                 i := i+1;
             end;
+
+    
+    {fermeture du fichier}
     close(fic);
 
 

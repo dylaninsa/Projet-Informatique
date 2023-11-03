@@ -6,15 +6,15 @@ Interface
 uses unite, Crt, affichage;
 
 
-procedure jeu(var etui : Array of ListeCartes; var plat : Plateau; var joueurs : ListeJoueurs);
-procedure tour(var plat : Plateau; var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer);
+procedure jeu(var etui : Array of ListeCartes; var plat : Plateau; var joueurs : ListeJoueurs; environnement : Enviro);
+procedure tour(var plat : Plateau; var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
 procedure finPartie(joueurs : ListeJoueurs; accusation : Boolean; var j_actif : Integer; var etui : Array of ListeCartes);
 {procedure quitterSauvegarder(joueurs:ListeJoueurs; plat:Plateau; var etui:Array of ListeCartes; var sauvegarde:File);}
 procedure deplacement(var plat : Plateau; lancer : Integer; var joueurs : ListeJoueurs; j_actif : Integer);
 procedure lancerDes(var lancer : Integer);
-procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCartes; plat : Plateau; j_actif : Integer);
+procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCartes; plat : Plateau; j_actif : Integer; environnement : Enviro);
 procedure demandeJoueur(var hypo : Array of ListeCartes;joueurs : ListeJoueurs; j_actif : Integer);
-procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer);
+procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
 procedure placementSalle(var joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer);
 function estDansSalle(joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer) : Boolean;
 function estDansLaSalle(joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer) : Integer;
@@ -42,7 +42,7 @@ end;
 
 
 
-procedure jeu(var etui : Array of ListeCartes; var plat : Plateau; var joueurs : ListeJoueurs);
+procedure jeu(var etui : Array of ListeCartes; var plat : Plateau; var joueurs : ListeJoueurs; environnement : Enviro);
 
 var j_actif : Integer;
     accusation : Boolean;
@@ -59,7 +59,7 @@ begin
     repeat 
         begin 
             if (joueurs[j_actif].enVie) then
-                tour(plat, etui, joueurs, accusation, j_actif);
+                tour(plat, etui, joueurs, accusation, j_actif, environnement);
             
             if (accusation) then
                 Break;
@@ -131,7 +131,7 @@ end;
 
 
 
-procedure tour(var plat : Plateau; var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer);
+procedure tour(var plat : Plateau; var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
 
 var c, lancer : Integer;
     hypo : Array [1..3] of ListeCartes;
@@ -177,17 +177,17 @@ begin
                         if (estDansSalle(joueurs, plat, j_actif)) then
                             begin
                                 affichageCartes(joueurs, j_actif);
-                                faireHypothese(joueurs, hypo, plat, j_actif);
+                                faireHypothese(joueurs, hypo, plat, j_actif, environnement);
                                 demandeJoueur(hypo, joueurs, j_actif);
                             end;
                     end;
                 2 : begin
                         affichageCartes(joueurs, j_actif);
-                        faireHypothese(joueurs, hypo, plat, j_actif);
+                        faireHypothese(joueurs, hypo, plat, j_actif, environnement);
                         demandeJoueur(hypo, joueurs, j_actif);
                     end;
                 3 : begin
-                        faireAccusation(etui, joueurs, accusation, j_actif);
+                        faireAccusation(etui, joueurs, accusation, j_actif, environnement);
                     end;
             end;
         end
@@ -198,7 +198,7 @@ begin
             if (estDansSalle(joueurs, plat, j_actif)) then
                 begin
                     affichageCartes(joueurs, j_actif);
-                    faireHypothese(joueurs, hypo, plat, j_actif);
+                    faireHypothese(joueurs, hypo, plat, j_actif, environnement);
                     demandeJoueur(hypo, joueurs, j_actif);
                 end;
         end;
@@ -684,20 +684,48 @@ end;
 
 
 
-procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCartes; plat : Plateau; j_actif : Integer);
+procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCartes; plat : Plateau; j_actif : Integer; environnement : Enviro);
 
-var g1, g2 : ListeCartes;
+var g1, g2, carte : ListeCartes;
+    perso, arme : set of ListeCartes;
 
 begin 
+    {Déclaration et remplissage des ensembles personnage et arme propre à l'envrionnement}
+    perso := [];
+    arme := [];
+    if environnement = Manoir then
+        begin
+            for carte := Colonel_Moutarde to Madame_Leblanc do
+                Include(perso, carte);
+            for carte := Poignard to Clef_Anglaise do
+                Include(arme, carte);
+        end
+    else
+        begin
+            for carte := Monsieur_Bredel to Infirmiere do
+                Include(perso, carte);
+            for carte := Seringue to Pouf_Rouge do
+                Include(arme, carte);
+        end;
+
+
     {Enregistre les éléments de l'hypothèse}
     writeln('Vous allez formuler une hypothèse !');
 
-    write('Selon vous, qui pourrait-être l''assassin ? ');
-    readln(g1);
+    repeat
+        write('Selon vous, qui pourrait-être l''assassin ? ');
+        readln(g1);
+        if not(g1 in perso) then
+            writeln('La carte ne correspond pas à un personnage.')
+        until (g1 in perso);
     hypo[1] := g1;
 
-    write('Selon vous, quelle pourrait-être l''arme du crime ? ');
-    readln(g2);
+    repeat
+        write('Selon vous, quelle pourrait-être l''arme du crime ? ');
+        readln(g2);
+        if not(g2 in arme) then
+            writeln('La carte ne correspond pas à une arme')
+        until (g2 in arme);
     hypo[2] := g2;
 
     hypo[3] := plat.salles[estDansLaSalle(joueurs, plat, j_actif)].nom;
@@ -790,43 +818,74 @@ end;
 
 
 
-procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer);
+procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
 
-var guess : Array [1..3] of ListeCartes;
+var guess : Array [0..2] of ListeCartes;
     g1, g2, g3, carte : ListeCartes;
-    ens1, ens2 : set of ListeCartes;
+    perso, arme, lieu : set of ListeCartes;
 
 begin 
+    {Déclaration et remplissage des ensembles personnage et arme propre à l'envrionnement}
+    perso := [];
+    arme := [];
+    lieu := [];
+    if environnement = Manoir then
+        begin
+            for carte := Colonel_Moutarde to Madame_Leblanc do
+                Include(perso, carte);
+            for carte := Poignard to Clef_Anglaise do
+                Include(arme, carte);
+            for carte := Cuisine to Hall do
+                Include(lieu, carte);
+        end
+    else
+        begin  
+            for carte := Monsieur_Bredel to Infirmiere do
+                Include(perso, carte);
+            for carte := Seringue to Pouf_Rouge do
+                Include(arme, carte);
+            for carte := Cafete to BU do
+                Include(lieu, carte);
+        end;
+
+
     {Enregistre les éléments de l'accusation}
     writeln('Vous allez formuler une accusation !');
 
-    write('Selon vous, qui est l''assassin ? ');
-    readln(g1);
-    guess[1] := g1;
+    repeat
+        write('Selon vous, qui est l''assassin ? ');
+        readln(g1);
+        if not(g1 in perso) then
+            writeln('La carte ne correspond pas à un personnage.')
+        until (g1 in perso);
+    guess[0] := g1;
 
-    write('Selon vous, quelle est l''arme du crime ? ');
-    readln(g2);
-    guess[2] := g2;
+    repeat
+        write('Selon vous, quelle est l''arme du crime ? ');
+        readln(g2);
+        if not(g2 in arme) then
+            writeln('La carte ne correspond pas à une arme')
+        until (g2 in arme);
+    guess[1] := g2;
 
-    write('Selon vous, dans quelle salle l''assassinat a-t-il eu lieu ? ');
-    readln(g3);
-    guess[3] := g3;
+    repeat
+        write('Selon vous, dans quelle salle l''assassinat a-t-il eu lieu ? ');
+        readln(g3);
+        if not(g3 in lieu) then
+            writeln('La carte ne correspond pas à un lieu')
+        until (g3 in lieu);
+    guess[2] := g3;
 
-    
-    {Inclus les éléments de l'accusation et de l'étui dans deux ensembles différents}
-    ens1 := [];
-    ens2 := [];
-    for carte in guess do
-        Include(ens1, carte);
-    
-    for carte in etui do
-        Include(ens2, carte);
 
     {Vérifie que les ensembles de l'accusation et de l'étui coincident, sinon le joueur du tour meurt}
-    if (ens1 = ens2) then
+    if ((etui[0] = guess[0]) AND (etui[1] = guess[1]) AND (etui[2] = guess[2])) then
         accusation := True
     else
-        joueurs[j_actif].enVie := False;
+        begin
+            joueurs[j_actif].enVie := False;
+            ClrScr;
+            Writeln('Malheuresement, l''accusation de ', joueurs[j_actif].nom, ' n''était pas la bonne. Il ne fait donc plus partie de l''enquête.');
+        end;
 end;
 
 
