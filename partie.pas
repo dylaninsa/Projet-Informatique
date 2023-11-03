@@ -61,6 +61,9 @@ begin
             if (joueurs[j_actif].enVie) then
                 tour(plat, etui, joueurs, accusation, j_actif);
             
+            if (accusation) then
+                Break;
+            
             writeln('Appuyer sur ''Q'' pour quitter ou sur n''importe quelle autre touche pour continuer.');
             key := readKey();
 
@@ -70,7 +73,7 @@ begin
                 j_actif := j_actif + 1;
         
         end;
-        until ((key = QUIT) OR accusation OR (joueursEnVie(joueurs) < 2));
+        until ((key = QUIT) OR (joueursEnVie(joueurs) < 1));
     
 
     {Fini la partie}
@@ -791,6 +794,7 @@ procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJo
 
 var guess : Array [1..3] of ListeCartes;
     g1, g2, g3, carte : ListeCartes;
+    ens1, ens2 : set of ListeCartes;
 
 begin 
     {Enregistre les éléments de l'accusation}
@@ -804,25 +808,22 @@ begin
     readln(g2);
     guess[2] := g2;
 
-    write('Selon vous, dans quelle salle l''assassinat a-t-il eu lieu  ? ');
+    write('Selon vous, dans quelle salle l''assassinat a-t-il eu lieu ? ');
     readln(g3);
     guess[3] := g3;
 
+    
+    {Inclus les éléments de l'accusation et de l'étui dans deux ensembles différents}
+    ens1 := [];
+    ens2 := [];
+    for carte in guess do
+        Include(ens1, carte);
+    
+    for carte in etui do
+        Include(ens2, carte);
 
-    {Tests : Boolean vérifiant que l'accusation et l'étui coincident > Il ne les compare pas donc erreurs sur le if d'après
-    for carte in etui do write(carte, ' ');
-    writeln();
-    for carte in guess do write(carte, ' ');
-    writeln();
-    writeln((etui[1] = guess[1]));
-    writeln((etui[2] = guess[2]));
-    writeln((etui[3] = guess[3]));
-    writeln((etui[1] = guess[1]) AND (etui[2] = guess[2]) AND (etui[3] = guess[3]));
-    Delay(5000);}
-
-
-    {Vérifie que l'accusation et l'étui coincident, sinon le joueur du tour meurt}
-    if ((etui[1] = guess[1]) AND (etui[2] = guess[2]) AND (etui[3] = guess[3])) then
+    {Vérifie que les ensembles de l'accusation et de l'étui coincident, sinon le joueur du tour meurt}
+    if (ens1 = ens2) then
         accusation := True
     else
         joueurs[j_actif].enVie := False;
@@ -831,6 +832,8 @@ end;
 
 
 procedure finPartie(joueurs : ListeJoueurs; accusation : Boolean; var j_actif : Integer; var etui : Array of ListeCartes);
+
+var carte : ListeCartes;
 
 begin
     {Si l'accusation est vérifiée alors affiche le gagnant, sinon annonce affiche la défaite de tous}
@@ -843,7 +846,9 @@ begin
     
             writeln('La partie est terminée ! Un enquêteur a trouvé le meurtrier, l''arme du crime et le lieu de l''assassinnat.');
             writeln('Et cet en enquêteur est ', joueurs[j_actif].perso, ' !');
-            writeln('Voici les éléments du meurtre : ', etui[1], ' ', etui[2], ' ', etui[3], '.')
+            write('Voici les éléments du meurtre : ');
+            for carte in etui do
+                write(carte, ' ');
         end
     else
         begin
