@@ -11,7 +11,7 @@ procedure affichagePlateau(plat : Plateau; joueurs : ListeJoueurs);
 procedure affichageDes(de1 : Integer; de2 : Integer);
 procedure affichageCartes(joueurs : ListeJoueurs; j : Integer);
 procedure affichageDeplacement(move : Integer);
-procedure affichageMontrerCartes(var commun : Array of ListeCartes; joueurs : ListeJoueurs; j : Integer; var reveal : ListeCartes);
+procedure affichageMontrerCartes(var commun : Array of ListeCartes; joueurs : ListeJoueurs; j : Integer; j_actif : Integer; var reveal : ListeCartes);
 
 
 
@@ -53,6 +53,17 @@ begin
 			GotoXY(joueurs[i].pos[1], joueurs[i].pos[2]);
 			write(joueurs[i].pion);
 		end;
+
+
+	{Affichage des passages secrets}
+	GotoXY(4, 3);
+	write('#');
+	GotoXY(23, 26);
+	write('#');
+	GotoXY(23, 3);
+	write('@');
+	GotoXY(5, 26);
+	write('@');
 end;
 
     
@@ -90,13 +101,21 @@ end;
 
 
 
-procedure affichageMontrerCartes(var commun : Array of ListeCartes; joueurs : ListeJoueurs; j : Integer; var reveal : ListeCartes);
+procedure affichageMontrerCartes(var commun : Array of ListeCartes; joueurs : ListeJoueurs; j : Integer; j_actif : Integer; var reveal : ListeCartes);
 
-var I : Integer;
-	continue : Char;
+var continue : Char;
+	ens : set of ListeCartes;
+	carte : ListeCartes;
+	i : Integer;
 
 begin
-	{Montre les cartes en commun entre le joueur j et l'hypothèse formulée pendant le tour}
+	{Délcaration et implémentation des cartes en commun dans un ensemble}
+	ens := [];
+	for i := 1 to length(commun) do
+		Include(ens, commun[i]);
+
+
+	{Montre les cartes en commun entre le joueur j et l'hypothèse formulée pendant le tour et lui demande quelle carte montrer}
 	writeln(joueurs[j].perso, ', c''est à vous !');
 
 	repeat
@@ -104,11 +123,32 @@ begin
         until (continue = #32);
 
 	write('Voici les cartes en commun entre vos cartes et celles de l''hypothèse acuelle : ');
-	for i := 1 to length(commun) do
-		write(commun[i], ' ');
+	for carte in ens do
+		write(carte, ' ');
 	writeln();
-	write('Quelle carte voulez-vous montrer ? ');
-	readln(reveal);
+
+	repeat
+        write('Quelle carte voulez-vous montrer ? ');
+		readln(reveal);
+        if not(reveal in ens) then
+            writeln('La carte ne correspond aux cartes en commun.')
+        until (reveal in ens);
+	
+
+	{Montre la carte choisie par j au j_actif}
+    ClrScr;
+    writeln(joueurs[j_actif].perso, ', ', joueurs[j].perso, ' vous montre une de ses cartes. Êtes-vous prêt ?  (Appuyer sur ''espace'')');
+
+    repeat
+        continue := readKey();
+        until (continue = #32);
+
+    writeln('La carte que ', joueurs[j].perso, ' vous montre est : ', reveal, '(Appuyer sur ''espace'')');
+
+    repeat
+       continue := readKey();
+        until (continue = #32);
+    ClrScr;
 end;
 
 

@@ -740,7 +740,6 @@ var i, j, k, l, nb : Integer;
     commun : Array of ListeCartes;
     temp : set of ListeCartes;
     reveal, carte : ListeCartes;
-    continue : Char;
 
 begin
     {Demande aux joueurs suivants si il possède une des cartes de l'hypothèse formulée}
@@ -783,14 +782,14 @@ begin
                         l := l + 1;
                     end;
 
-                affichageMontrerCartes(commun, joueurs, j, reveal);
+                affichageMontrerCartes(commun, joueurs, j, j_actif, reveal);
                 montrer := True;
                 SetLength(commun, 0);
             end
         else
             begin
                 writeln(joueurs[j].perso, ' n''as aucune des cartes de votre hypothèse.');
-                Delay(500);
+                Delay(1000);
             end;
 
         
@@ -798,21 +797,8 @@ begin
         until (montrer OR (i = length(joueurs)));
 
 
-    {Affiche au joueur du tour la carte d'un des joueurs coincidant avec l'hypothèse formulée, si elle existe}
-    if (montrer) then
-        begin
-            ClrScr;
-            writeln(joueurs[j_actif].perso, ', ', joueurs[j].perso, ' vous montre une de ses cartes. Êtes-vous prêt ?  (Appuyer sur ''espace'')');
-            repeat
-                continue := readKey();
-                until (continue = #32);
-            writeln('La carte que ', joueurs[j].perso, ' vous montre est : ', reveal, '(Appuyer sur ''espace'')');
-            repeat
-                continue := readKey();
-                until (continue = #32);
-            ClrScr;
-        end
-    else
+    {Affiche au j_actif qu'aucun des joueurs ne possède les cartes de l'hypothèse si c'est le cas}
+    if not(montrer) then
         writeln('Aucun des joueurs de cette partie ne possède une carte de votre hypothèse !');
 end;
 
@@ -884,7 +870,7 @@ begin
         begin
             joueurs[j_actif].enVie := False;
             ClrScr;
-            Writeln('Malheuresement, l''accusation de ', joueurs[j_actif].nom, ' n''était pas la bonne. Il ne fait donc plus partie de l''enquête.');
+            Writeln('Malheuresement, l''accusation de ', joueurs[j_actif].perso, ' n''était pas la bonne. Il ne fait donc plus partie de l''enquête.');
         end;
 end;
 
