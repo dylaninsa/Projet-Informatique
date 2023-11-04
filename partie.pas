@@ -61,8 +61,6 @@ begin
             if (joueurs[j_actif].enVie) then
                 tour(plat, etui, joueurs, accusation, j_actif, environnement);
             
-            if (accusation) then
-                Break;
             
             writeln('Appuyer sur ''Q'' pour quitter ou sur n''importe quelle autre touche pour continuer.');
             key := readKey();
@@ -855,7 +853,7 @@ begin
             end
         else
             begin
-                colorPerso(joueurs, j_actif);
+                colorPerso(joueurs, j);
                 write(joueurs[j].perso);
                 TextColor(15);
                 writeln(' n''as aucune des cartes de votre hypothese.');
@@ -969,9 +967,7 @@ begin
             write(joueurs[j_actif].perso);
             TextColor(15); 
             writeln(' !');
-            write('Voici les elements du meurtre : ');
-            for carte in etui do
-                write(carte, ' ');
+            write('Voici les elements du meurtre : ', etui[0], ' ', etui[1], ' ', etui[2], '.');
         end
     else
         begin
