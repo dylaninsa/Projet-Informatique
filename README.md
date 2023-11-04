@@ -31,3 +31,5 @@ Si vous avez des question posez les moi.
 
 - Sauvegarder / Charger partie
 - Fiches de chaque personnage
+- Téléportation des joueurs lors de l'accusation
+- Afficher constamment le plateau à droite
