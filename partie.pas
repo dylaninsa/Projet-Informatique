@@ -153,6 +153,8 @@ begin
 
     {Affiche les cartes du joueurs qui joue}
     affichageCartes(joueurs, j_actif);
+    if estDansSalle(joueurs, plat, j_actif) then
+        writeln('Vous etes actuellement dans la salle : ', plat.salles[estDansLaSalle(joueurs, plat, j_actif)].nom, '.');
     writeln('(Appuyer sur ''espace'')');
     repeat
         continue := readKey();

@@ -198,7 +198,7 @@ begin
 	colorPerso(joueurs, j);
     write(joueurs[j].perso);
     TextColor(15);
-	writeln(' vous montre une de ses cartes. Êtes-vous pret ?  (Appuyer sur ''espace'')');
+	writeln(' vous montre une de ses cartes. Etes-vous pret ?  (Appuyer sur ''espace'')');
 
     repeat
         continue := readKey();
