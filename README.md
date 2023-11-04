@@ -31,7 +31,3 @@ Si vous avez des question posez les moi.
 
 - Sauvegarder / Charger partie
 - Fiches de chaque personnage
-
-**Bugs à corriger :**
-
-- Repositionner les pions dans une salle si un pion sort de celle-ci
