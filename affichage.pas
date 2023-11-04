@@ -11,6 +11,7 @@ procedure affichagePlateau(plat : Plateau; joueurs : ListeJoueurs);
 procedure affichageCartes(joueurs : ListeJoueurs; j : Integer);
 procedure affichageDeplacement(move : Integer);
 procedure affichageMontrerCartes(var commun : Array of ListeCartes; joueurs : ListeJoueurs; j : Integer; j_actif : Integer; var reveal : ListeCartes);
+procedure colorPerso(joueurs : ListeJoueurs; j : Integer);
 
 
 
@@ -68,11 +69,11 @@ begin
 	
 
 	{Affichage du nom des salles}
-	GotoXY(4, 4);
+	GotoXY(4, 3);
 	write(plat.salles[1].nom);
 	GotoXY(21, 5);
 	write(plat.salles[2].nom);
-	GotoXY(40, 4);
+	GotoXY(40, 3);
 	write(plat.salles[3].nom);
 	GotoXY(2, 13);
 	write(plat.salles[4].nom);
@@ -114,13 +115,13 @@ begin
 
 	{Affichage des passages secrets}
 	TextColor(8);
-	GotoXY(7, 3);
+	GotoXY(7, 2);
 	write('#');
-	GotoXY(45, 26);
+	GotoXY(45, 27);
 	write('#');
-	GotoXY(45, 3);
+	GotoXY(45, 2);
 	write('@');
-	GotoXY(9, 26);
+	GotoXY(9, 27);
 	write('@');
 	TextColor(15);
 end;
@@ -146,7 +147,7 @@ procedure affichageDeplacement(move : Integer);
 begin
 	{Affiche le nombre de déplacements restant}
 	GotoXY(70, 15);
-	write('Déplacements restants : ', move, ' ');
+	write('Deplacements restants : ', move, ' ');
 end;
 
 
@@ -166,13 +167,16 @@ begin
 
 
 	{Montre les cartes en commun entre le joueur j et l'hypothèse formulée pendant le tour et lui demande quelle carte montrer}
-	writeln(joueurs[j].perso, ', c''est à vous !');
+	colorPerso(joueurs, j);
+    write(joueurs[j].perso);
+    TextColor(15);
+	writeln(', c''est a vous !');
 
 	repeat
         continue := readKey();
         until (continue = #32);
 
-	write('Voici les cartes en commun entre vos cartes et celles de l''hypothèse acuelle : ');
+	write('Voici les cartes en commun entre vos cartes et celles de l''hypothese acuelle : ');
 	for carte in ens do
 		write(carte, ' ');
 	writeln();
@@ -187,19 +191,51 @@ begin
 
 	{Montre la carte choisie par j au j_actif}
     ClrScr;
-    writeln(joueurs[j_actif].perso, ', ', joueurs[j].perso, ' vous montre une de ses cartes. Êtes-vous prêt ?  (Appuyer sur ''espace'')');
+	colorPerso(joueurs, j_actif);
+    write(joueurs[j_actif].perso);
+    TextColor(15);
+    write(', ');
+	colorPerso(joueurs, j);
+    write(joueurs[j].perso);
+    TextColor(15);
+	writeln(' vous montre une de ses cartes. Êtes-vous pret ?  (Appuyer sur ''espace'')');
 
     repeat
         continue := readKey();
         until (continue = #32);
 
-    writeln('La carte que ', joueurs[j].perso, ' vous montre est : ', reveal, ' (Appuyer sur ''espace'')');
+    write('La carte que ');
+	colorPerso(joueurs, j);
+    write(joueurs[j].perso);
+    TextColor(15);
+	writeln(' vous montre est : ', reveal, ' (Appuyer sur ''espace'')');
 
     repeat
         continue := readKey();
         until (continue = #32);
 
     ClrScr;
+end;
+
+
+
+procedure colorPerso(joueurs : ListeJoueurs; j : Integer);
+
+begin
+    case joueurs[j].perso of
+		Colonel_Moutarde : TextColor(14);
+		Madame_Pervenche : TextColor(1);
+		Madame_Leblanc : TextColor(15);
+		Docteur_Olive : TextColor(2);
+		Mademoiselle_Rose : TextColor(13);
+		Professeur_Violet : TextColor(5);
+		Monsieur_Bredel : TextColor(3);
+		Madame_LArcheveque : TextColor(13);
+		Yohann_Lepailleur : TextColor(14);
+		Le_Directeur : TextColor(15);
+		Infirmiere : TextColor(4);
+		Monsieur_Thibault : TextColor(11);
+	end;
 end;
 
 

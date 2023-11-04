@@ -22,6 +22,7 @@ function caseEstLibre(joueurs : ListeJoueurs; plat : Plateau; co : Coords) : Boo
 function joueursDansLaSalle(joueurs : ListeJoueurs; plat : Plateau; salle : Integer) : Integer;
 
 
+
 Implementation
 
 
@@ -142,7 +143,11 @@ var c, lancer : Integer;
 begin
     {Indique le personnage qui joue}
     ClrScr;
-    writeln('C''est à ', joueurs[j_actif].perso, ' de jouer ! (Appuyer sur ''espace'')');
+    write('C''est a ');
+    colorPerso(joueurs, j_actif);
+    write(joueurs[j_actif].perso);
+    TextColor(15);
+    writeln(' de jouer ! (Appuyer sur ''espace'')');
     repeat
         continue := readKey();
         until (continue = #32);
@@ -162,7 +167,7 @@ begin
             if (estDansLaSalle(joueurs, plat, j_actif) = 10) then
                 begin
                     writeln('Que voulez-vous faire :');
-                    writeln('   1 : Vous déplacer');
+                    writeln('   1 : Vous deplacer');
                     writeln('   2 : Formuler une accusation');  
 
                     repeat
@@ -178,6 +183,7 @@ begin
                                 deplacement(plat, lancer, joueurs, j_actif);
                                 if (estDansSalle(joueurs, plat, j_actif)) then
                                     begin
+                                        ClrScr;
                                         affichageCartes(joueurs, j_actif);
                                         if (estDansLaSalle(joueurs, plat, j_actif) <> 10) then
                                             faireHypothese(joueurs, hypo, plat, j_actif, environnement)
@@ -194,8 +200,8 @@ begin
             else 
                 begin
                     writeln('Que voulez-vous faire :');
-                    writeln('   1 : Vous déplacer');
-                    writeln('   2 : Formuler une hypothèse'); 
+                    writeln('   1 : Vous deplacer');
+                    writeln('   2 : Formuler une hypothese'); 
 
                     repeat
                         write('Votre choix est : ');
@@ -210,6 +216,7 @@ begin
                                 deplacement(plat, lancer, joueurs, j_actif);
                                 if (estDansSalle(joueurs, plat, j_actif)) then
                                     begin
+                                        ClrScr;
                                         affichageCartes(joueurs, j_actif);
                                         if (estDansLaSalle(joueurs, plat, j_actif) <> 10) then
                                             faireHypothese(joueurs, hypo, plat, j_actif, environnement)
@@ -230,6 +237,7 @@ begin
             deplacement(plat, lancer, joueurs, j_actif);
             if (estDansSalle(joueurs, plat, j_actif)) then
                 begin
+                    ClrScr;
                     affichageCartes(joueurs, j_actif);
                     if (estDansLaSalle(joueurs, plat, j_actif) <> 10) then
                         faireHypothese(joueurs, hypo, plat, j_actif, environnement)
@@ -701,16 +709,19 @@ begin
 		        until ((move = 0) OR estDansSalle(joueurs, plat, j_actif));
 
 
-            {Ajout d'un joueur dans la salle}
+            {Ajout d'un joueur dans la salle si il rentre dans une salle}
             if estDansSalle(joueurs, plat, j_actif) then
-                plat.salles[estDansLaSalle(joueurs, plat, j_actif)].nb_j := plat.salles[estDansLaSalle(joueurs, plat, j_actif)].nb_j + 1;
+                begin
+                    plat.salles[estDansLaSalle(joueurs, plat, j_actif)].nb_j := plat.salles[estDansLaSalle(joueurs, plat, j_actif)].nb_j + 1;
+                    placementSalle(joueurs, plat, j_actif);
+                end;
         end;
         
     
     placementSalle(joueurs, plat, j_actif);
     affiche(joueurs[j_actif].pion, joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
     affichageDeplacement(move);
-    Delay(500);
+    Delay(1000);
     ClrScr;
 end;
 
@@ -727,16 +738,17 @@ begin
 
     de1 := random(5) + 1;
     de2 := random(5) + 1;
-    
-    affichageDes(de1, de2);
+
+    lancer := de1 + de2;
+
+    {Affiche la valeur des deux dés ainsi que le nombre de déplacements total}
+	writeln('Le premier de a pour valeur ', de1, ' et le second ', de2, '. Le nombre de deplacement total est donc de ', lancer, '.');
 
     writeln('(Appuyer sur ''espace'')');
 
     repeat
         continue := readKey();
         until (continue = #32);
-
-    lancer := de1 + de2;
 end;
 
 
@@ -770,40 +782,45 @@ begin
 
 
     {Enregistre les éléments de l'hypothèse}
-    writeln('Vous allez formuler une hypothèse !');
+    writeln('Vous allez formuler une hypothese !');
 
     repeat
-        write('Selon vous, qui pourrait-être l''assassin ? ');
+        write('Selon vous, qui pourrait-etre l''assassin ? ');
         readln(g1);
         if not(g1 in perso) then
-            writeln('La carte ne correspond pas à un personnage.')
+            writeln('La carte ne correspond pas a un personnage.')
         until (g1 in perso);
     hypo[1] := g1;
 
     repeat
-        write('Selon vous, quelle pourrait-être l''arme du crime ? ');
+        write('Selon vous, quelle pourrait-etre l''arme du crime ? ');
         readln(g2);
         if not(g2 in arme) then
-            writeln('La carte ne correspond pas à une arme')
+            writeln('La carte ne correspond pas a une arme')
         until (g2 in arme);
     hypo[2] := g2;
 
     hypo[3] := plat.salles[estDansLaSalle(joueurs, plat, j_actif)].nom;
 
 
+    {Affiche l'hypothèse en entière}
+    writeln('Votre hypothese est donc la suivante : ', hypo[1], ' ', hypo[2], ' ', hypo[3]);
+    Delay(5000);
+
+
     {Demande aux joueurs suivants si il possède une des cartes de l'hypothèse formulée}
     ClrScr;
-    i := 1;
     montrer := False;
     j := j_actif;
+    i := 1;
 
 
     {Répète la demande au joueur en stockant les cartes en commun entre le joueur j et l'hypothèse formulée jusqu'à ce qu'une carte coincide ou que tout les joueurs aient été interrogés}
     repeat 
-        if (j + i > length(joueurs)) then
-            j := (j + i) mod length(joueurs)
+        if (j + 1 > length(joueurs)) then
+            j := (j + 1) mod length(joueurs)
         else
-            j := j + i;
+            j := j + 1;
 
 
         temp := [];
@@ -838,18 +855,21 @@ begin
             end
         else
             begin
-                writeln(joueurs[j].perso, ' n''as aucune des cartes de votre hypothèse.');
+                colorPerso(joueurs, j_actif);
+                write(joueurs[j].perso);
+                TextColor(15);
+                writeln(' n''as aucune des cartes de votre hypothese.');
                 Delay(1000);
             end;
 
-        
         i := i + 1;
+
         until (montrer OR (i = length(joueurs)));
 
 
     {Affiche au j_actif qu'aucun des joueurs ne possède les cartes de l'hypothèse si c'est le cas}
     if not(montrer) then
-        writeln('Aucun des joueurs de cette partie ne possède une carte de votre hypothèse !');    
+        writeln('Aucun des enqueteurs ne possede une carte de votre hypothese !');    
 end;
 
 
@@ -892,7 +912,7 @@ begin
         write('Selon vous, qui est l''assassin ? ');
         readln(g1);
         if not(g1 in perso) then
-            writeln('La carte ne correspond pas à un personnage.')
+            writeln('La carte ne correspond pas a un personnage.')
         until (g1 in perso);
     guess[0] := g1;
 
@@ -900,7 +920,7 @@ begin
         write('Selon vous, quelle est l''arme du crime ? ');
         readln(g2);
         if not(g2 in arme) then
-            writeln('La carte ne correspond pas à une arme')
+            writeln('La carte ne correspond pas a une arme')
         until (g2 in arme);
     guess[1] := g2;
 
@@ -908,7 +928,7 @@ begin
         write('Selon vous, dans quelle salle l''assassinat a-t-il eu lieu ? ');
         readln(g3);
         if not(g3 in lieu) then
-            writeln('La carte ne correspond pas à un lieu')
+            writeln('La carte ne correspond pas a un lieu')
         until (g3 in lieu);
     guess[2] := g3;
 
@@ -920,7 +940,11 @@ begin
         begin
             joueurs[j_actif].enVie := False;
             ClrScr;
-            Writeln('Malheuresement, l''accusation de ', joueurs[j_actif].perso, ' n''était pas la bonne. Il ne fait donc plus partie de l''enquête.');
+            write('Malheuresement, l''accusation de ');
+            colorPerso(joueurs, j_actif);
+            write(joueurs[j_actif].perso);
+            TextColor(15);
+            writeln(' n''etait pas la bonne. Il ne fait donc plus partie de l''enquete.');
         end;
 end;
 
@@ -939,16 +963,20 @@ begin
             else
                 j_actif := j_actif - 1;
     
-            writeln('La partie est terminée ! Un enquêteur a trouvé le meurtrier, l''arme du crime et le lieu de l''assassinnat.');
-            writeln('Et cet en enquêteur est ', joueurs[j_actif].perso, ' !');
-            write('Voici les éléments du meurtre : ');
+            writeln('La partie est terminee ! Un enqueteur a trouve le meurtrier, l''arme du crime et le lieu de l''assassinnat.');
+            write('Et cet en enqueteur est ');
+            colorPerso(joueurs, j_actif);
+            write(joueurs[j_actif].perso);
+            TextColor(15); 
+            writeln(' !');
+            write('Voici les elements du meurtre : ');
             for carte in etui do
                 write(carte, ' ');
         end
     else
         begin
-            writeln('Aucun des enquêteurs n''est parvenu à résoudre ce meurtre. La partie est finie.');
-            writeln('Voici les éléments du meurtre : ', etui[0], ' ', etui[1], ' ', etui[2], '.');
+            writeln('Aucun des enqueteurs n''est parvenu a resoudre ce meurtre. La partie est finie.');
+            writeln('Voici les elements du meurtre : ', etui[0], ' ', etui[1], ' ', etui[2], '.');
         end;
 end;
 
@@ -981,322 +1009,415 @@ end;
 procedure placementSalle(var joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer);
 
 var co : Coords;
+    i : Integer;
 
 begin
+    i := 1;
+
+
 	if estDansSalle(joueurs, plat, j_actif) then
         begin
             affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
 			case estDansLaSalle(joueurs, plat, j_actif) of
                 1 : 
                     begin
-						co[1] := 2;
-						co[2] := 5;
-                        case joueursDansLaSalle(joueurs, plat, 1) of
-							0 : begin
-									joueurs[j_actif].pos[1] := co[1];
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							1 :	begin
-									joueurs[j_actif].pos[1] := co[1] + 1;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							2 : begin
-									joueurs[j_actif].pos[1] := co[1] + 2;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							3 : begin
-									joueurs[j_actif].pos[1] := co[1] + 3;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							4 : begin
-									joueurs[j_actif].pos[1] := co[1] + 4;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-                            5 : begin
-									joueurs[j_actif].pos[1] := co[1] + 2;
-									joueurs[j_actif].pos[2] := co[2] + 1;
-								end;
-						end;
-                    end;
+                        repeat
+                            case i of
+                                1 : begin
+                                        co[1] := 3;
+                                        co[2] := 5;
+                                    end;
+                                2 : begin
+                                        co[1] := 4;
+                                        co[2] := 5;
+                                    end;
+                                3 : begin
+                                        co[1] := 5;
+                                        co[2] := 5;
+                                    end;
+                                4 : begin
+                                        co[1] := 3;
+                                        co[2] := 6;
+                                    end;
+                                5 : begin
+                                        co[1] := 4;
+                                        co[2] := 6;
+                                    end;
+                                6 : begin
+                                        co[1] := 5;
+                                        co[2] := 6;
+                                    end;
+                            end;
+
+                            if caseEstLibre(joueurs, plat, co) then
+                                begin
+                                    joueurs[j_actif].pos[1] := co[1];
+						            joueurs[j_actif].pos[2] := co[2];
+                                end;
+
+                            i := i + 1;
+
+                            until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
+                    end;                                
                 2 : 
                     begin
-						co[1] := 11;
-						co[2] := 6;
-                        case joueursDansLaSalle(joueurs, plat, 2) of
-							0 : begin
-									joueurs[j_actif].pos[1] := co[1];
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							1 :	begin
-									joueurs[j_actif].pos[1] := co[1] + 1;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							2 : begin
-									joueurs[j_actif].pos[1] := co[1] + 2;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							3 : begin
-									joueurs[j_actif].pos[1] := co[1] + 3;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							4 : begin
-									joueurs[j_actif].pos[1] := co[1] + 4;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-                            5 : begin
-									joueurs[j_actif].pos[1] := co[1] + 5;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-						end;
+                        repeat
+                            case i of
+                                1 : begin
+                                        co[1] := 12;
+                                        co[2] := 6;
+                                    end;
+                                2 : begin
+                                        co[1] := 13;
+                                        co[2] := 6;
+                                    end;
+                                3 : begin
+                                        co[1] := 14;
+                                        co[2] := 6;
+                                    end;
+                                4 : begin
+                                        co[1] := 15;
+                                        co[2] := 6;
+                                    end;
+                                5 : begin
+                                        co[1] := 13;
+                                        co[2] := 7;
+                                    end;
+                                6 : begin
+                                        co[1] := 14;
+                                        co[2] := 7;
+                                    end;
+                            end;
+
+                            if caseEstLibre(joueurs, plat, co) then
+                                begin
+                                    joueurs[j_actif].pos[1] := co[1];
+						            joueurs[j_actif].pos[2] := co[2];
+                                end;
+
+                            i := i + 1;
+
+                            until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;
                 3 : 
                     begin
-                        co[1] := 21;
-						co[2] := 5;
-                        case joueursDansLaSalle(joueurs, plat, 3) of
-							0 : begin
-									joueurs[j_actif].pos[1] := co[1];
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							1 :	begin
-									joueurs[j_actif].pos[1] := co[1] + 1;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							2 : begin
-									joueurs[j_actif].pos[1] := co[1] + 2;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							3 : begin
-									joueurs[j_actif].pos[1] := co[1] + 3;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							4 : begin
-									joueurs[j_actif].pos[1] := co[1] + 4;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-                            5 : begin
-									joueurs[j_actif].pos[1] := co[1] + 2;
-									joueurs[j_actif].pos[2] := co[2] + 1;
-								end;
-						end;
+                        repeat
+                            case i of
+                                1 : begin
+                                        co[1] := 22;
+                                        co[2] := 4;
+                                    end;
+                                2 : begin
+                                        co[1] := 23;
+                                        co[2] := 4;
+                                    end;
+                                3 : begin
+                                        co[1] := 24;
+                                        co[2] := 4;
+                                    end;
+                                4 : begin
+                                        co[1] := 22;
+                                        co[2] := 5;
+                                    end;
+                                5 : begin
+                                        co[1] := 23;
+                                        co[2] := 5;
+                                    end;
+                                6 : begin
+                                        co[1] := 24;
+                                        co[2] := 5;
+                                    end;
+                            end;
+
+                            if caseEstLibre(joueurs, plat, co) then
+                                begin
+                                    joueurs[j_actif].pos[1] := co[1];
+						            joueurs[j_actif].pos[2] := co[2];
+                                end;
+
+                            i := i + 1;
+
+                            until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;
                 4 : 
                     begin
-                        co[1] := 3;
-						co[2] := 15;
-                        case joueursDansLaSalle(joueurs, plat, 4) of
-							0 : begin
-									joueurs[j_actif].pos[1] := co[1];
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							1 :	begin
-									joueurs[j_actif].pos[1] := co[1] + 1;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							2 : begin
-									joueurs[j_actif].pos[1] := co[1] + 2;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							3 : begin
-									joueurs[j_actif].pos[1] := co[1] + 3;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							4 : begin
-									joueurs[j_actif].pos[1] := co[1] + 4;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-                            5 : begin
-									joueurs[j_actif].pos[1] := co[1] + 5;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-						end;
+                        repeat
+                            case i of
+                                1 : begin
+                                        co[1] := 4;
+                                        co[2] := 14;
+                                    end;
+                                2 : begin
+                                        co[1] := 5;
+                                        co[2] := 14;
+                                    end;
+                                3 : begin
+                                        co[1] := 6;
+                                        co[2] := 14;
+                                    end;
+                                4 : begin
+                                        co[1] := 7;
+                                        co[2] := 14;
+                                    end;
+                                5 : begin
+                                        co[1] := 5;
+                                        co[2] := 15;
+                                    end;
+                                6 : begin
+                                        co[1] := 6;
+                                        co[2] := 15;
+                                    end;
+                            end;
+
+                            if caseEstLibre(joueurs, plat, co) then
+                                begin
+                                    joueurs[j_actif].pos[1] := co[1];
+						            joueurs[j_actif].pos[2] := co[2];
+                                end;
+
+                            i := i + 1;
+
+                            until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;
                 5 : 
                     begin
-                        co[1] := 21;
-						co[2] := 12;
-                        case joueursDansLaSalle(joueurs, plat, 5) of
-							0 : begin
-									joueurs[j_actif].pos[1] := co[1];
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							1 :	begin
-									joueurs[j_actif].pos[1] := co[1] + 1;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							2 : begin
-									joueurs[j_actif].pos[1] := co[1] + 2;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							3 : begin
-									joueurs[j_actif].pos[1] := co[1] + 3;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							4 : begin
-									joueurs[j_actif].pos[1] := co[1] + 4;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-                            5 : begin
-									joueurs[j_actif].pos[1] := co[1] + 2;
-									joueurs[j_actif].pos[2] := co[2] + 1;
-								end;
-                            
-						end;
+                        repeat
+                            case i of
+                                1 : begin
+                                        co[1] := 22;
+                                        co[2] := 12;
+                                    end;
+                                2 : begin
+                                        co[1] := 23;
+                                        co[2] := 12;
+                                    end;
+                                3 : begin
+                                        co[1] := 24;
+                                        co[2] := 12;
+                                    end;
+                                4 : begin
+                                        co[1] := 22;
+                                        co[2] := 13;
+                                    end;
+                                5 : begin
+                                        co[1] := 23;
+                                        co[2] := 13;
+                                    end;
+                                6 : begin
+                                        co[1] := 24;
+                                        co[2] := 13;
+                                    end;
+                            end;
+
+                            if caseEstLibre(joueurs, plat, co) then
+                                begin
+                                    joueurs[j_actif].pos[1] := co[1];
+						            joueurs[j_actif].pos[2] := co[2];
+                                end;
+
+                            i := i + 1;
+
+                            until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;
                 6 : 
                     begin
-                        co[1] := 21;
-						co[2] := 18;
-                        case joueursDansLaSalle(joueurs, plat, 6) of
-							0 : begin
-									joueurs[j_actif].pos[1] := co[1];
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							1 :	begin
-									joueurs[j_actif].pos[1] := co[1] + 1;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							2 : begin
-									joueurs[j_actif].pos[1] := co[1] + 2;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							3 : begin
-									joueurs[j_actif].pos[1] := co[1] + 3;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							4 : begin
-									joueurs[j_actif].pos[1] := co[1] + 4;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-                            5 : begin
-									joueurs[j_actif].pos[1] := co[1] + 5;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-						end;
+                        repeat
+                            case i of
+                                1 : begin
+                                        co[1] := 22;
+                                        co[2] := 17;
+                                    end;
+                                2 : begin
+                                        co[1] := 23;
+                                        co[2] := 17;
+                                    end;
+                                3 : begin
+                                        co[1] := 24;
+                                        co[2] := 17;
+                                    end;
+                                4 : begin
+                                        co[1] := 22;
+                                        co[2] := 18;
+                                    end;
+                                5 : begin
+                                        co[1] := 23;
+                                        co[2] := 18;
+                                    end;
+                                6 : begin
+                                        co[1] := 24;
+                                        co[2] := 18;
+                                    end;
+                            end;
+
+                            if caseEstLibre(joueurs, plat, co) then
+                                begin
+                                    joueurs[j_actif].pos[1] := co[1];
+						            joueurs[j_actif].pos[2] := co[2];
+                                end;
+
+                            i := i + 1;
+
+                            until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;
                 7 : 
                     begin
-                        co[1] := 3;
-						co[2] := 24;
-                        case joueursDansLaSalle(joueurs, plat, 7) of
-							0 : begin
-									joueurs[j_actif].pos[1] := co[1];
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							1 :	begin
-									joueurs[j_actif].pos[1] := co[1] + 1;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							2 : begin
-									joueurs[j_actif].pos[1] := co[1] + 2;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							3 : begin
-									joueurs[j_actif].pos[1] := co[1] + 3;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							4 : begin
-									joueurs[j_actif].pos[1] := co[1] + 4;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-                            5 : begin
-									joueurs[j_actif].pos[1] := co[1] + 5;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-						end;
+                        repeat
+                            case i of
+                                1 : begin
+                                        co[1] := 3;
+                                        co[2] := 24;
+                                    end;
+                                2 : begin
+                                        co[1] := 4;
+                                        co[2] := 24;
+                                    end;
+                                3 : begin
+                                        co[1] := 5;
+                                        co[2] := 24;
+                                    end;
+                                4 : begin
+                                        co[1] := 6;
+                                        co[2] := 24;
+                                    end;
+                                5 : begin
+                                        co[1] := 4;
+                                        co[2] := 25;
+                                    end;
+                                6 : begin
+                                        co[1] := 5;
+                                        co[2] := 25;
+                                    end;
+                            end;
+
+                            if caseEstLibre(joueurs, plat, co) then
+                                begin
+                                    joueurs[j_actif].pos[1] := co[1];
+						            joueurs[j_actif].pos[2] := co[2];
+                                end;
+
+                            i := i + 1;
+
+                            until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;
                 8 : 
                     begin
-                        co[1] := 12;
-						co[2] := 24;
-                        case joueursDansLaSalle(joueurs, plat, 9) of
-							0 : begin
-									joueurs[j_actif].pos[1] := co[1];
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							1 :	begin
-									joueurs[j_actif].pos[1] := co[1] + 1;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							2 : begin
-									joueurs[j_actif].pos[1] := co[1] + 2;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							3 : begin
-									joueurs[j_actif].pos[1] := co[1] + 3;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							4 : begin
-									joueurs[j_actif].pos[1] := co[1] + 1;
-									joueurs[j_actif].pos[2] := co[2] + 1;
-								end;
-                            5 : begin
-									joueurs[j_actif].pos[1] := co[1] + 2;
-									joueurs[j_actif].pos[2] := co[2] + 1;
-								end;
-						end;
+                        repeat
+                            case i of
+                                1 : begin
+                                        co[1] := 13;
+                                        co[2] := 22;
+                                    end;
+                                2 : begin
+                                        co[1] := 14;
+                                        co[2] := 22;
+                                    end;
+                                3 : begin
+                                        co[1] := 13;
+                                        co[2] := 23;
+                                    end;
+                                4 : begin
+                                        co[1] := 14;
+                                        co[2] := 23;
+                                    end;
+                                5 : begin
+                                        co[1] := 13;
+                                        co[2] := 24;
+                                    end;
+                                6 : begin
+                                        co[1] := 14;
+                                        co[2] := 24;
+                                    end;
+                            end;
+
+                            if caseEstLibre(joueurs, plat, co) then
+                                begin
+                                    joueurs[j_actif].pos[1] := co[1];
+						            joueurs[j_actif].pos[2] := co[2];
+                                end;
+
+                            i := i + 1;
+
+                            until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;
                 9 : 
                     begin
-                        co[1] := 21;
-						co[2] := 25;
-                        case joueursDansLaSalle(joueurs, plat, 8) of
-							0 : begin
-									joueurs[j_actif].pos[1] := co[1];
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							1 :	begin
-									joueurs[j_actif].pos[1] := co[1] + 1;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							2 : begin
-									joueurs[j_actif].pos[1] := co[1] + 2;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							3 : begin
-									joueurs[j_actif].pos[1] := co[1] + 3;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							4 : begin
-									joueurs[j_actif].pos[1] := co[1] + 4;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-                            5 : begin
-									joueurs[j_actif].pos[1] := co[1] + 5;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-						end;
+                        repeat
+                            case i of
+                                1 : begin
+                                        co[1] := 21;
+                                        co[2] := 25;
+                                    end;
+                                2 : begin
+                                        co[1] := 22;
+                                        co[2] := 25;
+                                    end;
+                                3 : begin
+                                        co[1] := 23;
+                                        co[2] := 25;
+                                    end;
+                                4 : begin
+                                        co[1] := 24;
+                                        co[2] := 25;
+                                    end;
+                                5 : begin
+                                        co[1] := 22;
+                                        co[2] := 26;
+                                    end;
+                                6 : begin
+                                        co[1] := 23;
+                                        co[2] := 26;
+                                    end;
+                            end;
+
+                            if caseEstLibre(joueurs, plat, co) then
+                                begin
+                                    joueurs[j_actif].pos[1] := co[1];
+						            joueurs[j_actif].pos[2] := co[2];
+                                end;
+
+                            i := i + 1;
+
+                            until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;
                 10 : 
                     begin
-                        co[1] := 13;
-						co[2] := 15;
-                        case joueursDansLaSalle(joueurs, plat, 9) of
-							0 : begin
-									joueurs[j_actif].pos[1] := co[1];
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							1 :	begin
-									joueurs[j_actif].pos[1] := co[1] + 1;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							2 : begin
-									joueurs[j_actif].pos[1] := co[1] + 2;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							3 : begin
-									joueurs[j_actif].pos[1] := co[1];
-									joueurs[j_actif].pos[2] := co[2] + 1;
-								end;
-							4 : begin
-									joueurs[j_actif].pos[1] := co[1] + 1;
-									joueurs[j_actif].pos[2] := co[2] + 1;
-								end;
-                            5 : begin
-									joueurs[j_actif].pos[1] := co[1] + 1;
-									joueurs[j_actif].pos[2] := co[2] + 2;
-								end;
-						end;
+                        repeat
+                            case i of
+                                1 : begin
+                                        co[1] := 13;
+                                        co[2] := 15;
+                                    end;
+                                2 : begin
+                                        co[1] := 14;
+                                        co[2] := 15;
+                                    end;
+                                3 : begin
+                                        co[1] := 15;
+                                        co[2] := 15;
+                                    end;
+                                4 : begin
+                                        co[1] := 13;
+                                        co[2] := 16;
+                                    end;
+                                5 : begin
+                                        co[1] := 14;
+                                        co[2] := 16;
+                                    end;
+                                6 : begin
+                                        co[1] := 15;
+                                        co[2] := 16;
+                                    end;
+                            end;
+
+                            if caseEstLibre(joueurs, plat, co) then
+                                begin
+                                    joueurs[j_actif].pos[1] := co[1];
+						            joueurs[j_actif].pos[2] := co[2];
+                                end;
+
+                            i := i + 1;
+
+                            until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;
 			end;
 		end;

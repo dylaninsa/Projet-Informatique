@@ -20,7 +20,7 @@ var c : Integer;
 
 begin 
     {Choix nouvelle / charger partie}
-    writeln('Voulez-vous créer une nouvelle partie ou charger une parite ? ');
+    writeln('Voulez-vous creer une nouvelle partie ou charger une parite ? ');
     writeln('   1 : Lancer une nouvelle partie');
     writeln('   2 : Charger une partie');
 
@@ -80,7 +80,7 @@ begin
 
     if (environnement = Manoir) then
         begin
-            for carte := Colonel_Moutarde to Hall do 
+            for carte := Colonel_Moutarde to Studio do 
                 begin
                     Include(cartes, carte);
                     liste_cartes[j] := carte;
@@ -90,7 +90,7 @@ begin
         end
     else
         begin
-            for carte := Monsieur_bredel to Labo do 
+            for carte := Monsieur_bredel to BU do 
                 begin
                     Include(cartes, carte);
                     liste_cartes[j] := carte;
