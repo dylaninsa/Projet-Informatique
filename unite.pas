@@ -13,7 +13,7 @@ Const
 
 Type Enviro = (Manoir, INSA);
 
-Type ListeCartes = (Colonel_Moutarde, Docteur_Olive, Madame_Pervenche, Mademoiselle_Rose, Professeur_Violet, Madame_Leblanc, Poignard, Chandelier, Revolver, Corde, Matraque, Clef_Anglaise, Cuisine, Grand_Salon, Petit_Salon, Salle_a_manger, Bureau, Bibliotheque, Veranda, Studio, Hall, Cluedo, Monsieur_Bredel, Madame_LArcheveque, Le_Directeur, Yohann_Lepailleur, Monsieur_Thibault, Infirmiere, Seringue, Moteur_4_temps, Alteres, Flacon_Acide, Ordi, Pouf_Rouge, Cafete, Amphi_Tillon, Infirmerie, Bureau_directeur, Toilettes, Vestiaires, DUBRJ11, BU, Labo, Accueil);
+Type ListeCartes = (Colonel_Moutarde, Docteur_Olive, Madame_Pervenche, Mademoiselle_Rose, Professeur_Violet, Madame_Leblanc, Poignard, Chandelier, Revolver, Corde, Matraque, Clef_Anglaise, Cuisine, Grand_Salon, Petit_Salon, Salle_a_manger, Bureau, Bibliotheque, Veranda, Hall, Studio, Cluedo, Monsieur_Bredel, Madame_LArcheveque, Le_Directeur, Yohann_Lepailleur, Monsieur_Thibault, Infirmiere, Seringue, Moteur_4_temps, Alteres, Flacon_Acide, Ordi, Pouf_Rouge, Cafete, Amphi_Tillon, Infirmerie, Bureau_directeur, Toilettes, Vestiaires, DUBRJ11, Labo, BU, Accueil);
 
 Type Coords = Array [1..2] of Integer;
 

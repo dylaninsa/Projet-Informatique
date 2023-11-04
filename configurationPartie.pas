@@ -139,9 +139,9 @@ begin
     repeat
         writeln('Combien y a-t-il de joueurs ?');
         readln(nb_j);
-        if not((nb_j >= 1) AND (nb_j <= 6)) then
+        if not((nb_j >= 2) AND (nb_j <= 6)) then
             writeln('Ce choix est invalide.')
-        until ((nb_j >= 1) AND (nb_j <= 6));
+        until ((nb_j >= 2) AND (nb_j <= 6));
     SetLength(joueurs, nb_j); 
 
 

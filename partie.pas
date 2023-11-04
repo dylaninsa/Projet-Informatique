@@ -179,8 +179,10 @@ begin
                                 if (estDansSalle(joueurs, plat, j_actif)) then
                                     begin
                                         affichageCartes(joueurs, j_actif);
-                                        if (estDansLaSalle(joueurs, plat, j_actif) = 10) then
-                                            faireHypothese(joueurs, hypo, plat, j_actif, environnement);
+                                        if (estDansLaSalle(joueurs, plat, j_actif) <> 10) then
+                                            faireHypothese(joueurs, hypo, plat, j_actif, environnement)
+                                        else
+                                            faireAccusation(etui, joueurs, accusation, j_actif, environnement);
                                     end;
                             end;
                         2 : begin
@@ -209,8 +211,10 @@ begin
                                 if (estDansSalle(joueurs, plat, j_actif)) then
                                     begin
                                         affichageCartes(joueurs, j_actif);
-                                        if (estDansLaSalle(joueurs, plat, j_actif) = 10) then
-                                            faireHypothese(joueurs, hypo, plat, j_actif, environnement);
+                                        if (estDansLaSalle(joueurs, plat, j_actif) <> 10) then
+                                            faireHypothese(joueurs, hypo, plat, j_actif, environnement)
+                                        else
+                                            faireAccusation(etui, joueurs, accusation, j_actif, environnement);
                                     end;
                             end;
                         2 : begin
@@ -227,8 +231,10 @@ begin
             if (estDansSalle(joueurs, plat, j_actif)) then
                 begin
                     affichageCartes(joueurs, j_actif);
-                    if (estDansLaSalle(joueurs, plat, j_actif) = 10) then
-                        faireHypothese(joueurs, hypo, plat, j_actif, environnement);
+                    if (estDansLaSalle(joueurs, plat, j_actif) <> 10) then
+                        faireHypothese(joueurs, hypo, plat, j_actif, environnement)
+                    else
+                        faireAccusation(etui, joueurs, accusation, j_actif, environnement);
                 end;
         end;
 end;
@@ -532,40 +538,6 @@ begin
                         repeat
                             key := readKey();
                             case key of 
-                                UP : 
-                                    begin
-                                        co[1] := 20;
-                                        co[2] := 22;
-                                        if (caseEstLibre(joueurs, plat, co)) then
-                                            begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
-                                                joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                plat.salles[8].nb_j := plat.salles[8].nb_j - 1;
-                                                bouge := True;
-                                            end;
-                                    end;
-                                DOWN : 
-                                    begin
-                                        co[1] := 6;
-                                        co[2] := 8;
-                                        affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                        joueurs[j_actif].pos[1] := co[1];
-                                        joueurs[j_actif].pos[2] := co[2];
-                                        move := move - 1;
-                                        plat.salles[8].nb_j := plat.salles[8].nb_j - 1;
-                                        plat.salles[1].nb_j := plat.salles[1].nb_j + 1;
-                                        bouge := True;
-                                    end;
-                            end;
-                            until (bouge);
-                    end;
-                9 : 
-                    begin
-                        repeat
-                            key := readKey();
-                            case key of 
                                 UP :
                                     begin
                                         co[1] := 14;
@@ -607,6 +579,40 @@ begin
                                                 plat.salles[9].nb_j := plat.salles[9].nb_j - 1;
                                                 bouge := True;
                                             end;
+                                    end;
+                            end;
+                            until (bouge);
+                    end;
+                9 : 
+                    begin
+                        repeat
+                            key := readKey();
+                            case key of 
+                                UP : 
+                                    begin
+                                        co[1] := 20;
+                                        co[2] := 22;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[8].nb_j := plat.salles[8].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                                DOWN : 
+                                    begin
+                                        co[1] := 6;
+                                        co[2] := 8;
+                                        affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                        joueurs[j_actif].pos[1] := co[1];
+                                        joueurs[j_actif].pos[2] := co[2];
+                                        move := move - 1;
+                                        plat.salles[8].nb_j := plat.salles[8].nb_j - 1;
+                                        plat.salles[1].nb_j := plat.salles[1].nb_j + 1;
+                                        bouge := True;
                                     end;
                             end;
                             until (bouge);
@@ -865,7 +871,7 @@ begin
                 Include(perso, carte);
             for carte := Poignard to Clef_Anglaise do
                 Include(arme, carte);
-            for carte := Cuisine to Hall do
+            for carte := Cuisine to Studio do
                 Include(lieu, carte);
         end
     else
@@ -874,7 +880,7 @@ begin
                 Include(perso, carte);
             for carte := Seringue to Pouf_Rouge do
                 Include(arme, carte);
-            for carte := Cafete to Labo do
+            for carte := Cafete to BU do
                 Include(lieu, carte);
         end;
 
@@ -1201,37 +1207,6 @@ begin
                     end;
                 8 : 
                     begin
-                        co[1] := 21;
-						co[2] := 25;
-                        case joueursDansLaSalle(joueurs, plat, 8) of
-							0 : begin
-									joueurs[j_actif].pos[1] := co[1];
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							1 :	begin
-									joueurs[j_actif].pos[1] := co[1] + 1;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							2 : begin
-									joueurs[j_actif].pos[1] := co[1] + 2;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							3 : begin
-									joueurs[j_actif].pos[1] := co[1] + 3;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-							4 : begin
-									joueurs[j_actif].pos[1] := co[1] + 4;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-                            5 : begin
-									joueurs[j_actif].pos[1] := co[1] + 5;
-									joueurs[j_actif].pos[2] := co[2];
-								end;
-						end;
-                    end;
-                9 : 
-                    begin
                         co[1] := 12;
 						co[2] := 24;
                         case joueursDansLaSalle(joueurs, plat, 9) of
@@ -1258,6 +1233,37 @@ begin
                             5 : begin
 									joueurs[j_actif].pos[1] := co[1] + 2;
 									joueurs[j_actif].pos[2] := co[2] + 1;
+								end;
+						end;
+                    end;
+                9 : 
+                    begin
+                        co[1] := 21;
+						co[2] := 25;
+                        case joueursDansLaSalle(joueurs, plat, 8) of
+							0 : begin
+									joueurs[j_actif].pos[1] := co[1];
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							1 :	begin
+									joueurs[j_actif].pos[1] := co[1] + 1;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							2 : begin
+									joueurs[j_actif].pos[1] := co[1] + 2;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							3 : begin
+									joueurs[j_actif].pos[1] := co[1] + 3;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							4 : begin
+									joueurs[j_actif].pos[1] := co[1] + 4;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+                            5 : begin
+									joueurs[j_actif].pos[1] := co[1] + 5;
+									joueurs[j_actif].pos[2] := co[2];
 								end;
 						end;
                     end;

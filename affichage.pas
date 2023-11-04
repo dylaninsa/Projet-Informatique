@@ -79,13 +79,13 @@ begin
 	write(plat.salles[4].nom);
 	GotoXY(42, 11);
 	write(plat.salles[5].nom);
-	GotoXY(40, 17);
+	GotoXY(40, 19);
 	write(plat.salles[6].nom);
 	GotoXY(5, 22);
 	write(plat.salles[7].nom);
-	GotoXY(43, 24);
-	write(plat.salles[8].nom);
 	GotoXY(25, 26);
+	write(plat.salles[8].nom);
+	GotoXY(43, 24);
 	write(plat.salles[9].nom);
 	GotoXY(25, 13);
 	write(plat.salles[10].nom);
