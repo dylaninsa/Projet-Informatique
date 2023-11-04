@@ -8,7 +8,6 @@ uses unite, Crt;
 
 procedure affiche(c : Char; posX, posY : Integer);
 procedure affichagePlateau(plat : Plateau; joueurs : ListeJoueurs);
-procedure affichageDes(de1 : Integer; de2 : Integer);
 procedure affichageCartes(joueurs : ListeJoueurs; j : Integer);
 procedure affichageDeplacement(move : Integer);
 procedure affichageMontrerCartes(var commun : Array of ListeCartes; joueurs : ListeJoueurs; j : Integer; j_actif : Integer; var reveal : ListeCartes);
@@ -126,15 +125,6 @@ begin
 	TextColor(15);
 end;
 
-    
-
-procedure affichageDes(de1 : Integer; de2 : Integer);
-
-begin
-	{Affiche la valeur des deux dés ainsi que le nombre de déplacements total}
-	writeln('Le premier dé a pour valeur ', de1, ' et le second ', de2, '. Le nombre de déplacement total est donc de ', de1+de2, '.');
-end;
-
 
 
 procedure affichageCartes(joueurs : ListeJoueurs; j : Integer);
@@ -191,7 +181,7 @@ begin
         write('Quelle carte voulez-vous montrer ? ');
 		readln(reveal);
         if not(reveal in ens) then
-            writeln('La carte ne correspond aux cartes en commun.')
+            writeln('La carte ne correspond pas aux cartes en commun.')
         until (reveal in ens);
 	
 
@@ -203,11 +193,12 @@ begin
         continue := readKey();
         until (continue = #32);
 
-    writeln('La carte que ', joueurs[j].perso, ' vous montre est : ', reveal, '(Appuyer sur ''espace'')');
+    writeln('La carte que ', joueurs[j].perso, ' vous montre est : ', reveal, ' (Appuyer sur ''espace'')');
 
     repeat
         continue := readKey();
         until (continue = #32);
+
     ClrScr;
 end;
 
