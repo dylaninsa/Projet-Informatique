@@ -28,13 +28,13 @@ begin
 		'L' : TextColor(15);
 		'O' : TextColor(2);
 		'R' : TextColor(13);
-		{'V' : TextColor(5);}
+		'V' : TextColor(5);
 		'B' : TextColor(3);
 		'A' : TextColor(13);
 		'Y' : TextColor(14);
 		'D' : TextColor(15);
 		'I' : TextColor(4);
-		{'T' : TextColor(11);}
+		'T' : TextColor(11);
 	else
 		TextBackground(0);
 	end;
@@ -87,6 +87,8 @@ begin
 	write(plat.salles[8].nom);
 	GotoXY(25, 26);
 	write(plat.salles[9].nom);
+	GotoXY(25, 13);
+	write(plat.salles[10].nom);
 
 
 	{Affichage des pions des joueurs sur le plateau}
@@ -99,13 +101,13 @@ begin
 				Madame_Leblanc : TextColor(15);
 				Docteur_Olive : TextColor(2);
 				Mademoiselle_Rose : TextColor(13);
-				{Professeur_Violet : TextColor(5);}
+				Professeur_Violet : TextColor(5);
 				Monsieur_Bredel : TextColor(3);
 				Madame_LArcheveque : TextColor(13);
 				Yohann_Lepailleur : TextColor(14);
 				Le_Directeur : TextColor(15);
 				Infirmiere : TextColor(4);
-				{Monsieur_Thibault : TextColor(11);}
+				Monsieur_Thibault : TextColor(11);
 			end;
 			write(joueurs[i].pion);
 		end;
@@ -204,7 +206,7 @@ begin
     writeln('La carte que ', joueurs[j].perso, ' vous montre est : ', reveal, '(Appuyer sur ''espace'')');
 
     repeat
-       continue := readKey();
+        continue := readKey();
         until (continue = #32);
     ClrScr;
 end;

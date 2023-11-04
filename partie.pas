@@ -70,14 +70,17 @@ begin
                 j_actif := 1
             else
                 j_actif := j_actif + 1;
+            
+
+            {Fin de la partie}
+            if ((joueursEnVie(joueurs) < 1) OR (accusation)) then
+                begin
+                    ClrScr;
+                    finPartie(joueurs, accusation, j_actif, etui);
+                end;
         
         end;
-        until ((key = QUIT) OR (joueursEnVie(joueurs) < 1));
-    
-
-    {Fini la partie}
-    ClrScr;
-    finPartie(joueurs, accusation, j_actif, etui);
+        until ((key = QUIT) OR (joueursEnVie(joueurs) < 1) OR (accusation));
 end;
 
 
@@ -100,7 +103,7 @@ begin
                 end;
             i := i + 1;
         end;
-        until ((i = 10) OR estDansSalle);        
+        until ((i = 11) OR estDansSalle);        
 
 end;
 
@@ -156,37 +159,66 @@ begin
     {Différentes action possibles selon les cas}
     if (estDansSalle(joueurs, plat, j_actif)) then
         begin
-            writeln('Que voulez-vous faire :');
-            writeln('   1 : Vous déplacer');
-            writeln('   2 : Formuler une hypothèse'); 
-            writeln('   3 : Formuler une accusation');  
+            if (estDansLaSalle(joueurs, plat, j_actif) = 10) then
+                begin
+                    writeln('Que voulez-vous faire :');
+                    writeln('   1 : Vous déplacer');
+                    writeln('   2 : Formuler une accusation');  
 
-            repeat
-                write('Votre choix est : ');
-                readln(c);
-                if not((c >= 1) AND (c <= 3)) then
-                    writeln('Ce choix n''est pas disponible.')
-                until ((c >= 1) AND (c <= 3));
+                    repeat
+                        write('Votre choix est : ');
+                        readln(c);
+                        if not((c >= 1) AND (c <= 2)) then
+                            writeln('Ce choix est invalide.')
+                        until ((c >= 1) AND (c <= 2));
 
+                    case c of
+                        1 : begin
+                                lancerDes(lancer);
+                                deplacement(plat, lancer, joueurs, j_actif);
+                                if (estDansSalle(joueurs, plat, j_actif)) then
+                                    begin
+                                        affichageCartes(joueurs, j_actif);
+                                        if (estDansLaSalle(joueurs, plat, j_actif) = 10) then
+                                            faireHypothese(joueurs, hypo, plat, j_actif, environnement);
+                                    end;
+                            end;
+                        2 : begin
+                                affichageCartes(joueurs, j_actif);
+                                faireAccusation(etui, joueurs, accusation, j_actif, environnement);
+                            end;
+                    end;
+                end
+            else 
+                begin
+                    writeln('Que voulez-vous faire :');
+                    writeln('   1 : Vous déplacer');
+                    writeln('   2 : Formuler une hypothèse'); 
 
-            case c of
-                1 : begin
-                        lancerDes(lancer);
-                        deplacement(plat, lancer, joueurs, j_actif);
-                        if (estDansSalle(joueurs, plat, j_actif)) then
-                            begin
+                    repeat
+                        write('Votre choix est : ');
+                        readln(c);
+                        if not((c >= 1) AND (c <= 2)) then
+                            writeln('Ce choix est invalide.')
+                        until ((c >= 1) AND (c <= 2));
+
+                    case c of
+                        1 : begin
+                                lancerDes(lancer);
+                                deplacement(plat, lancer, joueurs, j_actif);
+                                if (estDansSalle(joueurs, plat, j_actif)) then
+                                    begin
+                                        affichageCartes(joueurs, j_actif);
+                                        if (estDansLaSalle(joueurs, plat, j_actif) = 10) then
+                                            faireHypothese(joueurs, hypo, plat, j_actif, environnement);
+                                    end;
+                            end;
+                        2 : begin
                                 affichageCartes(joueurs, j_actif);
                                 faireHypothese(joueurs, hypo, plat, j_actif, environnement);
                             end;
                     end;
-                2 : begin
-                        affichageCartes(joueurs, j_actif);
-                        faireHypothese(joueurs, hypo, plat, j_actif, environnement);
-                    end;
-                3 : begin
-                        faireAccusation(etui, joueurs, accusation, j_actif, environnement);
-                    end;
-            end;
+                end;
         end
     else
         begin
@@ -195,7 +227,8 @@ begin
             if (estDansSalle(joueurs, plat, j_actif)) then
                 begin
                     affichageCartes(joueurs, j_actif);
-                    faireHypothese(joueurs, hypo, plat, j_actif, environnement);
+                    if (estDansLaSalle(joueurs, plat, j_actif) = 10) then
+                        faireHypothese(joueurs, hypo, plat, j_actif, environnement);
                 end;
         end;
 end;
@@ -578,6 +611,28 @@ begin
                             end;
                             until (bouge);
                     end;
+                10 : 
+                    begin
+                        repeat
+                            key := readKey();
+                            case key of 
+                                DOWN : 
+                                    begin
+                                        co[1] := 14;
+                                        co[2] := 19;
+                                        if (caseEstLibre(joueurs, plat, co)) then
+                                            begin
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
+                                                joueurs[j_actif].pos[1] := co[1];
+                                                joueurs[j_actif].pos[2] := co[2];
+                                                move := move - 1;
+                                                plat.salles[10].nb_j := plat.salles[10].nb_j - 1;
+                                                bouge := True;
+                                            end;
+                                    end;
+                            end;
+                            until (bouge);
+                    end;
             end;
         end;
 
@@ -810,7 +865,7 @@ begin
                 Include(perso, carte);
             for carte := Poignard to Clef_Anglaise do
                 Include(arme, carte);
-            for carte := Infirmerie to Labo do
+            for carte := Cuisine to Hall do
                 Include(lieu, carte);
         end
     else
@@ -819,7 +874,7 @@ begin
                 Include(perso, carte);
             for carte := Seringue to Pouf_Rouge do
                 Include(arme, carte);
-            for carte := Cafete to BU do
+            for carte := Cafete to Labo do
                 Include(lieu, carte);
         end;
 
@@ -951,6 +1006,10 @@ begin
 									joueurs[j_actif].pos[1] := co[1] + 4;
 									joueurs[j_actif].pos[2] := co[2];
 								end;
+                            5 : begin
+									joueurs[j_actif].pos[1] := co[1] + 2;
+									joueurs[j_actif].pos[2] := co[2] + 1;
+								end;
 						end;
                     end;
                 2 : 
@@ -976,6 +1035,10 @@ begin
 								end;
 							4 : begin
 									joueurs[j_actif].pos[1] := co[1] + 4;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+                            5 : begin
+									joueurs[j_actif].pos[1] := co[1] + 5;
 									joueurs[j_actif].pos[2] := co[2];
 								end;
 						end;
@@ -1005,6 +1068,10 @@ begin
 									joueurs[j_actif].pos[1] := co[1] + 4;
 									joueurs[j_actif].pos[2] := co[2];
 								end;
+                            5 : begin
+									joueurs[j_actif].pos[1] := co[1] + 2;
+									joueurs[j_actif].pos[2] := co[2] + 1;
+								end;
 						end;
                     end;
                 4 : 
@@ -1030,6 +1097,10 @@ begin
 								end;
 							4 : begin
 									joueurs[j_actif].pos[1] := co[1] + 4;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+                            5 : begin
+									joueurs[j_actif].pos[1] := co[1] + 5;
 									joueurs[j_actif].pos[2] := co[2];
 								end;
 						end;
@@ -1059,6 +1130,11 @@ begin
 									joueurs[j_actif].pos[1] := co[1] + 4;
 									joueurs[j_actif].pos[2] := co[2];
 								end;
+                            5 : begin
+									joueurs[j_actif].pos[1] := co[1] + 2;
+									joueurs[j_actif].pos[2] := co[2] + 1;
+								end;
+                            
 						end;
                     end;
                 6 : 
@@ -1084,6 +1160,10 @@ begin
 								end;
 							4 : begin
 									joueurs[j_actif].pos[1] := co[1] + 4;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+                            5 : begin
+									joueurs[j_actif].pos[1] := co[1] + 5;
 									joueurs[j_actif].pos[2] := co[2];
 								end;
 						end;
@@ -1113,6 +1193,10 @@ begin
 									joueurs[j_actif].pos[1] := co[1] + 4;
 									joueurs[j_actif].pos[2] := co[2];
 								end;
+                            5 : begin
+									joueurs[j_actif].pos[1] := co[1] + 5;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
 						end;
                     end;
                 8 : 
@@ -1138,6 +1222,10 @@ begin
 								end;
 							4 : begin
 									joueurs[j_actif].pos[1] := co[1] + 4;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+                            5 : begin
+									joueurs[j_actif].pos[1] := co[1] + 5;
 									joueurs[j_actif].pos[2] := co[2];
 								end;
 						end;
@@ -1166,6 +1254,41 @@ begin
 							4 : begin
 									joueurs[j_actif].pos[1] := co[1] + 1;
 									joueurs[j_actif].pos[2] := co[2] + 1;
+								end;
+                            5 : begin
+									joueurs[j_actif].pos[1] := co[1] + 2;
+									joueurs[j_actif].pos[2] := co[2] + 1;
+								end;
+						end;
+                    end;
+                10 : 
+                    begin
+                        co[1] := 13;
+						co[2] := 15;
+                        case joueursDansLaSalle(joueurs, plat, 9) of
+							0 : begin
+									joueurs[j_actif].pos[1] := co[1];
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							1 :	begin
+									joueurs[j_actif].pos[1] := co[1] + 1;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							2 : begin
+									joueurs[j_actif].pos[1] := co[1] + 2;
+									joueurs[j_actif].pos[2] := co[2];
+								end;
+							3 : begin
+									joueurs[j_actif].pos[1] := co[1];
+									joueurs[j_actif].pos[2] := co[2] + 1;
+								end;
+							4 : begin
+									joueurs[j_actif].pos[1] := co[1] + 1;
+									joueurs[j_actif].pos[2] := co[2] + 1;
+								end;
+                            5 : begin
+									joueurs[j_actif].pos[1] := co[1] + 1;
+									joueurs[j_actif].pos[2] := co[2] + 2;
 								end;
 						end;
                     end;

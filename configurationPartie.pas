@@ -59,7 +59,7 @@ begin
         write('Votre choix est : ');
         readln(c);
         if not((c >= 1) AND (c <= 2)) then
-            writeln('Ce choix n''est pas disponible.')
+            writeln('Ce choix est invalide.')
     until ((c >= 1) AND (c <= 2));
 
     case c of
@@ -73,7 +73,7 @@ begin
 
 
     {Mise en place des ensembles et des listes de cartes pour l'environnement choisi}
-    SetLength(liste_cartes, 20);
+    SetLength(liste_cartes, 21);
     cartes := [];
     personnages := [];
     j := 1;
@@ -101,21 +101,21 @@ begin
 
 
     {Tirage aléatoire de l'étui de l'étui}
-    r1 := random(5)+1;
+    r1 := random(6)+1;
     etui[0] := liste_cartes[r1];        // tirage du personnage
     Exclude(cartes, liste_cartes[r1]);
 
-    r2 := random(6)+6;
+    r2 := random(6)+7;
     etui[1] := liste_cartes[r2];        // tirage de l'arme
     Exclude(cartes, liste_cartes[r2]);
 
-    r3 := random(9)+12;
+    r3 := random(9)+13;
     etui[2] := liste_cartes[r3];        // tirage du lieu
     Exclude(cartes, liste_cartes[r3]);
 
 
     {Mise à jour de la liste de cartes}
-    SetLength(liste_cartes, 17);
+    SetLength(liste_cartes, 18);
     j := 0;
 
     for carte in cartes do 
@@ -136,8 +136,12 @@ begin
 
 
     {Choix du nombre de joueurs dans la partie}
-    writeln('Combien y a-t-il de joueurs ?');
-    readln(nb_j);
+    repeat
+        writeln('Combien y a-t-il de joueurs ?');
+        readln(nb_j);
+        if not((nb_j >= 1) AND (nb_j <= 6)) then
+            writeln('Ce choix est invalide.')
+        until ((nb_j >= 1) AND (nb_j <= 6));
     SetLength(joueurs, nb_j); 
 
 
@@ -178,6 +182,11 @@ begin
                                         joueurs[i].pos[2] := 2;
                                         joueurs[i].pion := 'L';
                                     end;
+                Professeur_Violet :    begin
+                                        joueurs[i].pos[1] := 25;
+                                        joueurs[i].pos[2] := 21;
+                                        joueurs[i].pion := 'V';
+                                    end;
                 Monsieur_Bredel :  begin
                                         joueurs[i].pos[1] := 2;
                                         joueurs[i].pos[2] := 19;
@@ -202,6 +211,11 @@ begin
                                         joueurs[i].pos[1] := 11;
                                         joueurs[i].pos[2] := 2;
                                         joueurs[i].pion := 'I';
+                                    end;
+                Monsieur_Thibault :    begin
+                                        joueurs[i].pos[1] := 25;
+                                        joueurs[i].pos[2] := 21;
+                                        joueurs[i].pion := 'T';
                                     end;
             end;
             joueurs[i].enVie := True;
@@ -235,6 +249,7 @@ begin
                 2 : Include(joueurs[3].cartes, liste_cartes[l]);
                 3 : Include(joueurs[4].cartes, liste_cartes[l]);
                 4 : Include(joueurs[5].cartes, liste_cartes[l]);
+                5 : Include(joueurs[6].cartes, liste_cartes[l]);
             end;
         end; 
     
@@ -288,7 +303,7 @@ begin
 
     {Chargement des cases des salles}
     readln(fic, space);
-    for i := 1 to 9 do
+    for i := 1 to 10 do
         begin
             readln(fic, str);
             for j := 1 to StrToInt(str) do
@@ -320,13 +335,13 @@ begin
     {Chargement des noms des salles}
     i := 1;
     if environnement = Manoir then
-        for carte := Cuisine to Hall do
+        for carte := Cuisine to Cluedo do
             begin
                 plat.salles[i].nom := carte;
                 i := i+1;
             end
     else
-        for carte := Cafete to Labo do
+        for carte := Cafete to Accueil do
             begin
                 plat.salles[i].nom := carte;
                 i := i+1;
@@ -338,7 +353,7 @@ begin
 
 
     {Chargement du nombre de joueurs par salle}
-    for i := 1 to 9 do
+    for i := 1 to 10 do
         plat.salles[i].nb_j := 0;
 
 
