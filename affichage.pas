@@ -21,8 +21,27 @@ procedure affiche(c : Char; posX, posY : Integer);
 
 begin
 	{Affiche le caractère 'c' à l'emplacement posX posY}
-	GotoXY(posX, posY);
+	TextBackground(7);
+	case c of
+		'M' : TextColor(14);
+		'P' : TextColor(1);
+		'L' : TextColor(15);
+		'O' : TextColor(2);
+		'R' : TextColor(13);
+		{'V' : TextColor(5);}
+		'B' : TextColor(3);
+		'A' : TextColor(13);
+		'Y' : TextColor(14);
+		'D' : TextColor(15);
+		'I' : TextColor(4);
+		{'T' : TextColor(11);}
+	else
+		TextBackground(0);
+	end;
+	GotoXY(posX + (posX - 1), posY);
 	write(c);
+	TextColor(15);
+	TextBackground(0);
 end; 
 
 
@@ -36,34 +55,73 @@ begin
     ClrScr;
 	i := 1;
 	j := 1;
+	TextColor(8);
 	for i := 1 to 27 do
 		for j := 1 to 26 do
 			begin
 				case plat.grille[j][i] of
-					0 : write(' ');
-					1 : write('/');
+					0 : write('  ');
+					1 : write('||');
 				end;
 				if (j = 26) then
 					writeln();
 			end;
+	
+
+	{Affichage du nom des salles}
+	GotoXY(4, 4);
+	write(plat.salles[1].nom);
+	GotoXY(21, 5);
+	write(plat.salles[2].nom);
+	GotoXY(40, 4);
+	write(plat.salles[3].nom);
+	GotoXY(2, 13);
+	write(plat.salles[4].nom);
+	GotoXY(42, 11);
+	write(plat.salles[5].nom);
+	GotoXY(40, 17);
+	write(plat.salles[6].nom);
+	GotoXY(5, 22);
+	write(plat.salles[7].nom);
+	GotoXY(43, 24);
+	write(plat.salles[8].nom);
+	GotoXY(25, 26);
+	write(plat.salles[9].nom);
+
 
 	{Affichage des pions des joueurs sur le plateau}
 	for i := 1 to length(joueurs) do
 		begin
-			GotoXY(joueurs[i].pos[1], joueurs[i].pos[2]);
+			GotoXY(joueurs[i].pos[1] + (joueurs[i].pos[1] - 1), joueurs[i].pos[2]);
+			case joueurs[i].perso of
+				Colonel_Moutarde : TextColor(14);
+				Madame_Pervenche : TextColor(1);
+				Madame_Leblanc : TextColor(15);
+				Docteur_Olive : TextColor(2);
+				Mademoiselle_Rose : TextColor(13);
+				{Professeur_Violet : TextColor(5);}
+				Monsieur_Bredel : TextColor(3);
+				Madame_LArcheveque : TextColor(13);
+				Yohann_Lepailleur : TextColor(14);
+				Le_Directeur : TextColor(15);
+				Infirmiere : TextColor(4);
+				{Monsieur_Thibault : TextColor(11);}
+			end;
 			write(joueurs[i].pion);
 		end;
 
 
 	{Affichage des passages secrets}
-	GotoXY(4, 3);
+	TextColor(8);
+	GotoXY(7, 3);
 	write('#');
-	GotoXY(23, 26);
+	GotoXY(45, 26);
 	write('#');
-	GotoXY(23, 3);
+	GotoXY(45, 3);
 	write('@');
-	GotoXY(5, 26);
+	GotoXY(9, 26);
 	write('@');
+	TextColor(15);
 end;
 
     
@@ -95,7 +153,7 @@ procedure affichageDeplacement(move : Integer);
 
 begin
 	{Affiche le nombre de déplacements restant}
-	GotoXY(35, 15);
+	GotoXY(70, 15);
 	write('Déplacements restants : ', move, ' ');
 end;
 

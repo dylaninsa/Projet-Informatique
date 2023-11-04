@@ -90,7 +90,7 @@ begin
         end
     else
         begin
-            for carte := Monsieur_bredel to BU do 
+            for carte := Monsieur_bredel to Labo do 
                 begin
                     Include(cartes, carte);
                     liste_cartes[j] := carte;
@@ -220,21 +220,21 @@ begin
     writeln();}
 
 
-    {Tests : affichage de l'étui (à enlever plus tard)}
+    {Tests : affichage de l'étui (à enlever plus tard)
     writeln('Etui');
     for carte in etui do write(carte, ' ');
-    Delay(5000);
+    Delay(5000);}
 
 
     {Distribution des cartes}
     for l := 0 to length(liste_cartes)-1 do
         begin
             case l mod nb_j of
-                0 : if nb_j >= 1 then Include(joueurs[1].cartes, liste_cartes[l]);
-                1 : if nb_j >= 2 then Include(joueurs[2].cartes, liste_cartes[l]);
-                2 : if nb_j >= 3 then Include(joueurs[3].cartes, liste_cartes[l]);
-                3 : if nb_j >= 4 then Include(joueurs[4].cartes, liste_cartes[l]);
-                4 : if nb_j >= 5 then Include(joueurs[5].cartes, liste_cartes[l]);
+                0 : Include(joueurs[1].cartes, liste_cartes[l]);
+                1 : Include(joueurs[2].cartes, liste_cartes[l]);
+                2 : Include(joueurs[3].cartes, liste_cartes[l]);
+                3 : Include(joueurs[4].cartes, liste_cartes[l]);
+                4 : Include(joueurs[5].cartes, liste_cartes[l]);
             end;
         end; 
     
@@ -326,7 +326,7 @@ begin
                 i := i+1;
             end
     else
-        for carte := Cafete to BU do
+        for carte := Cafete to Labo do
             begin
                 plat.salles[i].nom := carte;
                 i := i+1;

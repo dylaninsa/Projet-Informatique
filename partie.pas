@@ -13,7 +13,6 @@ procedure finPartie(joueurs : ListeJoueurs; accusation : Boolean; var j_actif : 
 procedure deplacement(var plat : Plateau; lancer : Integer; var joueurs : ListeJoueurs; j_actif : Integer);
 procedure lancerDes(var lancer : Integer);
 procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCartes; plat : Plateau; j_actif : Integer; environnement : Enviro);
-procedure demandeJoueur(var hypo : Array of ListeCartes;joueurs : ListeJoueurs; j_actif : Integer);
 procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
 procedure placementSalle(var joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer);
 function estDansSalle(joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer) : Boolean;
@@ -178,13 +177,11 @@ begin
                             begin
                                 affichageCartes(joueurs, j_actif);
                                 faireHypothese(joueurs, hypo, plat, j_actif, environnement);
-                                demandeJoueur(hypo, joueurs, j_actif);
                             end;
                     end;
                 2 : begin
                         affichageCartes(joueurs, j_actif);
                         faireHypothese(joueurs, hypo, plat, j_actif, environnement);
-                        demandeJoueur(hypo, joueurs, j_actif);
                     end;
                 3 : begin
                         faireAccusation(etui, joueurs, accusation, j_actif, environnement);
@@ -199,7 +196,6 @@ begin
                 begin
                     affichageCartes(joueurs, j_actif);
                     faireHypothese(joueurs, hypo, plat, j_actif, environnement);
-                    demandeJoueur(hypo, joueurs, j_actif);
                 end;
         end;
 end;
@@ -686,8 +682,11 @@ end;
 
 procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCartes; plat : Plateau; j_actif : Integer; environnement : Enviro);
 
-var g1, g2, carte : ListeCartes;
-    perso, arme : set of ListeCartes;
+var g1, g2, reveal, carte : ListeCartes;
+    perso, arme, temp : set of ListeCartes;
+    i, j, k, l, nb : Integer;
+    montrer : Boolean;
+    commun : Array of ListeCartes;
 
 begin 
     {Déclaration et remplissage des ensembles personnage et arme propre à l'envrionnement}
@@ -729,20 +728,10 @@ begin
     hypo[2] := g2;
 
     hypo[3] := plat.salles[estDansLaSalle(joueurs, plat, j_actif)].nom;
-end;
 
 
-
-procedure demandeJoueur(var hypo : array of ListeCartes; joueurs : ListeJoueurs; j_actif : Integer);
-
-var i, j, k, l, nb : Integer;
-    montrer : Boolean;
-    commun : Array of ListeCartes;
-    temp : set of ListeCartes;
-    reveal, carte : ListeCartes;
-
-begin
     {Demande aux joueurs suivants si il possède une des cartes de l'hypothèse formulée}
+    ClrScr;
     i := 1;
     montrer := False;
     j := j_actif;
@@ -799,7 +788,7 @@ begin
 
     {Affiche au j_actif qu'aucun des joueurs ne possède les cartes de l'hypothèse si c'est le cas}
     if not(montrer) then
-        writeln('Aucun des joueurs de cette partie ne possède une carte de votre hypothèse !');
+        writeln('Aucun des joueurs de cette partie ne possède une carte de votre hypothèse !');    
 end;
 
 
@@ -821,7 +810,7 @@ begin
                 Include(perso, carte);
             for carte := Poignard to Clef_Anglaise do
                 Include(arme, carte);
-            for carte := Cuisine to Hall do
+            for carte := Infirmerie to Labo do
                 Include(lieu, carte);
         end
     else
@@ -898,7 +887,7 @@ begin
     else
         begin
             writeln('Aucun des enquêteurs n''est parvenu à résoudre ce meurtre. La partie est finie.');
-            writeln('Voici les éléments du meurtre : ', etui[1], ' ', etui[2], ' ', etui[3], '.');
+            writeln('Voici les éléments du meurtre : ', etui[0], ' ', etui[1], ' ', etui[2], '.');
         end;
 end;
 
@@ -994,7 +983,7 @@ begin
                 3 : 
                     begin
                         co[1] := 21;
-						co[2] := 4;
+						co[2] := 5;
                         case joueursDansLaSalle(joueurs, plat, 3) of
 							0 : begin
 									joueurs[j_actif].pos[1] := co[1];
@@ -1021,7 +1010,7 @@ begin
                 4 : 
                     begin
                         co[1] := 3;
-						co[2] := 14;
+						co[2] := 15;
                         case joueursDansLaSalle(joueurs, plat, 4) of
 							0 : begin
 									joueurs[j_actif].pos[1] := co[1];

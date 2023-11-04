@@ -57,4 +57,5 @@ begin
         2 : afficherRegles();
         3 : quitter();
     end;
+    Halt();
 end.
