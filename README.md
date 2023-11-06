@@ -36,6 +36,6 @@ Si vous avez des question posez les moi.
 - Ne pas pouvoir sortir et rentrer d´une même salle pendant le même tour 
 - Afficher constamment le plateau à droite
 
-** Bug à fixer :**
+**Bug à fixer :**
 
 - Progrmamme tourne à l'infini si un joueur ne peut pas sortir d'une salle
