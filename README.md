@@ -35,3 +35,7 @@ Si vous avez des question posez les moi.
 - Afficher les touches pour sortir des salles / prendre les passages secrets
 - Ne pas pouvoir sortir et rentrer d´une même salle pendant le même tour 
 - Afficher constamment le plateau à droite
+
+** Bug à fixer :**
+
+- Progrmamme tourne à l'infini si un joueur ne peut pas sortir d'une salle
