@@ -32,4 +32,6 @@ Si vous avez des question posez les moi.
 - Sauvegarder / Charger partie
 - Fiches de chaque personnage
 - Téléportation des joueurs lors de l'accusation
+- Afficher les touches pour sortir des salles / prendre les passages secrets
+- Ne pas pouvoir sortir et rentrer d´une même salle pendant le même tour 
 - Afficher constamment le plateau à droite
