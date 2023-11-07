@@ -148,7 +148,9 @@ begin
     {Initialisation des joueurs et de leurs propriétés}
     for i := 1 to nb_j do
         begin
-            writeln('Quel est le personnage du joueur ', i, ' ?');
+            write('Quel est le personnage du joueur ', i, ' ? Voici les choix possibles : ');
+            for carte in personnages do write(carte, ' ');
+            writeln();
             repeat
                 readln(p);
                 if not(p in personnages) then
@@ -290,7 +292,7 @@ begin
     {Chargement de la grille}
     assign(fic, 'cluedo.txt');
     reset(fic);
-    for j := 1 to 27 do
+    for j := 1 to 28 do
         begin
 	        readln(fic,str);
 	        for i := 1 to 26 do
@@ -350,11 +352,6 @@ begin
     
     {fermeture du fichier}
     close(fic);
-
-
-    {Chargement du nombre de joueurs par salle}
-    for i := 1 to 10 do
-        plat.salles[i].nb_j := 0;
 
 
     {Tests : Affichage des salles

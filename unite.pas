@@ -30,7 +30,6 @@ Type ListeJoueurs = Array of Joueur;
 Type Salle = record
     nom : ListeCartes;
     cases : Array [1..MAX] of Coords;
-    nb_j : Integer;
 end;
 
 Type Plateau = record 

@@ -12,6 +12,7 @@ procedure affichageCartes(joueurs : ListeJoueurs; j : Integer);
 procedure affichageDeplacement(move : Integer);
 procedure affichageMontrerCartes(var commun : Array of ListeCartes; joueurs : ListeJoueurs; j : Integer; j_actif : Integer; var reveal : ListeCartes);
 procedure colorPerso(joueurs : ListeJoueurs; j : Integer);
+procedure affichageSortieSalle(salle : Integer);
 
 
 
@@ -56,7 +57,7 @@ begin
 	i := 1;
 	j := 1;
 	TextColor(8);
-	for i := 1 to 27 do
+	for i := 1 to 28 do
 		for j := 1 to 26 do
 			begin
 				case plat.grille[j][i] of
@@ -235,6 +236,79 @@ begin
 		Le_Directeur : TextColor(15);
 		Infirmiere : TextColor(4);
 		Monsieur_Thibault : TextColor(11);
+	end;
+end;
+
+
+
+procedure affichageSortieSalle(salle : Integer);
+
+begin
+	case salle of 
+		1 : begin
+				GotoXY(6, 7);
+				write('↓');
+				GotoXY(13, 3);
+				write('↑');
+			end;
+		2 : begin
+				GotoXY(21, 9);
+				write('↓');
+				GotoXY(31, 9);
+				write('↑');
+				GotoXY(19, 7);
+				write('←');
+				GotoXY(33, 7);
+				write('→');
+			end;
+		3 : begin
+				GotoXY(41, 5);
+				write('↓');
+				GotoXY(45, 3);
+				write('↑');
+			end;
+		4 : begin
+				GotoXY(17, 14);
+				write('→');
+				GotoXY(15, 17);
+				write('↓');
+			end;
+		5 : begin
+				GotoXY(47, 13);
+				write('↓');
+				GotoXY(41, 11);
+				write('←');
+			end;
+		6 : begin
+				GotoXY(40, 18);
+				write('←');
+				GotoXY(43, 17);
+				write('↑');
+			end;
+		7 : begin
+				GotoXY(9, 26);
+				write('↓');
+				GotoXY(13, 22);
+				write('↑');
+			end;
+		8 : begin
+				GotoXY(25, 21);
+				write('↓');
+				GotoXY(17, 21);
+				write('↑');
+				GotoXY(30, 22);
+				write('→');
+			end;
+		9 : begin
+				GotoXY(45, 26);
+				write('↓');
+				GotoXY(39, 24);
+				write('↑');
+			end;
+		10 : begin
+				GotoXY(27, 17);
+				write('↓');
+			end;
 	end;
 end;
 
