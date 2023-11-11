@@ -95,21 +95,8 @@ begin
 	{Affichage des pions des joueurs sur le plateau}
 	for i := 1 to length(joueurs) do
 		begin
-			GotoXY(joueurs[i].pos[1] + (joueurs[i].pos[1] - 1), joueurs[i].pos[2]);
-			case joueurs[i].perso of
-				Colonel_Moutarde : TextColor(14);
-				Madame_Pervenche : TextColor(1);
-				Madame_Leblanc : TextColor(15);
-				Docteur_Olive : TextColor(2);
-				Mademoiselle_Rose : TextColor(13);
-				Professeur_Violet : TextColor(5);
-				Monsieur_Bredel : TextColor(3);
-				Madame_LArcheveque : TextColor(13);
-				Yohann_Lepailleur : TextColor(14);
-				Le_Directeur : TextColor(15);
-				Infirmiere : TextColor(4);
-				Monsieur_Thibault : TextColor(11);
-			end;
+			GotoXY(2 * joueurs[i].pos[1] - 1, joueurs[i].pos[2]);
+			colorPerso(joueurs, i);
 			write(joueurs[i].pion);
 		end;
 
@@ -175,7 +162,7 @@ begin
 
 	repeat
         continue := readKey();
-        until (continue = #32);
+        until (continue = SPACE);
 
 	write('Voici les cartes en commun entre vos cartes et celles de l''hypothese acuelle : ');
 	for carte in ens do
@@ -203,7 +190,7 @@ begin
 
     repeat
         continue := readKey();
-        until (continue = #32);
+        until (continue = SPACE);
 
     write('La carte que ');
 	colorPerso(joueurs, j);
@@ -213,7 +200,7 @@ begin
 
     repeat
         continue := readKey();
-        until (continue = #32);
+        until (continue = SPACE);
 
     ClrScr;
 end;

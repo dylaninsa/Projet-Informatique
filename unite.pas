@@ -10,6 +10,7 @@ Const
 	LEFT = #75;
 	RIGHT = #77;
     QUIT = #113;
+    SPACE = #32;
 
 Type Enviro = (Manoir, INSA);
 
