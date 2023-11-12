@@ -364,7 +364,75 @@ begin
 
 end;
 
-//procedure chargerPartie(var joueurs:ListeJoueurs; var plateau:Plateau; var etui:ListeCartes);
+{procedure chargerPartie(var joueurs:ListeJoueurs; var plateau:Plateau; var etui:ListeCartes);
+
+var nomFichier:String;
+    sauvegarde:Text;
+    ligne:string;
+    environnement:Enviro;
+    nb_j, i, j, k, l, c, r1, r2, r3, r : Integer;
+    cartes, personnages : set of ListeCartes;
+    carte : ListeCartes;
+    liste_cartes : Array of ListeCartes;
+    personnage, p, mem : ListeCartes;
+
+begin
+    Randomize;
+
+    {Choix du fichier à lancer}
+    writeln('Quel partie souhaitez-vous lancer?');
+    readln(nomFichier);
+    assign(sauvegarde, nomFichier);
+    reset(sauvegarde);
+
+    readln(sauvegarde, ligne);
+    if (ligne='Manoir') then
+        environnement:=Manoir
+    else environnement:=INSA
+
+
+    {Création du plateau de jeu}
+    creerPlateau(plat, environnement);
+
+
+    {Nombre de joueurs dans la partie}
+    readln(sauvegarde,ligne);
+    nb_j:=ligne;
+    SetLength(joueurs, nb_j); 
+
+
+    {Initialisation des joueurs et de leurs propriétés}
+    for i := 1 to nb_j do
+        begin
+            readln(sauvegarde, ligne);
+            joueurs[i].enVie := ligne;
+            joueurs[i].cartes := [];
+            readln(sauvegarde, ligne);
+            joueurs[i].pos := ligne;
+            readln(sauvegarde, ligne);
+            joueurs[i].perso :=ligne;
+            readln(sauvegarde, ligne);
+            joueurs[i].pion := ligne;
+        end;
+
+
+    {Attribution des cartes}
+    while not Eof(sauvegarde)
+        begin   
+            for
+   
+    {Libération espace mémoire}
+    SetLength(liste_cartes, 0);
+
+
+    jeu(etui, plat, joueurs, environnement);
+    
+    {Libération espace mémoire}
+    SetLength(joueurs, 0); // le laisser à la fin de cette procédure
+{fermeture du fichier}
+close(sauvegarde);
+end;}
+
 
 
 end.
