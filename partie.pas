@@ -6,45 +6,28 @@ Interface
 uses unite, Crt, affichage;
 
 
-procedure jeu(var etui : Array of ListeCartes; var plat : Plateau; var joueurs : ListeJoueurs; environnement : Enviro);
+procedure jeu(var etui : Array of ListeCartes; var plat : Plateau; var joueurs : ListeJoueurs; environnement : Enviro; var j_actif : Integer);
 procedure tour(var plat : Plateau; var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
-procedure finPartie(joueurs : ListeJoueurs; accusation : Boolean; var j_actif : Integer; var etui : Array of ListeCartes);
-{procedure quitterSauvegarder(joueurs:ListeJoueurs; plat:Plateau; var etui:Array of ListeCartes; var sauvegarde:File);}
-procedure deplacement(var plat : Plateau; lancer : Integer; var joueurs : ListeJoueurs; j_actif : Integer);
 procedure lancerDes(var lancer : Integer);
+procedure deplacement(var plat : Plateau; lancer : Integer; var joueurs : ListeJoueurs; j_actif : Integer);
+procedure placementSalle(var joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer);
 procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCartes; plat : Plateau; j_actif : Integer; environnement : Enviro);
 procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
-procedure placementSalle(var joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer);
-function estDansSalle(joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer) : Boolean;
+procedure finPartie(joueurs : ListeJoueurs; accusation : Boolean; var j_actif : Integer; var etui : Array of ListeCartes);
+{procedure quitterSauvegarder(joueurs:ListeJoueurs; plat:Plateau; var etui:Array of ListeCartes; var sauvegarde:File);}
 function estDansLaSalle(plat : Plateau; coordonnees : Coords) : Integer;
 function joueursEnVie(joueurs : ListeJoueurs) : Integer;
 function caseEstLibre(joueurs : ListeJoueurs; plat : Plateau; co : Coords) : Boolean;
+function sortieSallePossible(joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer) : Boolean;
 
 
 
 Implementation
 
 
-function joueursEnVie(joueurs : ListeJoueurs) : Integer;
+procedure jeu(var etui : Array of ListeCartes; var plat : Plateau; var joueurs : ListeJoueurs; environnement : Enviro; var j_actif : Integer);
 
-var i : Integer;
-
-begin
-    {Renvoie le nombre de joueurs en vie}
-    joueursEnVie := 0;
-    for i := 0 to length(joueurs) do
-        begin
-            if (joueurs[i].enVie) then
-                joueursEnVie := joueursEnVie + 1;
-        end;
-end;
-
-
-
-procedure jeu(var etui : Array of ListeCartes; var plat : Plateau; var joueurs : ListeJoueurs; environnement : Enviro);
-
-var j_actif : Integer;
-    accusation : Boolean;
+var accusation : Boolean;
     key : Char;
 
 begin
@@ -54,7 +37,6 @@ begin
 
 
     {Lance les tours pour chaque perso jusqu'à ce qu'on quitte ou qu'il n'y ait plus assez de joueurs en vie ou sir les éléments du meurtre ont été trouvés}
-    j_actif := 1;
     repeat 
         begin 
             if (joueurs[j_actif].enVie) then
@@ -85,54 +67,6 @@ end;
 
 
 
-function estDansSalle(joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer) : Boolean;
-
-var co : Coords;
-    i : Integer;
-
-begin
-    {Renvoie True si le joueur est dans une salle, False sinon}
-    i := 1;
-    estDansSalle := False;
-    repeat
-        begin
-            for co in plat.salles[i].cases do
-                begin
-                    if ((co[1] = joueurs[j_actif].pos[1]) AND (co[2] = joueurs[j_actif].pos[2])) then
-                        estDansSalle := True;
-                end;
-            i := i + 1;
-        end;
-        until ((i = 11) OR estDansSalle);        
-
-end;
-
-
-
-function estDansLaSalle(plat : Plateau; coordonnees : Coords) : Integer;
-
-var co : Coords;
-    i : Integer;
-
-begin
-    {Renvoie la salle dans laquelle le joueur se trouve}
-    i := 1;
-    estDansLaSalle := 0;
-    repeat
-        begin
-            for co in plat.salles[i].cases do
-                begin
-                    if ((co[1] = coordonnees[1]) AND (co[2] = coordonnees[2])) then
-                        estDansLaSalle := i;
-                end;
-            i := i + 1;
-        end;
-        until (i = 11);        
-
-end;
-
-
-
 procedure tour(var plat : Plateau; var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
 
 var c, lancer : Integer;
@@ -149,56 +83,23 @@ begin
     writeln(' de jouer ! (Appuyer sur ''espace'')');
     repeat
         continue := readKey();
-        until (continue = #32);
+        until (continue = SPACE);
 
 
-    {Affiche les cartes du joueurs qui joue}
+    {Affiche les cartes du joueur qui joue}
     affichageCartes(joueurs, j_actif);
-    if estDansSalle(joueurs, plat, j_actif) then
+    if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then
         writeln('Vous etes actuellement dans la salle : ', plat.salles[estDansLaSalle(plat, joueurs[j_actif].pos)].nom, '.');
     writeln('(Appuyer sur ''espace'')');
     repeat
         continue := readKey();
-        until (continue = #32);
+        until (continue = SPACE);
     
 
     {Différentes action possibles selon les cas}
-    if (estDansSalle(joueurs, plat, j_actif)) then
+    if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then
         begin
-            if (estDansLaSalle(plat, joueurs[j_actif].pos) = 10) then
-                begin
-                    writeln('Que voulez-vous faire :');
-                    writeln('   1 : Vous deplacer');
-                    writeln('   2 : Formuler une accusation');  
-
-                    repeat
-                        write('Votre choix est : ');
-                        readln(c);
-                        if not((c >= 1) AND (c <= 2)) then
-                            writeln('Ce choix est invalide.')
-                        until ((c >= 1) AND (c <= 2));
-
-                    case c of
-                        1 : begin
-                                lancerDes(lancer);
-                                deplacement(plat, lancer, joueurs, j_actif);
-                                if (estDansSalle(joueurs, plat, j_actif)) then
-                                    begin
-                                        ClrScr;
-                                        affichageCartes(joueurs, j_actif);
-                                        if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 10) then
-                                            faireHypothese(joueurs, hypo, plat, j_actif, environnement)
-                                        else
-                                            faireAccusation(etui, joueurs, accusation, j_actif, environnement);
-                                    end;
-                            end;
-                        2 : begin
-                                affichageCartes(joueurs, j_actif);
-                                faireAccusation(etui, joueurs, accusation, j_actif, environnement);
-                            end;
-                    end;
-                end
-            else 
+            if sortieSallePossible(joueurs, plat, j_actif) then
                 begin
                     writeln('Que voulez-vous faire :');
                     writeln('   1 : Vous deplacer');
@@ -215,10 +116,8 @@ begin
                         1 : begin
                                 lancerDes(lancer);
                                 deplacement(plat, lancer, joueurs, j_actif);
-                                if (estDansSalle(joueurs, plat, j_actif)) then
+                                if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then
                                     begin
-                                        ClrScr;
-                                        affichageCartes(joueurs, j_actif);
                                         if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 10) then
                                             faireHypothese(joueurs, hypo, plat, j_actif, environnement)
                                         else
@@ -226,26 +125,57 @@ begin
                                     end;
                             end;
                         2 : begin
-                                affichageCartes(joueurs, j_actif);
                                 faireHypothese(joueurs, hypo, plat, j_actif, environnement);
                             end;
                     end;
+                end
+            else
+                begin
+                    writeln('Vous ne pouvez pas sortir de cette salle actuellement. Vous allez donc formuler une hypothèse. (Appuyer sur ''espace'')');
+                    repeat
+                        continue := readKey();
+                        until (continue = SPACE);
+                    faireHypothese(joueurs, hypo, plat, j_actif, environnement);
                 end;
         end
     else
         begin
             lancerDes(lancer);
             deplacement(plat, lancer, joueurs, j_actif);
-            if (estDansSalle(joueurs, plat, j_actif)) then
+            if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then
                 begin
-                    ClrScr;
-                    affichageCartes(joueurs, j_actif);
                     if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 10) then
                         faireHypothese(joueurs, hypo, plat, j_actif, environnement)
                     else
                         faireAccusation(etui, joueurs, accusation, j_actif, environnement);
                 end;
         end;
+end;
+
+
+
+procedure lancerDes(var lancer : Integer);
+
+var de1, de2 : Integer;
+    continue : Char;
+
+begin
+    {Lance les 2 dés de manière aléatoire}
+    Randomize;
+
+    de1 := 0;{random(5) + 1;}
+    de2 := 50;{random(5) + 1;}
+
+    lancer := de1 + de2;
+
+    {Affiche la valeur des deux dés ainsi que le nombre de déplacements total}
+	writeln('Le premier de a pour valeur ', de1, ' et le second ', de2, '. Le nombre de deplacement total est donc de ', lancer, '.');
+
+    writeln('(Appuyer sur ''espace'')');
+
+    repeat
+        continue := readKey();
+        until (continue = SPACE);
 end;
 
 
@@ -266,7 +196,7 @@ begin
     affichageDeplacement(move);
 
 
-    if estDansSalle(joueurs, plat, j_actif) then
+    if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then
         begin
             case estDansLaSalle(plat, joueurs[j_actif].pos) of
                 1 : 
@@ -648,7 +578,7 @@ begin
 
 
     {Déplace le pion en vérifiant les conditions de case d'arrivée, et réduit le nombre de déplacement restant jusqu'à que les déplacements restants soient à 0 ou que le joueur soit dans une salle}
-    if not(estDansSalle(joueurs, plat, j_actif)) then
+    if (estDansLaSalle(plat, joueurs[j_actif].pos) = 0) then
         begin
             repeat
 	        	begin
@@ -702,12 +632,7 @@ begin
 					        end;
                     end;
 		        end;
-		        until ((move = 0) OR estDansSalle(joueurs, plat, j_actif));
-
-
-            {Ajout d'un joueur dans la salle si il rentre dans une salle}
-            if estDansSalle(joueurs, plat, j_actif) then
-                placementSalle(joueurs, plat, j_actif);
+		        until ((move = 0) OR (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0));
         end;
         
     
@@ -716,273 +641,6 @@ begin
     affichageDeplacement(move);
     Delay(1000);
     ClrScr;
-end;
-
-
-
-procedure lancerDes(var lancer : Integer);
-
-var de1, de2 : Integer;
-    continue : Char;
-
-begin
-    {Lance les 2 dés de manière aléatoire}
-    Randomize;
-
-    de1 := random(5) + 1;
-    de2 := random(5) + 1;
-
-    lancer := de1 + de2;
-
-    {Affiche la valeur des deux dés ainsi que le nombre de déplacements total}
-	writeln('Le premier de a pour valeur ', de1, ' et le second ', de2, '. Le nombre de deplacement total est donc de ', lancer, '.');
-
-    writeln('(Appuyer sur ''espace'')');
-
-    repeat
-        continue := readKey();
-        until (continue = #32);
-end;
-
-
-
-procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCartes; plat : Plateau; j_actif : Integer; environnement : Enviro);
-
-var g1, g2, reveal, carte : ListeCartes;
-    perso, arme, temp : set of ListeCartes;
-    i, j, k, l, nb : Integer;
-    montrer : Boolean;
-    commun : Array of ListeCartes;
-
-begin 
-    {Déclaration et remplissage des ensembles personnage et arme propre à l'envrionnement}
-    perso := [];
-    arme := [];
-    if environnement = Manoir then
-        begin
-            for carte := Colonel_Moutarde to Madame_Leblanc do
-                Include(perso, carte);
-            for carte := Poignard to Clef_Anglaise do
-                Include(arme, carte);
-        end
-    else
-        begin
-            for carte := Monsieur_Bredel to Infirmiere do
-                Include(perso, carte);
-            for carte := Seringue to Pouf_Rouge do
-                Include(arme, carte);
-        end;
-
-
-    {Enregistre les éléments de l'hypothèse}
-    writeln('Vous allez formuler une hypothese !');
-
-    repeat
-        write('Selon vous, qui pourrait-etre l''assassin ? ');
-        readln(g1);
-        if not(g1 in perso) then
-            writeln('La carte ne correspond pas a un personnage.')
-        until (g1 in perso);
-    hypo[1] := g1;
-
-    repeat
-        write('Selon vous, quelle pourrait-etre l''arme du crime ? ');
-        readln(g2);
-        if not(g2 in arme) then
-            writeln('La carte ne correspond pas a une arme')
-        until (g2 in arme);
-    hypo[2] := g2;
-
-    hypo[3] := plat.salles[estDansLaSalle(plat, joueurs[j_actif].pos)].nom;
-
-
-    {Affiche l'hypothèse en entière}
-    writeln('Votre hypothese est donc la suivante : ', hypo[1], ' ', hypo[2], ' ', hypo[3]);
-    Delay(5000);
-
-
-    {Demande aux joueurs suivants si il possède une des cartes de l'hypothèse formulée}
-    ClrScr;
-    montrer := False;
-    j := j_actif;
-    i := 1;
-
-
-    {Répète la demande au joueur en stockant les cartes en commun entre le joueur j et l'hypothèse formulée jusqu'à ce qu'une carte coincide ou que tout les joueurs aient été interrogés}
-    repeat 
-        if (j + 1 > length(joueurs)) then
-            j := (j + 1) mod length(joueurs)
-        else
-            j := j + 1;
-
-
-        temp := [];
-        for k := 1 to 3 do
-            begin
-                if (hypo[k] in joueurs[j].cartes) then
-                    begin
-                        Include(temp, hypo[k]);
-                    end;
-            end;
-
-
-        if (temp <> []) then
-            begin
-                nb := 0;
-                for carte in temp do
-                    begin
-                        nb := nb + 1;
-                    end;
-                
-                SetLength(commun, nb);
-                l := 1;
-                for carte in temp do
-                    begin
-                        commun[l] := carte;
-                        l := l + 1;
-                    end;
-
-                affichageMontrerCartes(commun, joueurs, j, j_actif, reveal);
-                montrer := True;
-                SetLength(commun, 0);
-            end
-        else
-            begin
-                colorPerso(joueurs, j);
-                write(joueurs[j].perso);
-                TextColor(15);
-                writeln(' n''as aucune des cartes de votre hypothese.');
-                Delay(1000);
-            end;
-
-        i := i + 1;
-
-        until (montrer OR (i = length(joueurs)));
-
-
-    {Affiche au j_actif qu'aucun des joueurs ne possède les cartes de l'hypothèse si c'est le cas}
-    if not(montrer) then
-        writeln('Aucun des enqueteurs ne possede une carte de votre hypothese !');    
-end;
-
-
-
-procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
-
-var guess : Array [0..2] of ListeCartes;
-    g1, g2, g3, carte : ListeCartes;
-    perso, arme, lieu : set of ListeCartes;
-
-begin 
-    {Déclaration et remplissage des ensembles personnage et arme propre à l'envrionnement}
-    perso := [];
-    arme := [];
-    lieu := [];
-    if environnement = Manoir then
-        begin
-            for carte := Colonel_Moutarde to Madame_Leblanc do
-                Include(perso, carte);
-            for carte := Poignard to Clef_Anglaise do
-                Include(arme, carte);
-            for carte := Cuisine to Studio do
-                Include(lieu, carte);
-        end
-    else
-        begin  
-            for carte := Monsieur_Bredel to Infirmiere do
-                Include(perso, carte);
-            for carte := Seringue to Pouf_Rouge do
-                Include(arme, carte);
-            for carte := Cafete to BU do
-                Include(lieu, carte);
-        end;
-
-
-    {Enregistre les éléments de l'accusation}
-    writeln('Vous allez formuler une accusation !');
-
-    repeat
-        write('Selon vous, qui est l''assassin ? ');
-        readln(g1);
-        if not(g1 in perso) then
-            writeln('La carte ne correspond pas a un personnage.')
-        until (g1 in perso);
-    guess[0] := g1;
-
-    repeat
-        write('Selon vous, quelle est l''arme du crime ? ');
-        readln(g2);
-        if not(g2 in arme) then
-            writeln('La carte ne correspond pas a une arme')
-        until (g2 in arme);
-    guess[1] := g2;
-
-    repeat
-        write('Selon vous, dans quelle salle l''assassinat a-t-il eu lieu ? ');
-        readln(g3);
-        if not(g3 in lieu) then
-            writeln('La carte ne correspond pas a un lieu')
-        until (g3 in lieu);
-    guess[2] := g3;
-
-
-    {Vérifie que les ensembles de l'accusation et de l'étui coincident, sinon le joueur du tour meurt}
-    if ((etui[0] = guess[0]) AND (etui[1] = guess[1]) AND (etui[2] = guess[2])) then
-        accusation := True
-    else
-        begin
-            joueurs[j_actif].enVie := False;
-            ClrScr;
-            write('Malheuresement, l''accusation de ');
-            colorPerso(joueurs, j_actif);
-            write(joueurs[j_actif].perso);
-            TextColor(15);
-            writeln(' n''etait pas la bonne. Il ne fait donc plus partie de l''enquete.');
-        end;
-end;
-
-
-
-procedure finPartie(joueurs : ListeJoueurs; accusation : Boolean; var j_actif : Integer; var etui : Array of ListeCartes);
-
-begin
-    {Si l'accusation est vérifiée alors affiche le gagnant, sinon annonce affiche la défaite de tous}
-    if accusation then
-        begin
-            if (j_actif - 1 = 0) then
-                j_actif := length(joueurs)
-            else
-                j_actif := j_actif - 1;
-    
-            writeln('La partie est terminee ! Un enqueteur a trouve le meurtrier, l''arme du crime et le lieu de l''assassinnat.');
-            write('Et cet en enqueteur est ');
-            colorPerso(joueurs, j_actif);
-            write(joueurs[j_actif].perso);
-            TextColor(15); 
-            writeln(' !');
-            write('Voici les elements du meurtre : ', etui[0], ' ', etui[1], ' ', etui[2], '.');
-        end
-    else
-        begin
-            writeln('Aucun des enqueteurs n''est parvenu a resoudre ce meurtre. La partie est finie.');
-            writeln('Voici les elements du meurtre : ', etui[0], ' ', etui[1], ' ', etui[2], '.');
-        end;
-end;
-
-
-
-function caseEstLibre(joueurs : ListeJoueurs; plat : Plateau; co : Coords) : Boolean;
-
-var i : Integer;
-
-begin
-    {Renvoie True si la case est libre, False sinon}
-    caseEstLibre := True;
-    for i := 1 to length(joueurs) do
-        begin
-            if ((co[1] = joueurs[i].pos[1]) AND (co[2] = joueurs[i].pos[2])) then
-                caseEstLibre := False;
-        end;
 end;
 
 
@@ -996,7 +654,7 @@ begin
     i := 1;
 
 
-	if estDansSalle(joueurs, plat, j_actif) then
+	if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then
         begin
             affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
 			case estDansLaSalle(plat, joueurs[j_actif].pos) of
@@ -1406,6 +1064,365 @@ end;
 
 
 
+procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCartes; plat : Plateau; j_actif : Integer; environnement : Enviro);
+
+var g1, g2, reveal, carte : ListeCartes;
+    perso, arme, temp : set of ListeCartes;
+    i, j, k, l, nb : Integer;
+    montrer : Boolean;
+    commun : Array of ListeCartes;
+
+begin 
+    {Déclaration et remplissage des ensembles personnage et arme propre à l'envrionnement}
+    perso := [];
+    arme := [];
+    if environnement = Manoir then
+        begin
+            for carte := Colonel_Moutarde to Madame_Leblanc do
+                Include(perso, carte);
+            for carte := Poignard to Clef_Anglaise do
+                Include(arme, carte);
+        end
+    else
+        begin
+            for carte := Monsieur_Bredel to Infirmiere do
+                Include(perso, carte);
+            for carte := Seringue to Pouf_Rouge do
+                Include(arme, carte);
+        end;
+
+
+    ClrScr;
+    affichageCartes(joueurs, j_actif);
+
+
+    {Enregistre les éléments de l'hypothèse}
+    writeln('Vous allez formuler une hypothese !');
+
+    repeat
+        write('Selon vous, qui pourrait-etre l''assassin ? ');
+        readln(g1);
+        if not(g1 in perso) then
+            writeln('La carte ne correspond pas a un personnage.')
+        until (g1 in perso);
+    hypo[1] := g1;
+
+    repeat
+        write('Selon vous, quelle pourrait-etre l''arme du crime ? ');
+        readln(g2);
+        if not(g2 in arme) then
+            writeln('La carte ne correspond pas a une arme')
+        until (g2 in arme);
+    hypo[2] := g2;
+
+    hypo[3] := plat.salles[estDansLaSalle(plat, joueurs[j_actif].pos)].nom;
+
+
+    {Affiche l'hypothèse en entière}
+    writeln('Votre hypothese est donc la suivante : ', hypo[1], ' ', hypo[2], ' ', hypo[3]);
+    Delay(5000);
+
+
+    {Demande aux joueurs suivants si il possède une des cartes de l'hypothèse formulée}
+    ClrScr;
+    montrer := False;
+    j := j_actif;
+    i := 1;
+
+
+    {Répète la demande au joueur en stockant les cartes en commun entre le joueur j et l'hypothèse formulée jusqu'à ce qu'une carte coincide ou que tout les joueurs aient été interrogés}
+    repeat 
+        if (j + 1 > length(joueurs)) then
+            j := (j + 1) mod length(joueurs)
+        else
+            j := j + 1;
+
+
+        temp := [];
+        for k := 1 to 3 do
+            begin
+                if (hypo[k] in joueurs[j].cartes) then
+                    begin
+                        Include(temp, hypo[k]);
+                    end;
+            end;
+
+
+        if (temp <> []) then
+            begin
+                nb := 0;
+                for carte in temp do
+                    begin
+                        nb := nb + 1;
+                    end;
+                
+                SetLength(commun, nb);
+                l := 1;
+                for carte in temp do
+                    begin
+                        commun[l] := carte;
+                        l := l + 1;
+                    end;
+
+                affichageMontrerCartes(commun, joueurs, j, j_actif, reveal);
+                montrer := True;
+                SetLength(commun, 0);
+            end
+        else
+            begin
+                colorPerso(joueurs, j);
+                write(joueurs[j].perso);
+                TextColor(15);
+                writeln(' n''as aucune des cartes de votre hypothese.');
+                Delay(1000);
+            end;
+
+        i := i + 1;
+
+        until (montrer OR (i = length(joueurs)));
+
+
+    {Affiche au j_actif qu'aucun des joueurs ne possède les cartes de l'hypothèse si c'est le cas}
+    if not(montrer) then
+        writeln('Aucun des enqueteurs ne possede une carte de votre hypothese !');    
+end;
+
+
+
+procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
+
+var guess : Array [0..2] of ListeCartes;
+    g1, g2, g3, carte : ListeCartes;
+    perso, arme, lieu : set of ListeCartes;
+
+begin 
+    {Déclaration et remplissage des ensembles personnage et arme propre à l'envrionnement}
+    perso := [];
+    arme := [];
+    lieu := [];
+    if environnement = Manoir then
+        begin
+            for carte := Colonel_Moutarde to Madame_Leblanc do
+                Include(perso, carte);
+            for carte := Poignard to Clef_Anglaise do
+                Include(arme, carte);
+            for carte := Cuisine to Studio do
+                Include(lieu, carte);
+        end
+    else
+        begin  
+            for carte := Monsieur_Bredel to Infirmiere do
+                Include(perso, carte);
+            for carte := Seringue to Pouf_Rouge do
+                Include(arme, carte);
+            for carte := Cafete to BU do
+                Include(lieu, carte);
+        end;
+
+
+    ClrScr;
+    affichageCartes(joueurs, j_actif);
+
+
+    {Enregistre les éléments de l'accusation}
+    writeln('Vous allez formuler une accusation !');
+
+    repeat
+        write('Selon vous, qui est l''assassin ? ');
+        readln(g1);
+        if not(g1 in perso) then
+            writeln('La carte ne correspond pas a un personnage.')
+        until (g1 in perso);
+    guess[0] := g1;
+
+    repeat
+        write('Selon vous, quelle est l''arme du crime ? ');
+        readln(g2);
+        if not(g2 in arme) then
+            writeln('La carte ne correspond pas a une arme')
+        until (g2 in arme);
+    guess[1] := g2;
+
+    repeat
+        write('Selon vous, dans quelle salle l''assassinat a-t-il eu lieu ? ');
+        readln(g3);
+        if not(g3 in lieu) then
+            writeln('La carte ne correspond pas a un lieu')
+        until (g3 in lieu);
+    guess[2] := g3;
+
+
+    {Vérifie que les ensembles de l'accusation et de l'étui coincident, sinon le joueur du tour meurt}
+    if ((etui[0] = guess[0]) AND (etui[1] = guess[1]) AND (etui[2] = guess[2])) then
+        accusation := True
+    else
+        begin
+            joueurs[j_actif].enVie := False;
+            ClrScr;
+            write('Malheuresement, l''accusation de ');
+            colorPerso(joueurs, j_actif);
+            write(joueurs[j_actif].perso);
+            TextColor(15);
+            writeln(' n''etait pas la bonne. Il ne fait donc plus partie de l''enquete.');
+        end;
+end;
+
+
+
+procedure finPartie(joueurs : ListeJoueurs; accusation : Boolean; var j_actif : Integer; var etui : Array of ListeCartes);
+
+begin
+    {Si l'accusation est vérifiée alors affiche le gagnant, sinon annonce affiche la défaite de tous}
+    if accusation then
+        begin
+            if (j_actif - 1 = 0) then
+                j_actif := length(joueurs)
+            else
+                j_actif := j_actif - 1;
+    
+            writeln('La partie est terminee ! Un enqueteur a trouve le meurtrier, l''arme du crime et le lieu de l''assassinnat.');
+            write('Et cet en enqueteur est ');
+            colorPerso(joueurs, j_actif);
+            write(joueurs[j_actif].perso);
+            TextColor(15); 
+            writeln(' !');
+            write('Voici les elements du meurtre : ', etui[0], ' ', etui[1], ' ', etui[2], '.');
+        end
+    else
+        begin
+            writeln('Aucun des enqueteurs n''est parvenu a resoudre ce meurtre. La partie est finie.');
+            writeln('Voici les elements du meurtre : ', etui[0], ' ', etui[1], ' ', etui[2], '.');
+        end;
+end;
+
+
+
 {procedure quitterSauvegarder(joueurs : ListeJoueurs; plat : Plateau; var etui : Array of ListeCartes; var sauvegarde : File);}
+
+
+
+function estDansLaSalle(plat : Plateau; coordonnees : Coords) : Integer;
+
+var co : Coords;
+    i : Integer;
+
+begin
+    {Renvoie la salle dans laquelle le joueur se trouve}
+    i := 1;
+    estDansLaSalle := 0;
+    repeat
+        for co in plat.salles[i].cases do
+            begin
+                if ((co[1] = coordonnees[1]) AND (co[2] = coordonnees[2])) then
+                    estDansLaSalle := i;
+            end;
+        i := i + 1;
+        until ((i = 11) OR (estDansLaSalle = i - 1));        
+end;
+
+
+
+function joueursEnVie(joueurs : ListeJoueurs) : Integer;
+
+var i : Integer;
+
+begin
+    {Renvoie le nombre de joueurs en vie}
+    joueursEnVie := 0;
+    for i := 0 to length(joueurs) do
+        begin
+            if (joueurs[i].enVie) then
+                joueursEnVie := joueursEnVie + 1;
+        end;
+end;
+
+
+
+function caseEstLibre(joueurs : ListeJoueurs; plat : Plateau; co : Coords) : Boolean;
+
+var i : Integer;
+
+begin
+    {Renvoie True si la case est libre, False sinon}
+    caseEstLibre := True;
+    for i := 1 to length(joueurs) do
+        begin
+            if ((co[1] = joueurs[i].pos[1]) AND (co[2] = joueurs[i].pos[2])) then
+                caseEstLibre := False;
+        end;
+end;
+
+
+
+function sortieSallePossible(joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer) : Boolean;
+
+var co1, co2, co3, co4 : Coords;
+
+begin
+    sortieSallePossible := True;
+    case estDansLaSalle(plat, joueurs[j_actif].pos) of
+        2 : begin
+                co1[1] := 11;
+                co1[2] := 10;
+
+                co2[1] := 16;
+                co2[2] := 10;
+
+                co3[1] := 9;
+                co3[2] := 7;
+
+                co4[1] := 18;
+                co4[2] := 7;
+
+                if not((caseEstLibre(joueurs, plat, co1) AND caseEstLibre(joueurs, plat, co2) AND caseEstLibre(joueurs, plat, co3) AND caseEstLibre(joueurs, plat, co4))) then
+                    sortieSallePossible := False;
+            end;
+        4 : begin
+                co1[1] := 8;
+                co1[2] := 18;
+
+                co2[1] := 10;
+                co2[2] := 14;
+
+                if not((caseEstLibre(joueurs, plat, co1) AND caseEstLibre(joueurs, plat, co2))) then
+                    sortieSallePossible := False;
+            end;
+        5 : begin
+                co1[1] := 24;
+                co1[2] := 15;
+
+                co2[1] := 19;
+                co2[2] := 11;
+
+                if not((caseEstLibre(joueurs, plat, co1) AND caseEstLibre(joueurs, plat, co2))) then
+                    sortieSallePossible := False;
+            end;
+        6 : begin
+                co1[1] := 22;
+                co1[2] := 15;
+
+                co2[1] := 18;
+                co2[2] := 18;
+
+                if not((caseEstLibre(joueurs, plat, co1) AND caseEstLibre(joueurs, plat, co2))) then
+                    sortieSallePossible := False;
+            end;
+        8 : begin
+                co1[1] := 14;
+                co1[2] := 19;
+
+                co2[1] := 13;
+                co2[2] := 19;
+
+                co3[1] := 17;
+                co3[2] := 22;
+
+                if not((caseEstLibre(joueurs, plat, co1) AND caseEstLibre(joueurs, plat, co2) AND caseEstLibre(joueurs, plat, co3))) then
+                    sortieSallePossible := False;
+            end;
+    end;
+
+end;
+
 
 end.

@@ -30,10 +30,7 @@ Si vous avez des question posez les moi.
 **Fonctionnalités à implémenter :**
 
 - Sauvegarder / Charger partie
+- procedure type String > type ListeCartes
 - Téléportation des joueurs lors de l'accusation
-- Afficher constamment le plateau à droite
+- Afficher constamment le plateau à droite 
 - Fiches de chaque personnage (opt)
-
-**Bug à fixer :**
-
-- Progrmamme tourne à l'infini si un joueur ne peut pas sortir d'une salle

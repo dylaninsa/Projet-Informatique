@@ -3,18 +3,18 @@ Unit configurationPartie;
 
 Interface
 
-uses unite, Crt, sysutils, partie, affichage;
+uses unite, Crt, sysutils;
 
-procedure lancerPartie(var joueurs:ListeJoueurs; var plat:Plateau; var etui:Array of ListeCartes);
-//procedure chargerPartie(var joueurs:ListeJoueurs; var plateau:Plateau; var etui:ListeCartes);
-procedure nouvellePartie(var joueurs:ListeJoueurs; var plat:Plateau; var etui:Array of ListeCartes);
-procedure creerPlateau(var plat:Plateau; environnement:Enviro);
+procedure configPartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro);
+procedure nouvellePartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro);
+//procedure chargerPartie(var joueurs : ListeJoueurs; var plateau : Plateau; var etui : ListeCartes);
+procedure creerPlateau(var plat : Plateau; environnement : Enviro);
 
 
 Implementation
 
 
-procedure lancerPartie(var joueurs:ListeJoueurs; var plat:Plateau; var etui:Array of ListeCartes);
+procedure configPartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro);
 
 var c : Integer;
 
@@ -32,16 +32,15 @@ begin
     until ((c >= 1) AND (c <= 2));
 
     case c of
-        1 : nouvellePartie(joueurs, plat, etui);
+        1 : nouvellePartie(joueurs, plat, etui, environnement);
         //2 : chargerPartie(joueurs, plateau, etui);
     end;
 end;
 
 
-procedure nouvellePartie(var joueurs:ListeJoueurs; var plat:Plateau; var etui:Array of ListeCartes);
+procedure nouvellePartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro);
 
-var environnement : Enviro;
-    nb_j, i, j, k, l, c, r1, r2, r3, r : Integer;
+var nb_j, i, j, k, l, c, r1, r2, r3, r : Integer;
     cartes, personnages : set of ListeCartes;
     carte : ListeCartes;
     liste_cartes : Array of ListeCartes;
@@ -259,8 +258,6 @@ begin
     SetLength(liste_cartes, 0);
 
 
-    jeu(etui, plat, joueurs, environnement);
-
 
     {Tests : affichage de tous les attributs de tout les joueurs (à enlever plus tard)
     for i := 1 to nb_j do
@@ -271,16 +268,11 @@ begin
             for carte in joueurs[i].cartes do write(carte, ' ');
             writeln();
         end;}
-    
-    
-    {Libération espace mémoire}
-    SetLength(joueurs, 0); // le laisser à la fin de cette procédure
-
 end;
 
 
 
-procedure creerPlateau(var plat:Plateau; environnement:Enviro);
+procedure creerPlateau(var plat : Plateau; environnement : Enviro);
 
 var fic	: Text;
    i, j : Integer;
