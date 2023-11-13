@@ -1297,8 +1297,19 @@ end;
 
 
 
-{procedure quitterSauvegarder(joueurs : ListeJoueurs; plat : Plateau; var etui : Array of ListeCartes; var sauvegarde : File);}
+{procedure quitterSauvegarder(joueurs : ListeJoueurs; plat : Plateau; var etui : Array of ListeCartes; var sauvegarde : File);
+var fichier:String;
 
+begin
+writeln ('Etes-vous sur de vouloir quitter (o/n)?');
+readln (rep);
+if (rep='o') then
+writeln('Notez le nom du fichier de sauvegarde:');
+readln(fichier);
+assign(sauvegarde, fichier);
+rewrite(sauvegarde);
+
+end;}
 
 
 function estDansLaSalle(plat : Plateau; coordonnees : Coords) : Integer;

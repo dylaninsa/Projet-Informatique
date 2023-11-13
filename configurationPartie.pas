@@ -393,7 +393,7 @@ begin
     SetLength(joueurs, nb_j); 
 
 
-    {Initialisation des joueurs et de leurs propriétés}
+    {Initialisation des joueurs, de leurs propriétés et de leurs cartes}
     for i := 1 to nb_j do
         begin
             readln(sauvegarde, ligne);
@@ -408,10 +408,6 @@ begin
         end;
 
 
-    {Attribution des cartes}
-    while not Eof(sauvegarde)
-        begin   
-            for
    
     {Libération espace mémoire}
     SetLength(liste_cartes, 0);
