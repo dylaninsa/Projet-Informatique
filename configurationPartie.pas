@@ -236,10 +236,10 @@ begin
     writeln();}
 
 
-    {Tests : affichage de l'étui (à enlever plus tard)}
+    {Tests : affichage de l'étui (à enlever plus tard)
     writeln('Etui');
     for i := 1 to 3 do write(etui[i], ' ');
-    Delay(5000);
+    Delay(5000);}
 
 
     {Distribution des cartes}

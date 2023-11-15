@@ -170,8 +170,8 @@ begin
     {Lance les 2 dés de manière aléatoire}
     Randomize;
 
-    de1 := 0;{random(5) + 1;}
-    de2 := 50;{random(5) + 1;}
+    de1 := random(5) + 1;
+    de2 := random(5) + 1;
 
     lancer := de1 + de2;
 
