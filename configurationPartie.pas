@@ -7,7 +7,7 @@ uses unite, Crt, sysutils;
 
 procedure configPartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro);
 procedure nouvellePartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro);
-//procedure chargerPartie(var joueurs : ListeJoueurs; var plateau : Plateau; var etui : ListeCartes);
+procedure chargerPartie(var joueurs : ListeJoueurs; var plateau : Plateau; var etui : ListeCartes; var j_actif : Integer);
 procedure creerPlateau(var plat : Plateau; environnement : Enviro);
 
 
@@ -356,17 +356,13 @@ begin
 
 end;
 
-{procedure chargerPartie(var joueurs:ListeJoueurs; var plateau:Plateau; var etui:ListeCartes);
+procedure chargerPartie(var joueurs:ListeJoueurs; var plateau:Plateau; var etui:ListeCartes; var j_actif : Integer);
 
 var nomFichier:String;
     sauvegarde:Text;
     ligne:string;
     environnement:Enviro;
-    nb_j, i, j, k, l, c, r1, r2, r3, r : Integer;
-    cartes, personnages : set of ListeCartes;
-    carte : ListeCartes;
-    liste_cartes : Array of ListeCartes;
-    personnage, p, mem : ListeCartes;
+    nb_j, nb_cartes, i, j: Integer;
 
 begin
     Randomize;
@@ -389,7 +385,7 @@ begin
 
     {Nombre de joueurs dans la partie}
     readln(sauvegarde,ligne);
-    nb_j:=ligne;
+    nb_j:=strtoInt(ligne);
     SetLength(joueurs, nb_j); 
 
 
@@ -397,29 +393,44 @@ begin
     for i := 1 to nb_j do
         begin
             readln(sauvegarde, ligne);
-            joueurs[i].enVie := ligne;
+            joueurs[i].enVie:= TryStrToBool(ligne);
+           { if (ligne='True') then 
+                joueurs[i].enVie:=True
+            else joueurs[i].enVie:=False;}
+           
             joueurs[i].cartes := [];
             readln(sauvegarde, ligne);
-            joueurs[i].pos := ligne;
+            for j:=1 to strToInt(ligne) do
+             begin
+                readln(sauvegarde, ligne);
+                include(joueurs[i].cartes, StrToListeCartes(ligne));
+            end;
+           
+            
             readln(sauvegarde, ligne);
-            joueurs[i].perso :=ligne;
+            joueurs[i].pos[1] := strToInt(ligne);
+            readln(sauvegarde, ligne);
+            joueurs[i].pos[2] := strToInt(ligne);
+            
+            readln(sauvegarde, ligne);
+            joueurs[i].perso :=StrToListeCartes(ligne);
+           
             readln(sauvegarde, ligne);
             joueurs[i].pion := ligne;
         end;
-
-
-   
-    {Libération espace mémoire}
-    SetLength(liste_cartes, 0);
-
-
-    jeu(etui, plat, joueurs, environnement);
     
-    {Libération espace mémoire}
-    SetLength(joueurs, 0); // le laisser à la fin de cette procédure
-{fermeture du fichier}
-close(sauvegarde);
-end;}
+    for i:=1 to 3 do
+        begin
+            readln(sauvegarde, ligne);
+            etui[i]:=StrToListeCartes(ligne);
+        end;
+
+    readln(sauvegarde,ligne);
+    j_actif:=StrToInt(ligne);
+
+    {fermeture du fichier}
+    close(sauvegarde);
+end;
 
 
 
