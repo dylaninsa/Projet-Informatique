@@ -1297,20 +1297,59 @@ end;
 
 
 
-{procedure quitterSauvegarder(joueurs : ListeJoueurs; plat : Plateau; var etui : Array of ListeCartes; var sauvegarde : File);
-var fichier:String;
+procedure quitterSauvegarder( j_actif : Integer; environnement : Enviro; var joueurs : ListeJoueurs; var etui : Array of ListeCartes; var sauvegarde : Text);
+
+var nomFichier : String;
+    ligne : String;
+    environnement : Enviro;
+    nb_cartes, i, j : Integer;
+    carte : ListeCartes;
 
 begin
-writeln ('Etes-vous sur de vouloir quitter (o/n)?');
-readln (rep);
-if (rep='o') then
-writeln('Notez le nom du fichier de sauvegarde:');
-readln(fichier);
-assign(sauvegarde, fichier);
-rewrite(sauvegarde);
 
-end;}
+    {Création du fichier sauvegarde}
+    writeln('Comment souhaitez-vous nommer votre sauvegarde');
+    readln(nomFichier);
+    assign(sauvegarde, nomFichier);
+    rewrite(sauvegarde);
 
+    {Environnement de la partie}
+    writeln(sauvegarde, environnement);
+
+
+    {Nombre de joueurs dans la partie}
+    writeln(sauvegarde, length(joueurs)); 
+
+
+    {Initialisation des joueurs, de leurs propriétés et de leurs cartes}
+    for i := 1 to length(joueurs) do
+        begin
+            writeln(sauvegarde, joueurs[i].enVie);
+           
+           nb_cartes:= 0;
+           for carte in joueurs[i].cartes do
+            nb_cartes:=nb_cartes + 1;
+
+            writeln(sauvegarde, nb_cartes);
+            for carte in joueurs[i].cartes do
+                writeln(sauvegarde, carte);
+           
+            
+            writeln(sauvegarde, joueurs[i].pos[1]);
+            writeln(sauvegarde, joueurs[i].pos[2]);
+
+            writeln(sauvegarde,  joueurs[i].perso);
+            writeln(sauvegarde,  joueurs[i].pion);
+        end;
+    
+    for i:=0 to 2 do
+        writeln(sauvegarde, etui[i]);
+
+    writeln(sauvegarde, j_actif);
+
+    {fermeture du fichier}
+    close(sauvegarde);
+end;
 
 function estDansLaSalle(plat : Plateau; coordonnees : Coords) : Integer;
 
