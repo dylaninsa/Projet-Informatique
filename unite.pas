@@ -63,7 +63,7 @@ case carteachanger of
     'Corde': StrToListeCartes:=Corde;
     'Matraque' : StrToListeCartes:=Matraque;
     'Clef_Anglaise' : StrToListeCartes:=Clef_Anglaise;
-    'Clef Anglaise': StrToListeCartes:=Clef Anglaise;
+    'Clef Anglaise': StrToListeCartes:=Clef_Anglaise;
     'Cuisine': StrToListeCartes:=Cuisine;
     'Grand_Salon' : StrToListeCartes:=Grand_Salon;
     'Grand Salon' : StrToListeCartes:=Grand_Salon;
