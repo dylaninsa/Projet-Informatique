@@ -4,6 +4,9 @@ Unit unite;
 Interface
 
 
+uses sysutils;
+
+
 Const 
     MAX = 50;
     UP = #72;
@@ -48,21 +51,15 @@ Implementation
 
 function StrToListeCartes(carteAChanger: String): ListeCartes;
 
-var i : Integer;
-
 begin
-    for i := 1 to length(carteAChanger) do
-        begin
-            case carteAChanger[i] of 
-                '_' : carteAChanger[i] := ' ';
-            end;
-        end;
+    write(carteAChanger);
+    carteAChanger := StringReplace(carteAChanger, '_', ' ', [rfReplaceAll, rfIgnoreCase]);
 
     case LowerCase(carteAChanger) of 
         'colonel moutarde' : StrToListeCartes:=Colonel_Moutarde;
         'docteur olive': StrToListeCartes:=Docteur_Olive;
         'madame pervenche' : StrToListeCartes:=Madame_Pervenche;
-        'mademoiselle Rose': StrToListeCartes:=Mademoiselle_Rose;
+        'mademoiselle rose': StrToListeCartes:=Mademoiselle_Rose;
         'professeur violet' : StrToListeCartes:=Professeur_Violet;
         'madame leblanc': StrToListeCartes:=Madame_Leblanc;
         'poignard' : StrToListeCartes:=Poignard;
