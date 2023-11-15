@@ -3,7 +3,7 @@ Unit partie;
 
 Interface
 
-uses unite, Crt, affichage;
+uses unite, Crt, affichage, sysutils;
 
 
 procedure jeu(var etui : Array of ListeCartes; var plat : Plateau; var joueurs : ListeJoueurs; environnement : Enviro; var j_actif : Integer);
@@ -14,7 +14,7 @@ procedure placementSalle(var joueurs : ListeJoueurs; plat : Plateau; j_actif : I
 procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCartes; plat : Plateau; j_actif : Integer; environnement : Enviro);
 procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
 procedure finPartie(joueurs : ListeJoueurs; accusation : Boolean; var j_actif : Integer; var etui : Array of ListeCartes);
-procedure quitterSauvegarder(joueurs:ListeJoueurs; plat:Plateau; var etui:Array of ListeCartes; var sauvegarde:File);
+procedure quitterSauvegarder(var joueurs:ListeJoueurs; var etui : Array of ListeCartes; j_actif : Integer; environnement : Enviro);
 function estDansLaSalle(plat : Plateau; coordonnees : Coords) : Integer;
 function joueursEnVie(joueurs : ListeJoueurs) : Integer;
 function caseEstLibre(joueurs : ListeJoueurs; plat : Plateau; co : Coords) : Boolean;
@@ -51,18 +51,25 @@ begin
                 end
             else
                 begin
-                    writeln('Appuyer sur ''Q'' pour quitter ou sur n''importe quelle autre touche pour continuer.');
-                    key := readKey();
-
                     if (j_actif = length(joueurs)) then
                         j_actif := 1
                     else
                         j_actif := j_actif + 1;
+
+            
+                    {Deamnde si on veut quitter la partie}
+                    writeln('Appuyer sur ''Q'' pour quitter ou sur n''importe quelle autre touche pour continuer.');
+                    key := readKey();
                 end;
 
+
+            {Quitte la partie si 'Q' est pressé}
+            if (key = QUIT) then
+                quitterSauvegarder(joueurs, etui, j_actif, environnement);
         
         end;
         until ((key = QUIT) OR (joueursEnVie(joueurs) < 1) OR (accusation));
+    ClrScr;
 end;
 
 
@@ -1191,7 +1198,7 @@ end;
 
 procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
 
-var guess : Array [0..2] of ListeCartes;
+var guess : Array [1..3] of ListeCartes;
     g1, g2, g3, carte : ListeCartes;
     perso, arme, lieu : set of ListeCartes;
 
@@ -1233,7 +1240,7 @@ begin
         if not(g1 in perso) then
             writeln('La carte ne correspond pas a un personnage.')
         until (g1 in perso);
-    guess[0] := g1;
+    guess[1] := g1;
 
     repeat
         write('Selon vous, quelle est l''arme du crime ? ');
@@ -1241,7 +1248,7 @@ begin
         if not(g2 in arme) then
             writeln('La carte ne correspond pas a une arme')
         until (g2 in arme);
-    guess[1] := g2;
+    guess[2] := g2;
 
     repeat
         write('Selon vous, dans quelle salle l''assassinat a-t-il eu lieu ? ');
@@ -1249,11 +1256,11 @@ begin
         if not(g3 in lieu) then
             writeln('La carte ne correspond pas a un lieu')
         until (g3 in lieu);
-    guess[2] := g3;
+    guess[3] := g3;
 
 
     {Vérifie que les ensembles de l'accusation et de l'étui coincident, sinon le joueur du tour meurt}
-    if ((etui[0] = guess[0]) AND (etui[1] = guess[1]) AND (etui[2] = guess[2])) then
+    if ((etui[1] = guess[1]) AND (etui[2] = guess[2]) AND (etui[3] = guess[3])) then
         accusation := True
     else
         begin
@@ -1286,70 +1293,104 @@ begin
             write(joueurs[j_actif].perso);
             TextColor(15); 
             writeln(' !');
-            write('Voici les elements du meurtre : ', etui[0], ' ', etui[1], ' ', etui[2], '.');
+            write('Voici les elements du meurtre : ', etui[1], ' ', etui[2], ' ', etui[3], '.');
         end
     else
         begin
             writeln('Aucun des enqueteurs n''est parvenu a resoudre ce meurtre. La partie est finie.');
-            writeln('Voici les elements du meurtre : ', etui[0], ' ', etui[1], ' ', etui[2], '.');
+            writeln('Voici les elements du meurtre : ', etui[1], ' ', etui[2], ' ', etui[3], '.');
         end;
 end;
 
 
 
-procedure quitterSauvegarder( j_actif : Integer; environnement : Enviro; var joueurs : ListeJoueurs; var etui : Array of ListeCartes; var sauvegarde : Text);
+procedure quitterSauvegarder(var joueurs : ListeJoueurs; var etui : Array of ListeCartes; j_actif : Integer; environnement : Enviro);
 
 var nomFichier : String;
-    ligne : String;
-    environnement : Enviro;
-    nb_cartes, i, j : Integer;
+    nb_cartes, i, c : Integer;
     carte : ListeCartes;
+    sauvegarde : Text;
+    continue : Boolean;
 
 begin
+    writeln('Voulez-vous sauvegarder la partie en cours ?');
+    writeln('   1 : Oui');
+    writeln('   2 : Non');
+    repeat
+        write('Votre choix est : ');
+        readln(c);
+        if not((c >= 1) AND (c <= 2)) then
+            writeln('Ce choix n''est pas valide.')
+    until ((c >= 1) AND (c <= 2));
 
-    {Création du fichier sauvegarde}
-    writeln('Comment souhaitez-vous nommer votre sauvegarde');
-    readln(nomFichier);
-    assign(sauvegarde, nomFichier);
-    rewrite(sauvegarde);
-
-    {Environnement de la partie}
-    writeln(sauvegarde, environnement);
-
-
-    {Nombre de joueurs dans la partie}
-    writeln(sauvegarde, length(joueurs)); 
-
-
-    {Initialisation des joueurs, de leurs propriétés et de leurs cartes}
-    for i := 1 to length(joueurs) do
+    if (c = 1) then
         begin
-            writeln(sauvegarde, joueurs[i].enVie);
-           
-           nb_cartes:= 0;
-           for carte in joueurs[i].cartes do
-            nb_cartes:=nb_cartes + 1;
+            {Création du fichier sauvegarde}
+            write('Comment souhaitez-vous nommer votre sauvegarde (avec .txt en extension) : ');
+            continue := False;
+            repeat
+                readln(nomFichier);
+                if FileExists(nomFichier) then
+                    begin
+                        repeat
+                            writeln('Ce fichier existe deja. Voulez l''ecraser ou rentrer un autre nom ? ');
+                            writeln('   1 : Ecraser');
+                            writeln('   2 : Changer de nom');
+                            write('Votre choix est : ');
+                            if not((c >= 1) AND (c <= 2)) then
+                                writeln('Ce choix n''est pas valide.');
+                            until ((c >= 1) AND (c <= 2));
 
-            writeln(sauvegarde, nb_cartes);
-            for carte in joueurs[i].cartes do
-                writeln(sauvegarde, carte);
+                        if (c = 1) then
+                            continue := True;
+                    end
+                else
+                    continue := True;
+                until (continue);
+
+            assign(sauvegarde, nomFichier);
+            rewrite(sauvegarde);
+
+            {Environnement de la partie}
+            writeln(sauvegarde, environnement);
+
+
+            {Nombre de joueurs dans la partie}
+            writeln(sauvegarde, length(joueurs)); 
+
+
+            {Initialisation des joueurs, de leurs propriétés et de leurs cartes}
+            for i := 1 to length(joueurs) do
+                begin
+                    writeln(sauvegarde, joueurs[i].enVie);
+           
+                    nb_cartes:= 0;
+                    for carte in joueurs[i].cartes do
+                    nb_cartes:=nb_cartes + 1;
+
+                    writeln(sauvegarde, nb_cartes);
+                    for carte in joueurs[i].cartes do
+                        writeln(sauvegarde, carte);
            
             
-            writeln(sauvegarde, joueurs[i].pos[1]);
-            writeln(sauvegarde, joueurs[i].pos[2]);
+                    writeln(sauvegarde, joueurs[i].pos[1]);
+                    writeln(sauvegarde, joueurs[i].pos[2]);
 
-            writeln(sauvegarde,  joueurs[i].perso);
-            writeln(sauvegarde,  joueurs[i].pion);
-        end;
+                    writeln(sauvegarde,  joueurs[i].perso);
+                    writeln(sauvegarde,  joueurs[i].pion);
+                end;
     
-    for i:=0 to 2 do
-        writeln(sauvegarde, etui[i]);
+            for i := 1 to 3 do
+                writeln(sauvegarde, etui[i]);
 
-    writeln(sauvegarde, j_actif);
+            writeln(sauvegarde, j_actif);
 
-    {fermeture du fichier}
-    close(sauvegarde);
+            {fermeture du fichier}
+            close(sauvegarde);
+        end;
 end;
+
+
 
 function estDansLaSalle(plat : Plateau; coordonnees : Coords) : Integer;
 

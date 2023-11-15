@@ -5,16 +5,16 @@ Interface
 
 uses unite, Crt, sysutils;
 
-procedure configPartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro);
-procedure nouvellePartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro);
-procedure chargerPartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : ListeCartes; var j_actif : Integer);
+procedure configPartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro; var j_actif : Integer);
+procedure nouvellePartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro; var j_actif : Integer);
+procedure chargerPartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro; var j_actif : Integer);
 procedure creerPlateau(var plat : Plateau; environnement : Enviro);
 
 
 Implementation
 
 
-procedure configPartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro);
+procedure configPartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro; var j_actif : Integer);
 
 var c : Integer;
 
@@ -32,13 +32,13 @@ begin
     until ((c >= 1) AND (c <= 2));
 
     case c of
-        1 : nouvellePartie(joueurs, plat, etui, environnement);
-        2 : chargerPartie(joueurs, plat, etui, j_actif);
+        1 : nouvellePartie(joueurs, plat, etui, environnement, j_actif);
+        2 : chargerPartie(joueurs, plat, etui, environnement, j_actif);
     end;
 end;
 
 
-procedure nouvellePartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro);
+procedure nouvellePartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro; var j_actif : Integer);
 
 var nb_j, i, j, k, l, c, r1, r2, r3, r : Integer;
     cartes, personnages : set of ListeCartes;
@@ -48,6 +48,7 @@ var nb_j, i, j, k, l, c, r1, r2, r3, r : Integer;
 
 begin
     Randomize;
+    j_actif := 1;
 
     {Choix de l'environnement Manoir / INSA}
     writeln('Quel environnement voulez-vous ? ');
@@ -101,15 +102,15 @@ begin
 
     {Tirage aléatoire de l'étui de l'étui}
     r1 := random(6)+1;
-    etui[0] := liste_cartes[r1];        // tirage du personnage
+    etui[1] := liste_cartes[r1];        // tirage du personnage
     Exclude(cartes, liste_cartes[r1]);
 
     r2 := random(6)+7;
-    etui[1] := liste_cartes[r2];        // tirage de l'arme
+    etui[2] := liste_cartes[r2];        // tirage de l'arme
     Exclude(cartes, liste_cartes[r2]);
 
     r3 := random(9)+13;
-    etui[2] := liste_cartes[r3];        // tirage du lieu
+    etui[3] := liste_cartes[r3];        // tirage du lieu
     Exclude(cartes, liste_cartes[r3]);
 
 
@@ -235,10 +236,10 @@ begin
     writeln();}
 
 
-    {Tests : affichage de l'étui (à enlever plus tard)
+    {Tests : affichage de l'étui (à enlever plus tard)}
     writeln('Etui');
-    for carte in etui do write(carte, ' ');
-    Delay(5000);}
+    for i := 1 to 3 do write(etui[i], ' ');
+    Delay(5000);
 
 
     {Distribution des cartes}
@@ -356,26 +357,30 @@ begin
 
 end;
 
-procedure chargerPartie(var joueurs:ListeJoueurs; var plat:Plateau; var etui:ListeCartes; var j_actif : Integer);
 
-var nomFichier:String;
-    sauvegarde:Text;
-    ligne:string;
-    environnement:Enviro;
-    nb_j, nb_cartes, i, j: Integer;
+
+procedure chargerPartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro; var j_actif : Integer);
+
+var nomFichier : String;
+    sauvegarde : Text;
+    ligne : string;
+    nb_j, nb_cartes, i, j : Integer;
 
 begin
 
     {Choix du fichier à lancer}
-    writeln('Quel partie souhaitez-vous lancer?');
-    readln(nomFichier);
+    write('Entrer le nom de la partie a lancer (avec .txt en extension): ');
+    repeat
+        readln(nomFichier);
+        until FileExists(nomFichier);
     assign(sauvegarde, nomFichier);
     reset(sauvegarde);
 
     readln(sauvegarde, ligne);
     if (ligne='Manoir') then
         environnement:=Manoir
-    else environnement:=INSA;
+    else 
+        environnement:=INSA;
 
 
     {Création du plateau de jeu}
@@ -392,36 +397,36 @@ begin
     for i := 1 to nb_j do
         begin
             readln(sauvegarde, ligne);
-            joueurs[i].enVie:= TryStrToBool(ligne);
-           { if (ligne='True') then 
+            if (ligne='TRUE') then 
                 joueurs[i].enVie:=True
-            else joueurs[i].enVie:=False;}
+            else 
+                joueurs[i].enVie:=False;
            
             joueurs[i].cartes := [];
             readln(sauvegarde, ligne);
-            for j:=1 to strToInt(ligne) do
-             begin
-                readln(sauvegarde, ligne);
-                include(joueurs[i].cartes, StrToListeCartes(ligne));
-            end;
+            for j:=1 to StrToInt(ligne) do
+                begin
+                    readln(sauvegarde, ligne);
+                    Include(joueurs[i].cartes, StrToListeCartes(ligne));
+                end;
            
             
             readln(sauvegarde, ligne);
-            joueurs[i].pos[1] := strToInt(ligne);
+            joueurs[i].pos[1] := StrToInt(ligne);
             readln(sauvegarde, ligne);
-            joueurs[i].pos[2] := strToInt(ligne);
+            joueurs[i].pos[2] := StrToInt(ligne);
             
             readln(sauvegarde, ligne);
             joueurs[i].perso :=StrToListeCartes(ligne);
            
             readln(sauvegarde, ligne);
-            joueurs[i].pion := ligne;
+            joueurs[i].pion := ligne[1];
         end;
     
-    for i:=1 to 3 do
+    for i := 1 to 3 do
         begin
             readln(sauvegarde, ligne);
-            etui[i]:=StrToListeCartes(ligne);
+            etui[i] := StrToListeCartes(ligne);
         end;
 
     readln(sauvegarde,ligne);

@@ -58,12 +58,11 @@ var c, j_actif : Integer;
 
 begin
     ClrScr;
-    j_actif := 1;
     repeat
         menu(c);
         case c of
             1 : begin
-                    configPartie(joueurs, plat, etui, environnement);
+                    configPartie(joueurs, plat, etui, environnement, j_actif);
                     jeu(etui, plat, joueurs, environnement, j_actif);
                     {Libération espace mémoire}
                     SetLength(joueurs, 0);

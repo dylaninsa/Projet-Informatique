@@ -3,6 +3,7 @@ Unit unite;
 
 Interface
 
+
 Const 
     MAX = 50;
     UP = #72;
@@ -38,79 +39,73 @@ Type Plateau = record
     salles : Array [1..10] of Salle;
 end;
 
-function StrToListeCartes(carteachanger: String): ListeCartes;
+
+function StrToListeCartes(carteAChanger: String): ListeCartes;
+
 
 Implementation
 
-function StrToListeCartes(carteachanger: String): ListeCartes;
+
+function StrToListeCartes(carteAChanger: String): ListeCartes;
+
+var i : Integer;
 
 begin
-case carteachanger of 
-    'Colonel_Moutarde' : StrToListeCartes:=Colonel_Moutarde;
-    'Colonel Moutarde' : StrToListeCartes:=Colonel_Moutarde;
-    'Docteur_Olive': StrToListeCartes:=Docteur_Olive;
-    'Docteur Olive': StrToListeCartes:=Docteur_Olive;
-    'Madame_Pervenche' : StrToListeCartes:=Madame_Pervenche;
-    'Madame Pervenche' : StrToListeCartes:=Madame_Pervenche;
-    'Mademoiselle_Rose': StrToListeCartes:=Mademoiselle_Rose;
-    'Mademoiselle Rose': StrToListeCartes:=Mademoiselle_Rose;
-    'Professeur_Violet' : StrToListeCartes:=Professeur_Violet;
-    'Professeur Violet' : StrToListeCartes:=Professeur_Violet;
-    'Madame_Leblanc': StrToListeCartes:=Madame_Leblanc;
-    'Madame Leblanc': StrToListeCartes:=Madame_Leblanc;
-    'Poignard' : StrToListeCartes:=Poignard;
-    'Chandelier' : StrToListeCartes:=Chandelier;
-    'Revolver': StrToListeCartes:=Revolver;
-    'Corde': StrToListeCartes:=Corde;
-    'Matraque' : StrToListeCartes:=Matraque;
-    'Clef_Anglaise' : StrToListeCartes:=Clef_Anglaise;
-    'Clef Anglaise': StrToListeCartes:=Clef_Anglaise;
-    'Cuisine': StrToListeCartes:=Cuisine;
-    'Grand_Salon' : StrToListeCartes:=Grand_Salon;
-    'Grand Salon' : StrToListeCartes:=Grand_Salon;
-    'Petit_Salon': StrToListeCartes:=Petit_Salon;
-    'Petit Salon': StrToListeCartes:=Petit_Salon;
-    'Salle_a_manger': StrToListeCartes:=Salle_a_manger;
-    'Salle a manger': StrToListeCartes:=Salle_a_manger;
-    'Bureau': StrToListeCartes:=Bureau;
-    'Bibliotheque': StrToListeCartes:=Bibliotheque;
-    'Veranda': StrToListeCartes:=Veranda;
-    'Hall': StrToListeCartes:=Hall;
-    'Studio' : StrToListeCartes:=Studio;
-    'Cluedo' : StrToListeCartes:=Cluedo;
-    'Monsieur_Bredel': StrToListeCartes:= Monsieur_Bredel;
-    'Monsieur Bredel': StrToListeCartes:= Monsieur_Bredel;
-    'Madame_LArcheveque' : StrToListeCartes:=Madame_LArcheveque;
-    'Madame LArcheveque' : StrToListeCartes:=Madame_LArcheveque;
-    'Le_Directeur': StrToListeCartes:=Le_Directeur;
-    'Le Directeur': StrToListeCartes:=Le_Directeur;
-    'Yohann_Lepailleur' : StrToListeCartes:=Yohann_Lepailleur;
-    'Yohann Lepailleur' : StrToListeCartes:=Yohann_Lepailleur;
-    'Monsieur_Thibault': StrToListeCartes:=Monsieur_Thibault;
-    'Monsieur Thibault': StrToListeCartes:=Monsieur_Thibault;
-    'Infirmiere': StrToListeCartes:=Infirmiere;
-    'Seringue': StrToListeCartes:=Seringue;
-    'Moteur_4_temps': StrToListeCartes:=Moteur_4_temps;
-    'Alteres': StrToListeCartes:=Alteres;
-    'Flacon_Acide': StrToListeCartes:=Flacon_Acide;
-    'Flacon Acide': StrToListeCartes:=Flacon_Acide;
-    'Ordi': StrToListeCartes:=Ordi;
-    'Pouf_Rouge': StrToListeCartes:=Pouf_Rouge;
-    'Pouf Rouge': StrToListeCartes:=Pouf_Rouge;
-    'Cafete': StrToListeCartes:=Cafete;
-    'Amphi_Tillon': StrToListeCartes:=Amphi_Tillon;
-    'Amphi Tillon': StrToListeCartes:=Amphi_Tillon;
-    'Infirmerie': StrToListeCartes:=Infirmerie;
-    'Bureau_directeur': StrToListeCartes:=Bureau_directeur;
-    'Bureau directeur': StrToListeCartes:=Bureau_directeur;
-    'Vestiaires': StrToListeCartes:=Vestiaires;
-    'Toilettes': StrToListeCartes:=Toilettes;
-    'DUBRJ11' : StrToListeCartes:=DUBRJ11;
-    'Labo': StrToListeCartes:=Labo;
-    'BU': StrToListeCartes:=BU;
-    'Accueil': StrToListeCartes:=Accueil;
+    for i := 1 to length(carteAChanger) do
+        begin
+            case carteAChanger[i] of 
+                '_' : carteAChanger[i] := ' ';
+            end;
+        end;
+
+    case LowerCase(carteAChanger) of 
+        'colonel moutarde' : StrToListeCartes:=Colonel_Moutarde;
+        'docteur olive': StrToListeCartes:=Docteur_Olive;
+        'madame pervenche' : StrToListeCartes:=Madame_Pervenche;
+        'mademoiselle Rose': StrToListeCartes:=Mademoiselle_Rose;
+        'professeur violet' : StrToListeCartes:=Professeur_Violet;
+        'madame leblanc': StrToListeCartes:=Madame_Leblanc;
+        'poignard' : StrToListeCartes:=Poignard;
+        'chandelier' : StrToListeCartes:=Chandelier;
+        'revolver': StrToListeCartes:=Revolver;
+        'corde': StrToListeCartes:=Corde;
+        'matraque' : StrToListeCartes:=Matraque;
+        'clef anglaise': StrToListeCartes:=Clef_Anglaise;
+        'cuisine': StrToListeCartes:=Cuisine;
+        'grand salon' : StrToListeCartes:=Grand_Salon;
+        'petit salon': StrToListeCartes:=Petit_Salon;
+        'salle a manger': StrToListeCartes:=Salle_a_manger;
+        'bureau': StrToListeCartes:=Bureau;
+        'bibliotheque': StrToListeCartes:=Bibliotheque;
+        'veranda': StrToListeCartes:=Veranda;
+        'hall': StrToListeCartes:=Hall;
+        'studio' : StrToListeCartes:=Studio;
+        'cluedo' : StrToListeCartes:=Cluedo;
+        'monsieur bredel': StrToListeCartes:= Monsieur_Bredel;
+        'madame larcheveque' : StrToListeCartes:=Madame_LArcheveque;
+        'le directeur': StrToListeCartes:=Le_Directeur;
+        'yohann lepailleur' : StrToListeCartes:=Yohann_Lepailleur;
+        'monsieur thibault': StrToListeCartes:=Monsieur_Thibault;
+        'infirmiere': StrToListeCartes:=Infirmiere;
+        'seringue': StrToListeCartes:=Seringue;
+        'moteur 4 temps': StrToListeCartes:=Moteur_4_temps;
+        'alteres': StrToListeCartes:=Alteres;
+        'flacon acide': StrToListeCartes:=Flacon_Acide;
+        'ordi': StrToListeCartes:=Ordi;
+        'pouf rouge': StrToListeCartes:=Pouf_Rouge;
+        'cafete': StrToListeCartes:=Cafete;
+        'amphi tillon': StrToListeCartes:=Amphi_Tillon;
+        'infirmerie': StrToListeCartes:=Infirmerie;
+        'bureau directeur': StrToListeCartes:=Bureau_directeur;
+        'vestiaires': StrToListeCartes:=Vestiaires;
+        'toilettes': StrToListeCartes:=Toilettes;
+        'dubrj11' : StrToListeCartes:=DUBRJ11;
+        'labo': StrToListeCartes:=Labo;
+        'bu': StrToListeCartes:=BU;
+        'accueil': StrToListeCartes:=Accueil;
     end;
 end;
+
 
 end.
 
