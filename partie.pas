@@ -14,7 +14,7 @@ procedure placementSalle(var joueurs : ListeJoueurs; plat : Plateau; j_actif : I
 procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCartes; plat : Plateau; j_actif : Integer; environnement : Enviro);
 procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
 procedure finPartie(joueurs : ListeJoueurs; accusation : Boolean; var j_actif : Integer; var etui : Array of ListeCartes);
-{procedure quitterSauvegarder(joueurs:ListeJoueurs; plat:Plateau; var etui:Array of ListeCartes; var sauvegarde:File);}
+procedure quitterSauvegarder(joueurs:ListeJoueurs; plat:Plateau; var etui:Array of ListeCartes; var sauvegarde:File);
 function estDansLaSalle(plat : Plateau; coordonnees : Coords) : Integer;
 function joueursEnVie(joueurs : ListeJoueurs) : Integer;
 function caseEstLibre(joueurs : ListeJoueurs; plat : Plateau; co : Coords) : Boolean;

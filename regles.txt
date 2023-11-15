@@ -19,12 +19,13 @@ II – L’ENQUÊTE
 (f) L’ACCUSATION
 
 I – MATÉRIEL
-5 Pions par mode : ils correspondent aux cinq personnes se trouvant dans la villa au moment du crime :
+6 Pions par mode : ils correspondent aux six personnes se trouvant dans la villa au moment du crime :
 Pion jaune : Colonel MOUTARDE / Cyril BREDEL
 Vert : Docteur OLIVE / Le Directeur
 Bleu : Madame PERVENCHE / Yohann LEPAILLEUR
 Rouge : Mademoiselle ROSE / Madame L'ARCHEVEQUE
 Blanc : Madame LEBLANC / L'Infirmière
+Violet : Professeur VIOLET / Monsieur THIBAULT
 
 6 Armes par mode : Poignard, Chandelier, Revolver, Corde, Matraque, Clef Anglaise / Seringue, Moteur 4 temps, Alteres, Flacon Acide, Ordi, Pouf Rouge. Cafete, Amphi_Tillon, Infirmerie, Vestiaires, Labo, DUBRJ11, Bureau_du_directeur, Toilettes, BU
 
