@@ -76,4 +76,4 @@ Si son accusation est juste, il le prouve en exposant les 3 cartes et son rappor
 Si son accusation est fausse, il remet les cartes dans l’Etui qu’il retourne au point X. Il reste en jeu pour démentir les « HYPOTHÈSES » éventuelles mais ne peut plus ni se déplacer, ni interroger, ni accuser.
 Chaque enquêteur ne peut faire qu’une seule ACCUSATION. Qu’il la fasse donc à bon escient !
 
-Amusez-vous bien !
+Amusez-vous bien ! (pour retourner au menu appuyer sur Q)
