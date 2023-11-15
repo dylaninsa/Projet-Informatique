@@ -33,7 +33,7 @@ begin
 
     case c of
         1 : nouvellePartie(joueurs, plat, etui, environnement);
-        2 : chargerPartie(joueurs, plateau, etui);
+        2 : chargerPartie(joueurs, plat, etui, j_actif);
     end;
 end;
 
