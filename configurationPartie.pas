@@ -7,7 +7,7 @@ uses unite, Crt, sysutils;
 
 procedure configPartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro);
 procedure nouvellePartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro);
-procedure chargerPartie(var joueurs : ListeJoueurs; var plateau : Plateau; var etui : ListeCartes; var j_actif : Integer);
+procedure chargerPartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : ListeCartes; var j_actif : Integer);
 procedure creerPlateau(var plat : Plateau; environnement : Enviro);
 
 
@@ -356,7 +356,7 @@ begin
 
 end;
 
-procedure chargerPartie(var joueurs:ListeJoueurs; var plateau:Plateau; var etui:ListeCartes; var j_actif : Integer);
+procedure chargerPartie(var joueurs:ListeJoueurs; var plat:Plateau; var etui:ListeCartes; var j_actif : Integer);
 
 var nomFichier:String;
     sauvegarde:Text;
@@ -375,7 +375,7 @@ begin
     readln(sauvegarde, ligne);
     if (ligne='Manoir') then
         environnement:=Manoir
-    else environnement:=INSA
+    else environnement:=INSA;
 
 
     {Création du plateau de jeu}
