@@ -33,7 +33,7 @@ begin
 
     case c of
         1 : nouvellePartie(joueurs, plat, etui, environnement);
-        //2 : chargerPartie(joueurs, plateau, etui);
+        2 : chargerPartie(joueurs, plateau, etui);
     end;
 end;
 
@@ -365,7 +365,6 @@ var nomFichier:String;
     nb_j, nb_cartes, i, j: Integer;
 
 begin
-    Randomize;
 
     {Choix du fichier à lancer}
     writeln('Quel partie souhaitez-vous lancer?');
