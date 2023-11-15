@@ -38,6 +38,7 @@ Type Plateau = record
     salles : Array [1..10] of Salle;
 end;
 
+function StrToListeCartes(carteachanger: String): ListeCartes;
 
 Implementation
 
