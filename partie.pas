@@ -1126,46 +1126,57 @@ begin
 
 
     {Déplace le joueur accusé si il fait partie des joueurs}
-    for i := 1 to length(joueurs) do //changer en repeat until pour eviter de boucler pour rien
+    i := 1;
+    repeat
         if (hypo[1] = joueurs[i].perso) then
-            case estDansLaSalle(plat, joueurs[j_actif].pos) of
-                1 : begin
-                        joueurs[i].pos[1] := 6;
-                        joueurs[i].pos[2] := 8;
-                    end;
-                2 : begin
-                        joueurs[i].pos[1] := 11;
-                        joueurs[i].pos[2] := 9;
-                    end;
-                3 : begin
-                        joueurs[i].pos[1] := 21;
-                        joueurs[i].pos[2] := 6;
-                    end;
-                4 : begin
-                        joueurs[i].pos[1] := 9;
-                        joueurs[i].pos[2] := 14;
-                    end;
-                5 : begin
-                        joueurs[i].pos[1] := 24;
-                        joueurs[i].pos[2] := 14;
-                    end;
-                6 : begin
-                        joueurs[i].pos[1] := 22;
-                        joueurs[i].pos[2] := 16;
-                    end;
-                7 : begin
-                        joueurs[i].pos[1] := 7;
-                        joueurs[i].pos[2] := 21;
-                    end;
-                8 : begin
-                        joueurs[i].pos[1] := 13;
-                        joueurs[i].pos[2] := 20;
-                    end;
-                9 : begin
-                        joueurs[i].pos[1] := 20;
-                        joueurs[i].pos[2] := 23;
-                    end;
-            end;
+            begin
+                affiche(' ', joueurs[i].pos[1], joueurs[i].pos[2]);
+                case estDansLaSalle(plat, joueurs[j_actif].pos) of
+                    1 : begin
+                            joueurs[i].pos[1] := 6;
+                            joueurs[i].pos[2] := 8;
+                        end;
+                    2 : begin
+                            joueurs[i].pos[1] := 11;
+                            joueurs[i].pos[2] := 9;
+                        end;
+                    3 : begin
+                            joueurs[i].pos[1] := 21;
+                            joueurs[i].pos[2] := 6;
+                        end;
+                    4 : begin
+                            joueurs[i].pos[1] := 9;
+                            joueurs[i].pos[2] := 14;
+                        end;
+                    5 : begin
+                            joueurs[i].pos[1] := 24;
+                            joueurs[i].pos[2] := 14;
+                        end;
+                    6 : begin
+                            joueurs[i].pos[1] := 22;
+                            joueurs[i].pos[2] := 16;
+                        end;
+                    7 : begin
+                            joueurs[i].pos[1] := 7;
+                            joueurs[i].pos[2] := 21;
+                        end;
+                    8 : begin
+                            joueurs[i].pos[1] := 13;
+                            joueurs[i].pos[2] := 20;
+                        end;
+                    9 : begin
+                            joueurs[i].pos[1] := 20;
+                            joueurs[i].pos[2] := 23;
+                        end;
+                end;
+            placementSalle(joueurs, plat, i);
+            affiche(joueurs[i].pion, joueurs[i].pos[1], joueurs[i].pos[2]);
+        end;
+        i := i + 1;
+        until ((i = length(joueurs) + 1) OR (hypo[1] = joueurs[i-1].perso));
+    
+
+
 
 
     {Affiche l'hypothèse en entière}
@@ -1244,6 +1255,7 @@ procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJo
 var guess : Array [1..3] of ListeCartes;
     g1, g2, g3, carte : ListeCartes;
     perso, arme, lieu : set of ListeCartes;
+    i : Integer;
 
 begin 
     {Déclaration et remplissage des ensembles personnage et arme propre à l'envrionnement}
@@ -1301,7 +1313,24 @@ begin
         until (g3 in lieu);
     guess[3] := g3;
 
-
+       
+       
+        {Déplace le joueur accusé si il fait partie des joueurs}
+    i := 1;
+    repeat
+        if (guess[1] = joueurs[i].perso) then
+            begin
+                affiche(' ', joueurs[i].pos[1], joueurs[i].pos[2]);
+                joueurs[i].pos[1] := 14;
+                joueurs[i].pos[2] := 18;     
+                placementSalle(joueurs, plat, i);
+                affiche(joueurs[i].pion, joueurs[i].pos[1], joueurs[i].pos[2]);
+            end;
+        i := i + 1;
+        until ((i = length(joueurs) + 1) OR (guess[1] = joueurs[i-1].perso));
+   
+   
+   
     {Vérifie que les ensembles de l'accusation et de l'étui coincident, sinon le joueur du tour meurt}
     if ((etui[1] = guess[1]) AND (etui[2] = guess[2]) AND (etui[3] = guess[3])) then
         accusation := True
