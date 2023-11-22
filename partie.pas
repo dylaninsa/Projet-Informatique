@@ -1125,6 +1125,49 @@ begin
     hypo[3] := plat.salles[estDansLaSalle(plat, joueurs[j_actif].pos)].nom;
 
 
+    {Déplace le joueur accusé si il fait partie des joueurs}
+    for i := 1 to length(joueurs) do //changer en repeat until pour eviter de boucler pour rien
+        if (hypo[1] = joueurs[i].perso) then
+            case estDansLaSalle(plat, joueurs[j_actif].pos) of
+                1 : begin
+                        joueurs[i].pos[1] := 6;
+                        joueurs[i].pos[2] := 8;
+                    end;
+                2 : begin
+                        joueurs[i].pos[1] := 11;
+                        joueurs[i].pos[2] := 9;
+                    end;
+                3 : begin
+                        joueurs[i].pos[1] := 21;
+                        joueurs[i].pos[2] := 6;
+                    end;
+                4 : begin
+                        joueurs[i].pos[1] := 9;
+                        joueurs[i].pos[2] := 14;
+                    end;
+                5 : begin
+                        joueurs[i].pos[1] := 24;
+                        joueurs[i].pos[2] := 14;
+                    end;
+                6 : begin
+                        joueurs[i].pos[1] := 22;
+                        joueurs[i].pos[2] := 16;
+                    end;
+                7 : begin
+                        joueurs[i].pos[1] := 7;
+                        joueurs[i].pos[2] := 21;
+                    end;
+                8 : begin
+                        joueurs[i].pos[1] := 13;
+                        joueurs[i].pos[2] := 20;
+                    end;
+                9 : begin
+                        joueurs[i].pos[1] := 20;
+                        joueurs[i].pos[2] := 23;
+                    end;
+            end;
+
+
     {Affiche l'hypothèse en entière}
     writeln('Votre hypothese est donc la suivante : ', hypo[1], ' ', hypo[2], ' ', hypo[3]);
     Delay(5000);
@@ -1509,6 +1552,13 @@ begin
                 co3[2] := 22;
 
                 if not((caseEstLibre(joueurs, plat, co1) AND caseEstLibre(joueurs, plat, co2) AND caseEstLibre(joueurs, plat, co3))) then
+                    sortieSallePossible := False;
+            end;
+        10 : begin
+                co1[1] := 14;
+                co1[2] := 19;
+
+                if not(caseEstLibre(joueurs, plat, co1)) then
                     sortieSallePossible := False;
             end;
     end;
