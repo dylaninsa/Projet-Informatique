@@ -3,18 +3,19 @@ Unit partie;
 
 Interface
 
+
 uses unite, Crt, affichage, sysutils;
 
 
-procedure jeu(var etui : Array of ListeCartes; var plat : Plateau; var joueurs : ListeJoueurs; environnement : Enviro; var j_actif : Integer);
-procedure tour(var plat : Plateau; var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
+procedure jeu(var etui : Array of ListeCartes; plat : Plateau; var joueurs : ListeJoueurs; environnement : Enviro; var j_actif : Integer);
+procedure tour(plat : Plateau; var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
 procedure lancerDes(var lancer : Integer);
-procedure deplacement(var plat : Plateau; lancer : Integer; var joueurs : ListeJoueurs; j_actif : Integer);
+procedure deplacement(plat : Plateau; lancer : Integer; var joueurs : ListeJoueurs; j_actif : Integer);
 procedure placementSalle(var joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer);
 procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCartes; plat : Plateau; j_actif : Integer; environnement : Enviro);
-procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
+procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro; plat : Plateau);
 procedure finPartie(joueurs : ListeJoueurs; accusation : Boolean; var j_actif : Integer; var etui : Array of ListeCartes);
-procedure quitterSauvegarder(var joueurs:ListeJoueurs; var etui : Array of ListeCartes; j_actif : Integer; environnement : Enviro);
+procedure quitterSauvegarder(var joueurs : ListeJoueurs; var etui : Array of ListeCartes; j_actif : Integer; environnement : Enviro);
 function estDansLaSalle(plat : Plateau; coordonnees : Coords) : Integer;
 function joueursEnVie(joueurs : ListeJoueurs) : Integer;
 function caseEstLibre(joueurs : ListeJoueurs; plat : Plateau; co : Coords) : Boolean;
@@ -25,93 +26,98 @@ function sortieSallePossible(joueurs : ListeJoueurs; plat : Plateau; j_actif : I
 Implementation
 
 
-procedure jeu(var etui : Array of ListeCartes; var plat : Plateau; var joueurs : ListeJoueurs; environnement : Enviro; var j_actif : Integer);
+procedure jeu(var etui : Array of ListeCartes; plat : Plateau; var joueurs : ListeJoueurs; environnement : Enviro; var j_actif : Integer);
+{Procédure principale du programme un fois qu'une partie est lancée
+Elle va lancer les tours un par un, et ce pour pour chaque joueur
+Le programme s'arrête lorsque l'on quitte manuellement ou lorsque la partie se termine}
 
 var accusation : Boolean;
     key : Char;
 
 begin
-    {Lance le jeu}
-    ClrScr;
-    accusation := False;
+    ClrScr;  // Le terminal est nettoyé
+    accusation := False;  // Boolean qui vaut false le temps que l'enquête n'as pas ete résolue
 
-
-    {Lance les tours pour chaque perso jusqu'à ce qu'on quitte ou qu'il n'y ait plus assez de joueurs en vie ou sir les éléments du meurtre ont été trouvés}
+    {Lance les tours pour chaque joueur jusqu'à ce que l'on quitte ou qu'il n'y ait plus assez de joueurs en vie ou que les éléments du meurtre aient été trouvés}
     repeat 
-        begin 
-            if (joueurs[j_actif].enVie) then
-                tour(plat, etui, joueurs, accusation, j_actif, environnement);
+        if (joueurs[j_actif].enVie) then
+            tour(plat, etui, joueurs, accusation, j_actif, environnement);  // Lance le tour du joueur 'actif' si il est en vie
             
 
-            {Vérifie si la partie est finie}
-            if ((joueursEnVie(joueurs) < 1) OR (accusation)) then
-                begin
-                    ClrScr;
-                    finPartie(joueurs, accusation, j_actif, etui);
-                end
-            else
-                begin
-                    if (j_actif = length(joueurs)) then
-                        j_actif := 1
-                    else
-                        j_actif := j_actif + 1;
-
-            
-                    {Deamnde si on veut quitter la partie}
-                    writeln('Appuyer sur ''Q'' pour quitter ou sur n''importe quelle autre touche pour continuer.');
-                    key := readKey();
-                end;
+        {Vérifie si la partie est finie}
+        if ((joueursEnVie(joueurs) < 1) OR (accusation)) then  // Si la partie est finie, le procédure finPartie est appelé
+            begin
+                ClrScr;
+                finPartie(joueurs, accusation, j_actif, etui);  
+            end
+        else
+            {Sinon le joueur 'actif' est maintenant le joueur suivant}
+            begin
+                if (j_actif = length(joueurs)) then  // Si le dernier joueur à avoir joué est le dernier de la liste de joueurs, le joueur 'actif' devient le permier de la liste
+                    j_actif := 1  
+                else  // Sinon, c'est le joueur suivant qui devient le joueur 'actif'
+                    j_actif := j_actif + 1;  
 
 
-            {Quitte la partie si 'Q' est pressé}
-            if (key = QUIT) then
-                quitterSauvegarder(joueurs, etui, j_actif, environnement);
-        
-        end;
-        until ((key = QUIT) OR (joueursEnVie(joueurs) < 1) OR (accusation));
+                writeln('Appuyer sur ''Q'' pour quitter ou sur n''importe quelle autre touche pour continuer.');  // Si la touche 'Q' est pressée, la partie s'arrête, sinon le tour d'après est lancé
+                key := readKey();
+            end;
+
+
+        if (key = QUIT) then
+            quitterSauvegarder(joueurs, etui, j_actif, environnement);  // Quitte la partie si 'Q' est pressée
+
+        until ((key = QUIT) OR (joueursEnVie(joueurs) < 1) OR (accusation));  // La partie continue le temps que 'Q' n'est pas pressée, qu'il y a au moins un joueur en vie et que l'accusation n'ait pas été découverte
+
     ClrScr;
 end;
 
 
 
-procedure tour(var plat : Plateau; var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
+procedure tour(plat : Plateau; var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
+{Procedure centrale qui présente les différentes actions possibles au joueur 'actif' et qui appelle les procédures selon le choix du joueur}
 
 var c, lancer : Integer;
     hypo : Array [1..3] of ListeCartes;
     continue : Char;
 
 begin
-    {Indique le personnage qui joue}
+    {Indique le joueur qui va jouer}
     ClrScr;
     write('C''est a ');
-    colorPerso(joueurs, j_actif);
+    colorPerso(joueurs, j_actif);  // Appel de la procédure pour la coloration de l'encre pour l'écriture du nom du personnage
     write(joueurs[j_actif].perso);
-    TextColor(15);
+    TextColor(15);  // Rétablie la couleur de l'encre d'origine : blanc
     writeln(' de jouer ! (Appuyer sur ''espace'')');
-    repeat
+
+    repeat  // Boucle s'assurant que le joueur 'actif' soit prêt à jouer
         continue := readKey();
-        until (continue = SPACE);
+        until (continue = SPACE);   
 
 
-    {Affiche les cartes du joueur qui joue}
-    affichageCartes(joueurs, j_actif);
-    if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then
+    affichageCartes(joueurs, j_actif);  // Appel de la procédure permettant d'afficher les cartes du joueur 'actif'
+
+
+    if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then  // Affiche la salle dans laquelle le joueur 'actif' se trouve, si il est dans une salle
         writeln('Vous etes actuellement dans la salle : ', plat.salles[estDansLaSalle(plat, joueurs[j_actif].pos)].nom, '.');
     writeln('(Appuyer sur ''espace'')');
-    repeat
+
+    repeat  // Boucle s'assurant que le joueur 'actif' ai prit connaissance de ses cartes et de la salle dans laquelle il se trouve
         continue := readKey();
         until (continue = SPACE);
     
 
     {Différentes action possibles selon les cas}
-    if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then
+    if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then  // Vérifie si le joueur 'actif' est dans une salle au debut du tour
         begin
-            if sortieSallePossible(joueurs, plat, j_actif) then
+            if sortieSallePossible(joueurs, plat, j_actif) then  // Vérifie si le joueur 'actif' peut sortir de la salle dans laquelle il se trouve
                 begin
+                    {Propose au joueur 'actif' les actions possibles}
                     writeln('Que voulez-vous faire :');
                     writeln('   1 : Vous deplacer');
                     writeln('   2 : Formuler une hypothese'); 
 
+                    {Lecture du choix d'action du joueur 'actif' et vérification que l'action soit possible}
                     repeat
                         write('Votre choix est : ');
                         readln(c);
@@ -119,42 +125,43 @@ begin
                             writeln('Ce choix est invalide.')
                         until ((c >= 1) AND (c <= 2));
 
+                    {Lance les action en fonction du choix du joueur 'actif'}
                     case c of
-                        1 : begin
-                                lancerDes(lancer);
-                                deplacement(plat, lancer, joueurs, j_actif);
-                                if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then
+                        1 : begin  // Choix : déplacement
+                                lancerDes(lancer);  // Appel de la procedure lancerDes qui va définir le nombre de déplacement possible du joueur 'actif' pour le tour actuel
+                                deplacement(plat, lancer, joueurs, j_actif);  // Appel de la procedure deplacement permettant au joueur 'actif' de se déplacer sur le plateau de jeu
+                                if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then  // Vérification de la présence du joueur 'actif' dans une salle
                                     begin
-                                        if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 10) then
-                                            faireHypothese(joueurs, hypo, plat, j_actif, environnement)
-                                        else
-                                            faireAccusation(etui, joueurs, accusation, j_actif, environnement);
+                                        if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 10) then  // Si le joueur 'actif' est dans une salle différente de la salle pour formuler un accusation
+                                            faireHypothese(joueurs, hypo, plat, j_actif, environnement)  // Appel de la procedure faireHypothese pour formuler une hypothèse
+                                        else  // Sinon
+                                            faireAccusation(etui, joueurs, accusation, j_actif, environnement, plat);  // Appel de la procedure faireAccusation pour formuler une accusation
                                     end;
                             end;
-                        2 : begin
-                                faireHypothese(joueurs, hypo, plat, j_actif, environnement);
+                        2 : begin  // Choix : Formulation d'hypothèse
+                                faireHypothese(joueurs, hypo, plat, j_actif, environnement);  // Appel de la procedure faireHypothese pour formuler une hypothèse
                             end;
                     end;
                 end
-            else
+            else  // Si le joueur 'actif' ne peut pas sortir de la salle
                 begin
                     writeln('Vous ne pouvez pas sortir de cette salle actuellement. Vous allez donc formuler une hypothèse. (Appuyer sur ''espace'')');
-                    repeat
+                    repeat  // Boucle s'assurant que le joueur 'actif' ai prit connaissance de la situation
                         continue := readKey();
                         until (continue = SPACE);
-                    faireHypothese(joueurs, hypo, plat, j_actif, environnement);
+                    faireHypothese(joueurs, hypo, plat, j_actif, environnement);  // Appel de la procedure faireHypothese pour formuler une hypothèse
                 end;
         end
-    else
+    else  // Si le joueur 'actif' n'est dans aucune salle au début du tour
         begin
-            lancerDes(lancer);
-            deplacement(plat, lancer, joueurs, j_actif);
-            if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then
+            lancerDes(lancer);  // Appel de la procedure lancerDes qui va définir le nombre de déplacement possible du joueur 'actif' pour le tour actuel
+            deplacement(plat, lancer, joueurs, j_actif);  // Appel de la procedure deplacement permettant au joueur 'actif' de se déplacer sur le plateau de jeu
+            if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then  // Vérification de la présence du joueur 'actif' dans une salle
                 begin
-                    if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 10) then
-                        faireHypothese(joueurs, hypo, plat, j_actif, environnement)
-                    else
-                        faireAccusation(etui, joueurs, accusation, j_actif, environnement);
+                    if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 10) then  // Si le joueur 'actif' est dans une salle différente de la salle pour formuler un accusation
+                        faireHypothese(joueurs, hypo, plat, j_actif, environnement)  // Appel de la procedure faireHypothese pour formuler une hypothèse
+                    else  // Sinon
+                        faireAccusation(etui, joueurs, accusation, j_actif, environnement, plat);  // Appel de la procedure faireAccusation pour formuler une accusation
                 end;
         end;
 end;
@@ -187,7 +194,7 @@ end;
 
 
 
-procedure deplacement(var plat : Plateau; lancer : Integer; var joueurs : ListeJoueurs; j_actif : Integer);
+procedure deplacement(plat : Plateau; lancer : Integer; var joueurs : ListeJoueurs; j_actif : Integer);
 
 var key : Char;
 	move : Integer;
@@ -1250,7 +1257,7 @@ end;
 
 
 
-procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro);
+procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro; plat : Plateau);
 
 var guess : Array [1..3] of ListeCartes;
     g1, g2, g3, carte : ListeCartes;
