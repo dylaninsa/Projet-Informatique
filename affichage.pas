@@ -3,6 +3,7 @@ Unit affichage;
 
 Interface
 
+
 uses unite, Crt;
 
 
@@ -39,7 +40,7 @@ begin
 	else
 		TextBackground(0);
 	end;
-	GotoXY(posX + (posX - 1), posY);
+	GotoXY(2 * posX - 1, posY);
 	write(c);
 	TextColor(15);
 	TextBackground(0);

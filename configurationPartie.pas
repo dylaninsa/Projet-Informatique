@@ -3,11 +3,13 @@ Unit configurationPartie;
 
 Interface
 
+
 uses unite, Crt, sysutils;
 
+
 procedure configPartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro; var j_actif : Integer);
-procedure nouvellePartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro; var j_actif : Integer);
-procedure chargerPartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro; var j_actif : Integer);
+procedure nouvellePartie(var joueurs : ListeJoueurs;  var etui : Array of ListeCartes; var environnement : Enviro; var j_actif : Integer);
+procedure chargerPartie(var joueurs : ListeJoueurs; var etui : Array of ListeCartes; var environnement : Enviro; var j_actif : Integer);
 procedure creerPlateau(var plat : Plateau; environnement : Enviro);
 
 
@@ -32,13 +34,16 @@ begin
     until ((c >= 1) AND (c <= 2));
 
     case c of
-        1 : nouvellePartie(joueurs, plat, etui, environnement, j_actif);
-        2 : chargerPartie(joueurs, plat, etui, environnement, j_actif);
+        1 : nouvellePartie(joueurs, etui, environnement, j_actif);
+        2 : chargerPartie(joueurs, etui, environnement, j_actif);
     end;
+
+    creerPlateau(plat, environnement);
 end;
 
 
-procedure nouvellePartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro; var j_actif : Integer);
+
+procedure nouvellePartie(var joueurs : ListeJoueurs; var etui : Array of ListeCartes; var environnement : Enviro; var j_actif : Integer);
 
 var nb_j, i, j, k, l, c, r1, r2, r3, r : Integer;
     cartes, personnages : set of ListeCartes;
@@ -66,10 +71,6 @@ begin
         1 : environnement := Manoir;
         2 : environnement := INSA;
     end;
-
-
-    {Création du plateau de jeu}
-    creerPlateau(plat, environnement);
 
 
     {Mise en place des ensembles et des listes de cartes pour l'environnement choisi}
@@ -273,6 +274,83 @@ end;
 
 
 
+procedure chargerPartie(var joueurs : ListeJoueurs; var etui : Array of ListeCartes; var environnement : Enviro; var j_actif : Integer);
+
+var nomFichier : String;
+    sauvegarde : Text;
+    ligne : string;
+    nb_j, nb_cartes, i, j : Integer;
+
+begin
+
+    {Choix du fichier à lancer}
+    repeat
+        write('Entrer le nom de la partie a lancer (avec .txt en extension) : ');
+        readln(nomFichier);
+        if not(FileExists(nomFichier)) then
+            writeln('Ce fichier n''existe pas ou est invalide.')
+        until FileExists(nomFichier);
+    assign(sauvegarde, nomFichier);
+    reset(sauvegarde);
+
+    readln(sauvegarde, ligne);
+    if (ligne='Manoir') then
+        environnement:=Manoir
+    else 
+        environnement:=INSA;
+
+
+    {Nombre de joueurs dans la partie}
+    readln(sauvegarde,ligne);
+    nb_j:=strtoInt(ligne);
+    SetLength(joueurs, nb_j); 
+
+
+    {Initialisation des joueurs, de leurs propriétés et de leurs cartes}
+    for i := 1 to nb_j do
+        begin
+            readln(sauvegarde, ligne);
+            if (ligne='TRUE') then 
+                joueurs[i].enVie:=True
+            else 
+                joueurs[i].enVie:=False;
+           
+            joueurs[i].cartes := [];
+            readln(sauvegarde, ligne);
+            for j:=1 to StrToInt(ligne) do
+                begin
+                    readln(sauvegarde, ligne);
+                    Include(joueurs[i].cartes, StrToListeCartes(ligne));
+                end;
+           
+            
+            readln(sauvegarde, ligne);
+            joueurs[i].pos[1] := StrToInt(ligne);
+            readln(sauvegarde, ligne);
+            joueurs[i].pos[2] := StrToInt(ligne);
+            
+            readln(sauvegarde, ligne);
+            joueurs[i].perso :=StrToListeCartes(ligne);
+           
+            readln(sauvegarde, ligne);
+            joueurs[i].pion := ligne[1];
+        end;
+    
+    for i := 1 to 3 do
+        begin
+            readln(sauvegarde, ligne);
+            etui[i] := StrToListeCartes(ligne);
+        end;
+
+    readln(sauvegarde,ligne);
+    j_actif:=StrToInt(ligne);
+
+    {fermeture du fichier}
+    close(sauvegarde);
+end;
+
+
+
 procedure creerPlateau(var plat : Plateau; environnement : Enviro);
 
 var fic	: Text;
@@ -292,6 +370,8 @@ begin
 		        case str[i] of
 			        '0' : plat.grille[i][j] := 0;
 			        '1' : plat.grille[i][j] := 1;
+                    '2' : plat.grille[i][j] := 2;
+                    '3' : plat.grille[i][j] := 3;
 	            end;
         end;
     
@@ -356,86 +436,6 @@ begin
         end;}
 
 end;
-
-
-
-procedure chargerPartie(var joueurs : ListeJoueurs; var plat : Plateau; var etui : Array of ListeCartes; var environnement : Enviro; var j_actif : Integer);
-
-var nomFichier : String;
-    sauvegarde : Text;
-    ligne : string;
-    nb_j, nb_cartes, i, j : Integer;
-
-begin
-
-    {Choix du fichier à lancer}
-    write('Entrer le nom de la partie a lancer (avec .txt en extension): ');
-    repeat
-        readln(nomFichier);
-        until FileExists(nomFichier);
-    assign(sauvegarde, nomFichier);
-    reset(sauvegarde);
-
-    readln(sauvegarde, ligne);
-    if (ligne='Manoir') then
-        environnement:=Manoir
-    else 
-        environnement:=INSA;
-
-
-    {Création du plateau de jeu}
-    creerPlateau(plat, environnement);
-
-
-    {Nombre de joueurs dans la partie}
-    readln(sauvegarde,ligne);
-    nb_j:=strtoInt(ligne);
-    SetLength(joueurs, nb_j); 
-
-
-    {Initialisation des joueurs, de leurs propriétés et de leurs cartes}
-    for i := 1 to nb_j do
-        begin
-            readln(sauvegarde, ligne);
-            if (ligne='TRUE') then 
-                joueurs[i].enVie:=True
-            else 
-                joueurs[i].enVie:=False;
-           
-            joueurs[i].cartes := [];
-            readln(sauvegarde, ligne);
-            for j:=1 to StrToInt(ligne) do
-                begin
-                    readln(sauvegarde, ligne);
-                    Include(joueurs[i].cartes, StrToListeCartes(ligne));
-                end;
-           
-            
-            readln(sauvegarde, ligne);
-            joueurs[i].pos[1] := StrToInt(ligne);
-            readln(sauvegarde, ligne);
-            joueurs[i].pos[2] := StrToInt(ligne);
-            
-            readln(sauvegarde, ligne);
-            joueurs[i].perso :=StrToListeCartes(ligne);
-           
-            readln(sauvegarde, ligne);
-            joueurs[i].pion := ligne[1];
-        end;
-    
-    for i := 1 to 3 do
-        begin
-            readln(sauvegarde, ligne);
-            etui[i] := StrToListeCartes(ligne);
-        end;
-
-    readln(sauvegarde,ligne);
-    j_actif:=StrToInt(ligne);
-
-    {fermeture du fichier}
-    close(sauvegarde);
-end;
-
 
 
 end.
