@@ -64,17 +64,8 @@ begin
 				case plat.grille[j][i] of
 					0 : write('  ');
 					1 : write('||');
-					2 : begin 
-							TextColor(8);
-							write('#|');
-							TextColor(15);
-						end;
-					3 : begin 
-							TextColor(8);
-							write('@|');
-							TextColor(15);
-						end;
-
+					2 : write('#|');
+					3 : write('@|');
 				end;
 				if (j = 26) then
 					writeln();
@@ -111,19 +102,8 @@ begin
 			colorPerso(joueurs, i);
 			write(joueurs[i].pion);
 		end;
-
-
-	{Affichage des passages secrets
-	TextColor(8);
-	GotoXY(7, 2);
-	write('#');
-	GotoXY(45, 27);
-	write('#');
-	GotoXY(45, 2);
-	write('@');
-	GotoXY(9, 27);
-	write('@');
-	TextColor(15);}
+	
+	TextColor(15);
 end;
 
 
