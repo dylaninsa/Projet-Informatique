@@ -36,7 +36,7 @@ var accusation : Boolean;
 
 begin
     ClrScr;  // Le terminal est nettoyé
-    accusation := False;  // Boolean qui vaut false le temps que l'enquête n'as pas ete résolue
+    accusation := False;  // Boolean qui vaut False le temps que l'enquête n'as pas ete résolue
 
     {Lance les tours pour chaque joueur jusqu'à ce que l'on quitte ou qu'il n'y ait plus assez de joueurs en vie ou que les éléments du meurtre aient été trouvés}
     repeat 
@@ -47,7 +47,7 @@ begin
         {Vérifie si la partie est finie}
         if ((joueursEnVie(joueurs) < 1) OR (accusation)) then  // Si la partie est finie, le procédure finPartie est appelé
             begin
-                ClrScr;
+                ClrScr;  // Le terminal est nettoyé
                 finPartie(joueurs, accusation, j_actif, etui);  
             end
         else
@@ -82,15 +82,16 @@ var c, lancer : Integer;
     continue : Char;
 
 begin
+    ClrScr;  // Le terminal est nettoyé
+
     {Indique le joueur qui va jouer}
-    ClrScr;
     write('C''est a ');
     colorPerso(joueurs, j_actif);  // Appel de la procédure pour la coloration de l'encre pour l'écriture du nom du personnage
     write(joueurs[j_actif].perso);
     TextColor(15);  // Rétablie la couleur de l'encre d'origine : blanc
     writeln(' de jouer ! (Appuyer sur ''espace'')');
 
-    repeat  // Boucle s'assurant que le joueur 'actif' soit prêt à jouer
+    repeat  // Boucle s'assurant que le joueur 'actif' soit prêt à jouer en appuyant sur 'espcace'
         continue := readKey();
         until (continue = SPACE);   
 
@@ -102,92 +103,138 @@ begin
         writeln('Vous etes actuellement dans la salle : ', plat.salles[estDansLaSalle(plat, joueurs[j_actif].pos)].nom, '.');
     writeln('(Appuyer sur ''espace'')');
 
-    repeat  // Boucle s'assurant que le joueur 'actif' ai prit connaissance de ses cartes et de la salle dans laquelle il se trouve
+    repeat  // Boucle s'assurant que le joueur 'actif' ai prit connaissance de ses cartes et de la salle dans laquelle il se trouve en appuyant sur 'espcace'
         continue := readKey();
         until (continue = SPACE);
     
-
-    {Différentes action possibles selon les cas}
-    if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then  // Vérifie si le joueur 'actif' est dans une salle au debut du tour
-        begin
-            if sortieSallePossible(joueurs, plat, j_actif) then  // Vérifie si le joueur 'actif' peut sortir de la salle dans laquelle il se trouve
-                begin
-                    {Propose au joueur 'actif' les actions possibles}
-                    writeln('Que voulez-vous faire :');
-                    writeln('   1 : Vous deplacer');
-                    writeln('   2 : Formuler une hypothese'); 
-
-                    {Lecture du choix d'action du joueur 'actif' et vérification que l'action soit possible}
-                    repeat
-                        write('Votre choix est : ');
-                        readln(c);
-                        if not((c >= 1) AND (c <= 2)) then
-                            writeln('Ce choix est invalide.')
-                        until ((c >= 1) AND (c <= 2));
-
-                    {Lance les action en fonction du choix du joueur 'actif'}
-                    case c of
-                        1 : begin  // Choix : déplacement
-                                lancerDes(lancer);  // Appel de la procedure lancerDes qui va définir le nombre de déplacement possible du joueur 'actif' pour le tour actuel
-                                deplacement(plat, lancer, joueurs, j_actif);  // Appel de la procedure deplacement permettant au joueur 'actif' de se déplacer sur le plateau de jeu
-                                if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then  // Vérification de la présence du joueur 'actif' dans une salle
-                                    begin
-                                        if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 10) then  // Si le joueur 'actif' est dans une salle différente de la salle pour formuler un accusation
-                                            faireHypothese(joueurs, hypo, plat, j_actif, environnement)  // Appel de la procedure faireHypothese pour formuler une hypothèse
-                                        else  // Sinon
-                                            faireAccusation(etui, joueurs, accusation, j_actif, environnement, plat);  // Appel de la procedure faireAccusation pour formuler une accusation
-                                    end;
-                            end;
-                        2 : begin  // Choix : Formulation d'hypothèse
-                                faireHypothese(joueurs, hypo, plat, j_actif, environnement);  // Appel de la procedure faireHypothese pour formuler une hypothèse
-                            end;
+    case estDansLaSalle(plat, joueurs[j_actif].pos) of
+        0 : // Le joueur 'actif' n'est dans aucune salle au début du tour
+            begin  
+                lancerDes(lancer);  // Appel de la procedure lancerDes qui va définir le nombre de déplacement possible du joueur 'actif' pour le tour actuel
+                deplacement(plat, lancer, joueurs, j_actif);  // Appel de la procedure deplacement permettant au joueur 'actif' de se déplacer sur le plateau de jeu
+                if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then  // Vérification de la présence du joueur 'actif' dans une salle
+                    begin
+                        if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 10) then  // Si le joueur 'actif' est dans une salle différente de la salle pour formuler un accusation
+                            faireHypothese(joueurs, hypo, plat, j_actif, environnement)  // Appel de la procedure faireHypothese pour formuler une hypothèse
+                        else  // Sinon
+                            faireAccusation(etui, joueurs, accusation, j_actif, environnement, plat);  // Appel de la procedure faireAccusation pour formuler une accusation
                     end;
-                end
-            else  // Si le joueur 'actif' ne peut pas sortir de la salle
-                begin
-                    writeln('Vous ne pouvez pas sortir de cette salle actuellement. Vous allez donc formuler une hypothèse. (Appuyer sur ''espace'')');
-                    repeat  // Boucle s'assurant que le joueur 'actif' ai prit connaissance de la situation
-                        continue := readKey();
-                        until (continue = SPACE);
-                    faireHypothese(joueurs, hypo, plat, j_actif, environnement);  // Appel de la procedure faireHypothese pour formuler une hypothèse
-                end;
-        end
-    else  // Si le joueur 'actif' n'est dans aucune salle au début du tour
-        begin
-            lancerDes(lancer);  // Appel de la procedure lancerDes qui va définir le nombre de déplacement possible du joueur 'actif' pour le tour actuel
-            deplacement(plat, lancer, joueurs, j_actif);  // Appel de la procedure deplacement permettant au joueur 'actif' de se déplacer sur le plateau de jeu
-            if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then  // Vérification de la présence du joueur 'actif' dans une salle
-                begin
-                    if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 10) then  // Si le joueur 'actif' est dans une salle différente de la salle pour formuler un accusation
-                        faireHypothese(joueurs, hypo, plat, j_actif, environnement)  // Appel de la procedure faireHypothese pour formuler une hypothèse
-                    else  // Sinon
+            end;
+        1..9 :  // Le joueur 'actif' est dans une salle différente de la salle d'accusation au début du tour
+            begin
+                if sortieSallePossible(joueurs, plat, j_actif) then  // Vérifie si le joueur 'actif' peut sortir de la salle dans laquelle il se trouve
+                    begin
+                        {Propose au joueur 'actif' les actions possibles}
+                        writeln('Que voulez-vous faire :');
+                        writeln('   1 : Vous deplacer');
+                        writeln('   2 : Formuler une hypothese'); 
+
+                        {Lecture du choix d'action du joueur 'actif' et vérification que l'action soit possible}
+                        repeat
+                            write('Votre choix est : ');
+                            readln(c);
+                            if not((c >= 1) AND (c <= 2)) then
+                                writeln('Ce choix est invalide.')
+                            until ((c >= 1) AND (c <= 2));
+
+                        {Lance les action en fonction du choix du joueur 'actif'}
+                        case c of
+                            1 : begin  // Choix : déplacement
+                                    lancerDes(lancer);  // Appel de la procedure lancerDes qui va définir le nombre de déplacement possible du joueur 'actif' pour le tour actuel
+                                    deplacement(plat, lancer, joueurs, j_actif);  // Appel de la procedure deplacement permettant au joueur 'actif' de se déplacer sur le plateau de jeu
+                                    if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then  // Vérification de la présence du joueur 'actif' dans une salle
+                                        begin
+                                            if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 10) then  // Si le joueur 'actif' est dans une salle différente de la salle pour formuler un accusation
+                                                faireHypothese(joueurs, hypo, plat, j_actif, environnement)  // Appel de la procedure faireHypothese pour formuler une hypothèse
+                                            else  // Sinon
+                                                faireAccusation(etui, joueurs, accusation, j_actif, environnement, plat);  // Appel de la procedure faireAccusation pour formuler une accusation
+                                        end;
+                                end;
+                            2 : begin  // Choix : Formulation d'hypothèse
+                                    faireHypothese(joueurs, hypo, plat, j_actif, environnement);  // Appel de la procedure faireHypothese pour formuler une hypothèse
+                                end;
+                        end;
+                    end
+                else  // Si le joueur 'actif' ne peut pas sortir de la salle
+                    begin
+                        writeln('Vous ne pouvez pas sortir de cette salle actuellement. Vous allez donc formuler une hypothèse. (Appuyer sur ''espace'')');
+                        repeat  // Boucle s'assurant que le joueur 'actif' ai prit connaissance de la situation en appuyant sur 'espcace'
+                            continue := readKey();
+                            until (continue = SPACE);
+                        faireHypothese(joueurs, hypo, plat, j_actif, environnement);  // Appel de la procedure faireHypothese pour formuler une hypothèse
+                    end;
+            end;
+        10 :  // Le joueur 'actif' est dans la salle d'accusation au début du tour
+            begin
+                if sortieSallePossible(joueurs, plat, j_actif) then  // Vérifie si le joueur 'actif' peut sortir de la salle dans laquelle il se trouve
+                    begin
+                        {Propose au joueur 'actif' les actions possibles}
+                        writeln('Que voulez-vous faire :');
+                        writeln('   1 : Vous deplacer');
+                        writeln('   2 : Formuler une accusation'); 
+
+                        {Lecture du choix d'action du joueur 'actif' et vérification que l'action soit possible}
+                        repeat
+                            write('Votre choix est : ');
+                            readln(c);
+                            if not((c >= 1) AND (c <= 2)) then
+                                writeln('Ce choix est invalide.')
+                            until ((c >= 1) AND (c <= 2));
+
+                        {Lance les action en fonction du choix du joueur 'actif'}
+                        case c of
+                            1 : begin  // Choix : déplacement
+                                    lancerDes(lancer);  // Appel de la procedure lancerDes qui va définir le nombre de déplacement possible du joueur 'actif' pour le tour actuel
+                                    deplacement(plat, lancer, joueurs, j_actif);  // Appel de la procedure deplacement permettant au joueur 'actif' de se déplacer sur le plateau de jeu
+                                    if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then  // Vérification de la présence du joueur 'actif' dans une salle
+                                        begin
+                                            if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 10) then  // Si le joueur 'actif' est dans une salle différente de la salle pour formuler un accusation
+                                                faireHypothese(joueurs, hypo, plat, j_actif, environnement)  // Appel de la procedure faireHypothese pour formuler une hypothèse
+                                            else  // Sinon
+                                                faireAccusation(etui, joueurs, accusation, j_actif, environnement, plat);  // Appel de la procedure faireAccusation pour formuler une accusation
+                                        end;
+                                end;
+                            2 : begin  // Choix : Formulation d'une accisation
+                                    faireAccusation(etui, joueurs, accusation, j_actif, environnement, plat);  // Appel de la procedure faireAccusation pour formuler une accusation
+                                end;
+                        end;
+                    end
+                else  // Si le joueur 'actif' ne peut pas sortir de la salle
+                    begin
+                        writeln('Vous ne pouvez pas sortir de cette salle actuellement. Vous allez donc formuler une accusation. (Appuyer sur ''espace'')');
+                        repeat  // Boucle s'assurant que le joueur 'actif' ai prit connaissance de la situation en appuyant sur 'espcace'
+                            continue := readKey();
+                            until (continue = SPACE);
                         faireAccusation(etui, joueurs, accusation, j_actif, environnement, plat);  // Appel de la procedure faireAccusation pour formuler une accusation
-                end;
-        end;
+                    end;
+            end;
+    end;
 end;
 
 
 
+    
+
+
+
 procedure lancerDes(var lancer : Integer);
+{Procedure permettant de jeter virtuellement deux dés, et la valeur de la somme de ces deux derniers correspond au nombre de déplacement disponible}
 
 var de1, de2 : Integer;
     continue : Char;
 
 begin
-    {Lance les 2 dés de manière aléatoire}
-    Randomize;
+    Randomize;  // Appel de la procédure Randomize afin de pouvoir uiliser la fonction random
 
-    de1 := random(5) + 1;
-    de2 := random(5) + 1;
+    de1 := random(5) + 1;  // de1 prend une valeur aléatoire tirée entre 1 et 6
+    de2 := random(5) + 1;  // de2 prend une valeur aléatoire tirée entre 1 et 6
 
-    lancer := de1 + de2;
+    lancer := de1 + de2;  // lancer est donc la somme des deux dés
 
-    {Affiche la valeur des deux dés ainsi que le nombre de déplacements total}
-	writeln('Le premier de a pour valeur ', de1, ' et le second ', de2, '. Le nombre de deplacement total est donc de ', lancer, '.');
-
+	writeln('Le premier de a pour valeur ', de1, ' et le second ', de2, '. Le nombre de deplacement total est donc de ', lancer, '.'); // Affiche la valeur des deux dés ainsi que le nombre de déplacements total
     writeln('(Appuyer sur ''espace'')');
 
-    repeat
+    repeat  // Boucle s'assurant que le joueur 'actif' ai prit connaissance du nombre de déplacement qu'il possède en appuyant sur 'espcace'
         continue := readKey();
         until (continue = SPACE);
 end;
@@ -195,6 +242,7 @@ end;
 
 
 procedure deplacement(plat : Plateau; lancer : Integer; var joueurs : ListeJoueurs; j_actif : Integer);
+{Procedure permettant au joueur 'actif' de se déplacer sur le plateau de jeu}
 
 var key : Char;
 	move : Integer;
@@ -204,384 +252,384 @@ var key : Char;
 
 begin
     {Affichage du plateau}
-    move := lancer;
-    bouge := False;
-    affichagePlateau(plat, joueurs);
-    affichageDeplacement(move);
+    move := lancer;  // move est la variable qui compte le nombre de déplacements restants
+    bouge := False;  // Boolean permettant de savoir si le joueur 'actif' est sorti de la salle dans laquelle il se trouve au début du tour, si il se trouve dans l'une d'elle
+    affichagePlateau(plat, joueurs);  // Appel de la procedure affichant le plateau de jeu
+    affichageDeplacement(move);  // Appel de la procedure affichant le nombre de déplacements restants
 
 
-    if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then
+    if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then  // Vérification de la présence du joueur 'actif' dans une salle
         begin
-            case estDansLaSalle(plat, joueurs[j_actif].pos) of
-                1 : 
+            case estDansLaSalle(plat, joueurs[j_actif].pos) of  // Instruction permettant de traiter les différents cas en fonction des valeurs de la salle dans laquelle le joueur 'actif' se trouve
+                1 :  // Le joueur 'actif' se trouve dans la salle 1
                     begin
-                        salle_act := 1;
-                        affichageSortieSalle(1);
-                        repeat
-                            key := readKey();
-                            case key of 
-                                DOWN : 
+                        affichageSortieSalle(1);  // Appel de la procedure affichageSortieSalle affichant les touches sur lesquelles appuyer pour sortir de cette salle
+                        salle_act := 1;  // Variable stockant la valeur de salle dans laquelle le joueur 'actif' se trouve au début du tour
+                        repeat  // Boucle se répétant tant que le joueur 'actif' n'est pas sortie de la salle dans laquelle il se trouve
+                            key := readKey();  // Variable stockant la touche sur laquelle le joueur 'actif' a appuyé
+                            case key of  // Instruction permettant de traiter les différents cas en fonction de la touche sur laquelle laa joueur 'actif' a appuyé
+                                DOWN :  // Le joueur 'actif' a appuyé sur la flèche du bas 
                                     begin
-                                        co[1] := 6;
+                                        co[1] := 6;  // Coordonnées de la sortie correspondant à la touche flèche du bas
                                         co[2] := 9;
-                                        if (caseEstLibre(joueurs, plat, co)) then
+                                        if (caseEstLibre(joueurs, plat, co)) then  // Vérification de l'absence d'autre joueur sur la case sur laquelle le joueur 'actif' veut sortir. Si la condition est vraie, le joueur 'actif' va sortir de la salle
                                             begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                                joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                                 joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                bouge := True;
+                                                move := move - 1;  // Diminition du nombre de déplacements restants
+                                                bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                             end;
                                     end;
-                                UP : 
+                                UP :  // Le joueur 'actif' a appuyé sur la flèche du haut. Dans ce cas, on n'a pas besoin de vérifier que la case est libre puisqu'il s'agit d'un passage secret que mène directement à une salle
                                     begin
-                                        co[1] := 20;
+                                        co[1] := 20;  // Coordonnées de la sortie correspondant à la touche flèche du haut
                                         co[2] := 23;
-                                        affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                        joueurs[j_actif].pos[1] := co[1];
+                                        affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                        joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                         joueurs[j_actif].pos[2] := co[2];
-                                        move := move - 1;
-                                        bouge := True;
+                                        move := move - 1;  // Diminition du nombre de déplacements restants
+                                        bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                     end;
                             end;
                             until (bouge);
                     end;
-                2 : 
+                2 :  // Le joueur 'actif' se trouve dans la salle 2
                     begin
-                        affichageSortieSalle(2);
-                        salle_act := 2;
-                        repeat
-                            key := readKey();
-                            case key of 
-                                DOWN : 
+                        affichageSortieSalle(2);  // Appel de la procedure affichageSortieSalle affichant les touches sur lesquelles appuyer pour sortir de cette salle
+                        salle_act := 2;  // Variable stockant la valeur de salle dans laquelle le joueur 'actif' se trouve au début du tour
+                        repeat  // Boucle se répétant tant que le joueur 'actif' n'est pas sortie de la salle dans laquelle il se trouve
+                            key := readKey();  // Variable stockant la touche sur laquelle le joueur 'actif' a appuyé
+                            case key of   // Instruction permettant de traiter les différents cas en fonction de la touche sur laquelle laa joueur 'actif' a appuyé
+                                DOWN :  // Le joueur 'actif' a appuyé sur la flèche du bas 
                                     begin
-                                        co[1] := 11;
+                                        co[1] := 11;  // Coordonnées de la sortie correspondant à la touche flèche du bas
                                         co[2] := 10;
-                                        if (caseEstLibre(joueurs, plat, co)) then
+                                        if (caseEstLibre(joueurs, plat, co)) then  // Vérification de l'absence d'autre joueur sur la case sur laquelle le joueur 'actif' veut sortir. Si la condition est vraie, le joueur 'actif' va sortir de la salle
                                             begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                                joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                                 joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                bouge := True;
+                                                move := move - 1;  // Diminition du nombre de déplacements restants
+                                                bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                             end;
                                     end;
-                                UP :
+                                UP :  // Le joueur 'actif' a appuyé sur la flèche du haut
                                     begin
-                                        co[1] := 16;
+                                        co[1] := 16;  // Coordonnées de la sortie correspondant à la touche flèche du haut
                                         co[2] := 10;
-                                        if (caseEstLibre(joueurs, plat, co)) then
+                                        if (caseEstLibre(joueurs, plat, co)) then  // Vérification de l'absence d'autre joueur sur la case sur laquelle le joueur 'actif' veut sortir. Si la condition est vraie, le joueur 'actif' va sortir de la salle
                                             begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                                joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                                 joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                bouge := True;
+                                                move := move - 1;  // Diminition du nombre de déplacements restants
+                                                bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                             end;
                                     end;
-                                LEFT : 
+                                LEFT :  // Le joueur 'actif' a appuyé sur la flèche de gauche
                                     begin
-                                        co[1] := 9;
+                                        co[1] := 9;  // Coordonnées de la sortie correspondant à la touche flèche de gauche
                                         co[2] := 7;
-                                        if (caseEstLibre(joueurs, plat, co)) then
+                                        if (caseEstLibre(joueurs, plat, co)) then  // Vérification de l'absence d'autre joueur sur la case sur laquelle le joueur 'actif' veut sortir. Si la condition est vraie, le joueur 'actif' va sortir de la salle
                                             begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                                joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                                 joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                bouge := True;
+                                                move := move - 1;  // Diminition du nombre de déplacements restants
+                                                bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                             end;
                                     end;
-                                RIGHT :
+                                RIGHT :  // Le joueur 'actif' a appuyé sur la flèche de droite
                                     begin
-                                        co[1] := 18;
+                                        co[1] := 18;  // Coordonnées de la sortie correspondant à la touche flèche de droite
                                         co[2] := 7;
-                                        if (caseEstLibre(joueurs, plat, co)) then
+                                        if (caseEstLibre(joueurs, plat, co)) then  // Vérification de l'absence d'autre joueur sur la case sur laquelle le joueur 'actif' veut sortir. Si la condition est vraie, le joueur 'actif' va sortir de la salle
                                             begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                                joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                                 joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                bouge := True;
+                                                move := move - 1;  // Diminition du nombre de déplacements restants
+                                                bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                             end;
                                     end;
                             end;
                             until (bouge);
                     end;
-                3 : 
+                3 :  // Le joueur 'actif' se trouve dans la salle 3
                     begin
-                        affichageSortieSalle(3);
-                        salle_act := 3;
-                        repeat
-                            key := readKey();
-                            case key of 
-                                DOWN : 
+                        affichageSortieSalle(3);  // Appel de la procedure affichageSortieSalle affichant les touches sur lesquelles appuyer pour sortir de cette salle
+                        salle_act := 3;  // Variable stockant la valeur de salle dans laquelle le joueur 'actif' se trouve au début du tour
+                        repeat  // Boucle se répétant tant que le joueur 'actif' n'est pas sortie de la salle dans laquelle il se trouve
+                            key := readKey();  // Variable stockant la touche sur laquelle le joueur 'actif' a appuyé
+                            case key of   // Instruction permettant de traiter les différents cas en fonction de la touche sur laquelle laa joueur 'actif' a appuyé
+                                DOWN :  // Le joueur 'actif' a appuyé sur la flèche du bas 
                                     begin
-                                        co[1] := 21;
+                                        co[1] := 21;  // Coordonnées de la sortie correspondant à la touche flèche du bas
                                         co[2] := 7;
-                                        if (caseEstLibre(joueurs, plat, co)) then
+                                        if (caseEstLibre(joueurs, plat, co)) then  // Vérification de l'absence d'autre joueur sur la case sur laquelle le joueur 'actif' veut sortir. Si la condition est vraie, le joueur 'actif' va sortir de la salle
                                             begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                                joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                                 joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                bouge := True;
+                                                move := move - 1;  // Diminition du nombre de déplacements restants
+                                                bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                             end;
                                     end;
-                                UP : 
+                                UP :  // Le joueur 'actif' a appuyé sur la flèche du haut. Dans ce cas, on n'a pas besoin de vérifier que la case est libre puisqu'il s'agit d'un passage secret que mène directement à une salle
                                     begin
-                                        co[1] := 7;
+                                        co[1] := 7;  // Coordonnées de la sortie correspondant à la touche flèche du haut
                                         co[2] := 21;
-                                        affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                        joueurs[j_actif].pos[1] := co[1];
+                                        affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                        joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                         joueurs[j_actif].pos[2] := co[2];
-                                        move := move - 1;
-                                        bouge := True;
+                                        move := move - 1;  // Diminition du nombre de déplacements restants
+                                        bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                     end;
                             end;
                             until (bouge);
                     end;
-                4 : 
+                4 :  // Le joueur 'actif' se trouve dans la salle 4
                     begin
-                        affichageSortieSalle(4);
-                        salle_act := 4;
-                        repeat
-                            key := readKey();
-                            case key of 
-                                DOWN : 
+                        affichageSortieSalle(4);  // Appel de la procedure affichageSortieSalle affichant les touches sur lesquelles appuyer pour sortir de cette salle
+                        salle_act := 4;  // Variable stockant la valeur de salle dans laquelle le joueur 'actif' se trouve au début du tour
+                        repeat  // Boucle se répétant tant que le joueur 'actif' n'est pas sortie de la salle dans laquelle il se trouve
+                            key := readKey();  // Variable stockant la touche sur laquelle le joueur 'actif' a appuyé
+                            case key of  // Instruction permettant de traiter les différents cas en fonction de la touche sur laquelle laa joueur 'actif' a appuyé
+                                DOWN :  // Le joueur 'actif' a appuyé sur la flèche du bas 
                                     begin
-                                        co[1] := 8;
+                                        co[1] := 8;  // Coordonnées de la sortie correspondant à la touche flèche du bas
                                         co[2] := 18;
-                                        if (caseEstLibre(joueurs, plat, co)) then
+                                        if (caseEstLibre(joueurs, plat, co)) then  // Vérification de l'absence d'autre joueur sur la case sur laquelle le joueur 'actif' veut sortir. Si la condition est vraie, le joueur 'actif' va sortir de la salle
                                             begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                                joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                                 joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                bouge := True;
+                                                move := move - 1;  // Diminition du nombre de déplacements restants
+                                                bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                             end;
                                     end;
-                                RIGHT :
+                                RIGHT :  // Le joueur 'actif' a appuyé sur la flèche de droite
                                     begin
-                                        co[1] := 10;
+                                        co[1] := 10;  // Coordonnées de la sortie correspondant à la touche flèche de droite
                                         co[2] := 14;
-                                        if (caseEstLibre(joueurs, plat, co)) then
+                                        if (caseEstLibre(joueurs, plat, co)) then  // Vérification de l'absence d'autre joueur sur la case sur laquelle le joueur 'actif' veut sortir. Si la condition est vraie, le joueur 'actif' va sortir de la salle
                                             begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                                joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                                 joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                bouge := True;
+                                                move := move - 1;  // Diminition du nombre de déplacements restants
+                                                bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                             end;
                                     end;
                             end;
                             until (bouge);
                     end;
-                5 : 
+                5 :  // Le joueur 'actif' se trouve dans la salle 5
                     begin
-                        affichageSortieSalle(5);
-                        salle_act := 5;
-                        repeat
-                            key := readKey();
-                            case key of 
-                                DOWN : 
+                        affichageSortieSalle(5);  // Appel de la procedure affichageSortieSalle affichant les touches sur lesquelles appuyer pour sortir de cette salle
+                        salle_act := 5;  // Variable stockant la valeur de salle dans laquelle le joueur 'actif' se trouve au début du tour
+                        repeat  // Boucle se répétant tant que le joueur 'actif' n'est pas sortie de la salle dans laquelle il se trouve
+                            key := readKey();  // Variable stockant la touche sur laquelle le joueur 'actif' a appuyé
+                            case key of  // Instruction permettant de traiter les différents cas en fonction de la touche sur laquelle laa joueur 'actif' a appuyé
+                                DOWN :  // Le joueur 'actif' a appuyé sur la flèche du bas 
                                     begin
-                                        co[1] := 24;
+                                        co[1] := 24;  // Coordonnées de la sortie correspondant à la touche flèche du bas
                                         co[2] := 15;
-                                        if (caseEstLibre(joueurs, plat, co)) then
+                                        if (caseEstLibre(joueurs, plat, co)) then  // Vérification de l'absence d'autre joueur sur la case sur laquelle le joueur 'actif' veut sortir. Si la condition est vraie, le joueur 'actif' va sortir de la salle
                                             begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                                joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                                 joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                bouge := True;
+                                                move := move - 1;  // Diminition du nombre de déplacements restants
+                                                bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                             end;
                                     end;
-                                LEFT :
+                                LEFT :  // Le joueur 'actif' a appuyé sur la flèche de gauche
                                     begin
-                                        co[1] := 19;
+                                        co[1] := 19;  // Coordonnées de la sortie correspondant à la touche flèche de gauche
                                         co[2] := 11;
-                                        if (caseEstLibre(joueurs, plat, co)) then
+                                        if (caseEstLibre(joueurs, plat, co)) then  // Vérification de l'absence d'autre joueur sur la case sur laquelle le joueur 'actif' veut sortir. Si la condition est vraie, le joueur 'actif' va sortir de la salle
                                             begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                                joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                                 joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                bouge := True;
+                                                move := move - 1;  // Diminition du nombre de déplacements restants
+                                                bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                             end;
                                     end;
                             end;
                             until (bouge);
                     end;
-                6 : 
+                6 :  // Le joueur 'actif' se trouve dans la salle 6
                     begin
-                        affichageSortieSalle(6);
-                        salle_act := 6;
-                        repeat
-                            key := readKey();
-                            case key of 
-                                UP : 
+                        affichageSortieSalle(6);  // Appel de la procedure affichageSortieSalle affichant les touches sur lesquelles appuyer pour sortir de cette salle
+                        salle_act := 6;  // Variable stockant la valeur de salle dans laquelle le joueur 'actif' se trouve au début du tour
+                        repeat  // Boucle se répétant tant que le joueur 'actif' n'est pas sortie de la salle dans laquelle il se trouve
+                            key := readKey();  // Variable stockant la touche sur laquelle le joueur 'actif' a appuyé
+                            case key of  // Instruction permettant de traiter les différents cas en fonction de la touche sur laquelle laa joueur 'actif' a appuyé 
+                                UP :  // Le joueur 'actif' a appuyé sur la flèche du haut
                                     begin
-                                        co[1] := 22;
+                                        co[1] := 22;  // Coordonnées de la sortie correspondant à la touche flèche du haut
                                         co[2] := 15;
-                                        if (caseEstLibre(joueurs, plat, co)) then
+                                        if (caseEstLibre(joueurs, plat, co)) then  // Vérification de l'absence d'autre joueur sur la case sur laquelle le joueur 'actif' veut sortir. Si la condition est vraie, le joueur 'actif' va sortir de la salle
                                             begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                                joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                                 joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                bouge := True;
+                                                move := move - 1;  // Diminition du nombre de déplacements restants
+                                                bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                             end;
                                     end;
-                                LEFT :
+                                LEFT :  // Le joueur 'actif' a appuyé sur la flèche de gauche
                                     begin
-                                        co[1] := 18;
+                                        co[1] := 18;  // Coordonnées de la sortie correspondant à la touche flèche de gauche
                                         co[2] := 18;
-                                        if (caseEstLibre(joueurs, plat, co)) then
+                                        if (caseEstLibre(joueurs, plat, co)) then  // Vérification de l'absence d'autre joueur sur la case sur laquelle le joueur 'actif' veut sortir. Si la condition est vraie, le joueur 'actif' va sortir de la salle
                                             begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                                joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                                 joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                bouge := True;
+                                                move := move - 1;  // Diminition du nombre de déplacements restants
+                                                bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                             end;
                                     end;
                             end;
                             until (bouge);
                     end;
-                7 : 
+                7 :  // Le joueur 'actif' se trouve dans la salle 7
                     begin
-                        affichageSortieSalle(7);
-                        salle_act := 7;
-                        repeat
-                            key := readKey();
-                            case key of 
-                                UP : 
+                        affichageSortieSalle(7);  // Appel de la procedure affichageSortieSalle affichant les touches sur lesquelles appuyer pour sortir de cette salle
+                        salle_act := 7;  // Variable stockant la valeur de salle dans laquelle le joueur 'actif' se trouve au début du tour
+                        repeat  // Boucle se répétant tant que le joueur 'actif' n'est pas sortie de la salle dans laquelle il se trouve
+                            key := readKey();  // Variable stockant la touche sur laquelle le joueur 'actif' a appuyé
+                            case key of  // Instruction permettant de traiter les différents cas en fonction de la touche sur laquelle laa joueur 'actif' a appuyé 
+                                UP :  // Le joueur 'actif' a appuyé sur la flèche du haut
                                     begin
-                                        co[1] := 7;
+                                        co[1] := 7;  // Coordonnées de la sortie correspondant à la touche flèche du haut
                                         co[2] := 20;
-                                        if (caseEstLibre(joueurs, plat, co)) then
+                                        if (caseEstLibre(joueurs, plat, co)) then  // Vérification de l'absence d'autre joueur sur la case sur laquelle le joueur 'actif' veut sortir. Si la condition est vraie, le joueur 'actif' va sortir de la salle
                                             begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                                joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                                 joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                bouge := True;
+                                                move := move - 1;  // Diminition du nombre de déplacements restants
+                                                bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                             end;
                                     end;
-                                DOWN : 
+                                DOWN :  // Le joueur 'actif' a appuyé sur la flèche du bas. Dans ce cas, on n'a pas besoin de vérifier que la case est libre puisqu'il s'agit d'un passage secret que mène directement à une salle
                                     begin
-                                        co[1] := 21;
+                                        co[1] := 21;  // Coordonnées de la sortie correspondant à la touche flèche du bas
                                         co[2] := 6;
-                                        affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                        joueurs[j_actif].pos[1] := co[1];
+                                        affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                        joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                         joueurs[j_actif].pos[2] := co[2];
-                                        move := move - 1;
-                                        bouge := True;
+                                        move := move - 1;  // Diminition du nombre de déplacements restants
+                                        bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                     end;
                             end;
                             until (bouge);
                     end;
-                8 :
-                    begin
-                        affichageSortieSalle(8);
-                        salle_act := 8;
-                        repeat
-                            key := readKey();
-                            case key of 
-                                UP :
+                8 :  // Le joueur 'actif' se trouve dans la salle 8
+                    begin 
+                        affichageSortieSalle(8);  // Appel de la procedure affichageSortieSalle affichant les touches sur lesquelles appuyer pour sortir de cette salle
+                        salle_act := 8;  // Variable stockant la valeur de salle dans laquelle le joueur 'actif' se trouve au début du tour
+                        repeat  // Boucle se répétant tant que le joueur 'actif' n'est pas sortie de la salle dans laquelle il se trouve
+                            key := readKey();  // Variable stockant la touche sur laquelle le joueur 'actif' a appuyé
+                            case key of  // Instruction permettant de traiter les différents cas en fonction de la touche sur laquelle laa joueur 'actif' a appuyé 
+                                UP :  // Le joueur 'actif' a appuyé sur la flèche du haut
                                     begin
-                                        co[1] := 14;
+                                        co[1] := 14;  // Coordonnées de la sortie correspondant à la touche flèche du haut
                                         co[2] := 19;
-                                        if (caseEstLibre(joueurs, plat, co)) then
+                                        if (caseEstLibre(joueurs, plat, co)) then  // Vérification de l'absence d'autre joueur sur la case sur laquelle le joueur 'actif' veut sortir. Si la condition est vraie, le joueur 'actif' va sortir de la salle
                                             begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                                joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                                 joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                bouge := True;
+                                                move := move - 1;  // Diminition du nombre de déplacements restants
+                                                bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                             end;
                                     end;
-                                LEFT : 
+                                LEFT :  // Le joueur 'actif' a appuyé sur la flèche de gauche
                                     begin
-                                        co[1] := 13;
+                                        co[1] := 13;  // Coordonnées de la sortie correspondant à la touche flèche de gauche
                                         co[2] := 19;
-                                        if (caseEstLibre(joueurs, plat, co)) then
+                                        if (caseEstLibre(joueurs, plat, co)) then  // Vérification de l'absence d'autre joueur sur la case sur laquelle le joueur 'actif' veut sortir. Si la condition est vraie, le joueur 'actif' va sortir de la salle
                                             begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                                joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                                 joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                bouge := True;
+                                                move := move - 1;  // Diminition du nombre de déplacements restants
+                                                bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                             end;
                                     end;
-                                RIGHT :
+                                RIGHT :  // Le joueur 'actif' a appuyé sur la flèche de droite
                                     begin
-                                        co[1] := 17;
+                                        co[1] := 17;  // Coordonnées de la sortie correspondant à la touche flèche de droite
                                         co[2] := 22;
-                                        if (caseEstLibre(joueurs, plat, co)) then
+                                        if (caseEstLibre(joueurs, plat, co)) then  // Vérification de l'absence d'autre joueur sur la case sur laquelle le joueur 'actif' veut sortir. Si la condition est vraie, le joueur 'actif' va sortir de la salle
                                             begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                                joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                                 joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                bouge := True;
+                                                move := move - 1;  // Diminition du nombre de déplacements restants
+                                                bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                             end;
                                     end;
                             end;
                             until (bouge);
                     end;
-                9 : 
+                9 :  // Le joueur 'actif' se trouve dans la salle 9
                     begin
-                        affichageSortieSalle(9);
-                        salle_act := 9;
-                        repeat
-                            key := readKey();
-                            case key of 
-                                UP : 
+                        affichageSortieSalle(9);  // Appel de la procedure affichageSortieSalle affichant les touches sur lesquelles appuyer pour sortir de cette salle
+                        salle_act := 9;  // Variable stockant la valeur de salle dans laquelle le joueur 'actif' se trouve au début du tour
+                        repeat  // Boucle se répétant tant que le joueur 'actif' n'est pas sortie de la salle dans laquelle il se trouve
+                            key := readKey();  // Variable stockant la touche sur laquelle le joueur 'actif' a appuyé
+                            case key of  // Instruction permettant de traiter les différents cas en fonction de la touche sur laquelle laa joueur 'actif' a appuyé 
+                                UP :  // Le joueur 'actif' a appuyé sur la flèche du haut
                                     begin
-                                        co[1] := 20;
+                                        co[1] := 20;  // Coordonnées de la sortie correspondant à la touche flèche du haut
                                         co[2] := 22;
-                                        if (caseEstLibre(joueurs, plat, co)) then
+                                        if (caseEstLibre(joueurs, plat, co)) then  // Vérification de l'absence d'autre joueur sur la case sur laquelle le joueur 'actif' veut sortir. Si la condition est vraie, le joueur 'actif' va sortir de la salle
                                             begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                                joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                                 joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                bouge := True;
+                                                move := move - 1;  // Diminition du nombre de déplacements restants
+                                                bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                             end;
                                     end;
-                                DOWN : 
+                                DOWN :  // Le joueur 'actif' a appuyé sur la flèche du bas. Dans ce cas, on n'a pas besoin de vérifier que la case est libre puisqu'il s'agit d'un passage secret que mène directement à une salle 
                                     begin
-                                        co[1] := 6;
+                                        co[1] := 6;  // Coordonnées de la sortie correspondant à la touche flèche du bas
                                         co[2] := 8;
-                                        affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                        joueurs[j_actif].pos[1] := co[1];
+                                        affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                        joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                         joueurs[j_actif].pos[2] := co[2];
-                                        move := move - 1;
-                                        bouge := True;
+                                        move := move - 1;  // Diminition du nombre de déplacements restants
+                                        bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                     end;
                             end;
                             until (bouge);
                     end;
-                10 : 
+                10 :  // Le joueur 'actif' se trouve dans la salle 10
                     begin
-                        affichageSortieSalle(10);
-                        salle_act := 10;
-                        repeat
-                            key := readKey();
-                            case key of 
-                                DOWN : 
+                        affichageSortieSalle(10);  // Appel de la procedure affichageSortieSalle affichant les touches sur lesquelles appuyer pour sortir de cette salle
+                        salle_act := 10;  // Variable stockant la valeur de salle dans laquelle le joueur 'actif' se trouve au début du tour
+                        repeat  // Boucle se répétant tant que le joueur 'actif' n'est pas sortie de la salle dans laquelle il se trouve
+                            key := readKey();  // Variable stockant la touche sur laquelle le joueur 'actif' a appuyé
+                            case key of  // Instruction permettant de traiter les différents cas en fonction de la touche sur laquelle laa joueur 'actif' a appuyé 
+                                DOWN :  // Le joueur 'actif' a appuyé sur la flèche du bas 
                                     begin
-                                        co[1] := 14;
+                                        co[1] := 14;  // Coordonnées de la sortie correspondant à la touche flèche du bas
                                         co[2] := 19;
-                                        if (caseEstLibre(joueurs, plat, co)) then
+                                        if (caseEstLibre(joueurs, plat, co)) then  // Vérification de l'absence d'autre joueur sur la case sur laquelle le joueur 'actif' veut sortir. Si la condition est vraie, le joueur 'actif' va sortir de la salle
                                             begin
-                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                                joueurs[j_actif].pos[1] := co[1];
+                                                affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                                joueurs[j_actif].pos[1] := co[1];  // Actualisation de la position du pion du joueur 'actif'
                                                 joueurs[j_actif].pos[2] := co[2];
-                                                move := move - 1;
-                                                bouge := True;
+                                                move := move - 1;  // Diminition du nombre de déplacements restants
+                                                bouge := True;  // Le joueur 'actif' est sorti de la salle, donc bouge devient True et on sort de la boucle
                                             end;
                                     end;
                             end;
@@ -592,56 +640,60 @@ begin
 
 
     {Déplace le pion en vérifiant les conditions de case d'arrivée, et réduit le nombre de déplacement restant jusqu'à que les déplacements restants soient à 0 ou que le joueur soit dans une salle}
-    if (estDansLaSalle(plat, joueurs[j_actif].pos) = 0) then
+    if (estDansLaSalle(plat, joueurs[j_actif].pos) = 0) then  // Vérification de la présence du joueur 'actif' dans aucune salle
         begin
-            repeat
+            repeat  // Boucle se répétant tant que le joueur 'actif' n'est pas dans une salle ou qu'il lui reste des déplacements
 	        	begin
-                    affichageDeplacement(move);
-		        	affiche(joueurs[j_actif].pion, joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-		        	key := readKey();
-		        	case key of
-		        		UP : {Déplacement en haut}
+                    affichageDeplacement(move);  // Appel de la procedure affichant le nombre de déplacements restants
+		        	affiche(joueurs[j_actif].pion, joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Affiche la position du pion du joueur 'actif' sur le plateau de jeu
+		        	key := readKey();  // Variable stockant la touche sur laquelle le joueur 'actif' a appuyé
+		        	case key of  // Instruction permettant de traiter les différents cas en fonction de la touche sur laquelle laa joueur 'actif' a appuyé 
+		        		UP :  // Déplacement en haut
                             begin
-                                co[1] := joueurs[j_actif].pos[1];
+                                co[1] := joueurs[j_actif].pos[1];    // Coordonnées de la case située au dessus du joueur 'actif'
                                 co[2] := joueurs[j_actif].pos[2] - 1;
-                                if ((joueurs[j_actif].pos[2] - 1 >= 2) AND (plat.grille[joueurs[j_actif].pos[1]][joueurs[j_actif].pos[2] - 1] <> 1) AND (caseEstLibre(joueurs, plat, co)) AND (salle_act <> estDansLaSalle(plat, co))) then 
+                                // Vérification de la possibilité de déplacement sur la case co (que ce soit ni un mur, ni une case occupée par un autre joueur, ni une case de la salle dans laquelle le joueur 'actif' a commencé le tour si c'est le cas). Si la condition est vraie, le joueur 'actif' va se déplacer sur la case co
+                                if ((joueurs[j_actif].pos[2] - 1 >= 2) AND (plat.grille[joueurs[j_actif].pos[1]][joueurs[j_actif].pos[2] - 1] <> 1) AND (caseEstLibre(joueurs, plat, co)) AND (salle_act <> estDansLaSalle(plat, co))) then
 				        	        begin
-				        	        	affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                        joueurs[j_actif].pos[2] := joueurs[j_actif].pos[2] - 1;
-                                        move := move - 1;
+				        	        	affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                        joueurs[j_actif].pos[2] := joueurs[j_actif].pos[2] - 1;  // Actualisation de la position du pion du joueur 'actif'
+                                        move := move - 1;  // Diminition du nombre de déplacements restants
 				        	        end;
                             end;
-				        DOWN : {Déplacement en bas}
+				        DOWN : // Déplacement en bas
                             begin
-                                co[1] := joueurs[j_actif].pos[1];
+                                co[1] := joueurs[j_actif].pos[1];  // Coordonnées de la case située au dessous du joueur 'actif'
                                 co[2] := joueurs[j_actif].pos[2] + 1;
-                                if ((joueurs[j_actif].pos[2] + 1 <= 26) AND (plat.grille[joueurs[j_actif].pos[1]][joueurs[j_actif].pos[2] + 1] <> 1) AND (caseEstLibre(joueurs, plat, co)) AND (salle_act <> estDansLaSalle(plat, co))) then 
+                                // Vérification de la possibilité de déplacement sur la case co (que ce soit ni un mur, ni une case occupée par un autre joueur, ni une case de la salle dans laquelle le joueur 'actif' a commencé le tour si c'est le cas). Si la condition est vraie, le joueur 'actif' va se déplacer sur la case co
+                                if ((joueurs[j_actif].pos[2] + 1 <= 26) AND (plat.grille[joueurs[j_actif].pos[1]][joueurs[j_actif].pos[2] + 1] <> 1) AND (caseEstLibre(joueurs, plat, co)) AND (salle_act <> estDansLaSalle(plat, co))) then
 					                begin
-					                	affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                        joueurs[j_actif].pos[2] := joueurs[j_actif].pos[2] + 1;
-                                        move := move - 1;
+					                	affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                        joueurs[j_actif].pos[2] := joueurs[j_actif].pos[2] + 1;  // Actualisation de la position du pion du joueur 'actif'
+                                        move := move - 1;  // Diminition du nombre de déplacements restants
 					                end;
                             end;
-				        LEFT : {Déplacement à gauche}
+				        LEFT : // Déplacement à gauche
                             begin
-                                co[1] := joueurs[j_actif].pos[1] - 1;
+                                co[1] := joueurs[j_actif].pos[1] - 1;  // Coordonnées de la case située à gauche du joueur 'actif'
                                 co[2] := joueurs[j_actif].pos[2];
-                                if ((joueurs[j_actif].pos[1] - 1 >= 2) AND (plat.grille[joueurs[j_actif].pos[1] - 1][joueurs[j_actif].pos[2]] <> 1) AND (caseEstLibre(joueurs, plat, co)) AND (salle_act <> estDansLaSalle(plat, co))) then 
+                                // Vérification de la possibilité de déplacement sur la case co (que ce soit ni un mur, ni une case occupée par un autre joueur, ni une case de la salle dans laquelle le joueur 'actif' a commencé le tour si c'est le cas). Si la condition est vraie, le joueur 'actif' va se déplacer sur la case co
+                                if ((joueurs[j_actif].pos[1] - 1 >= 2) AND (plat.grille[joueurs[j_actif].pos[1] - 1][joueurs[j_actif].pos[2]] <> 1) AND (caseEstLibre(joueurs, plat, co)) AND (salle_act <> estDansLaSalle(plat, co))) then
 				        	        begin
-				        	        	affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                        joueurs[j_actif].pos[1] := joueurs[j_actif].pos[1] - 1;
-                                        move := move - 1;
+				        	        	affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                        joueurs[j_actif].pos[1] := joueurs[j_actif].pos[1] - 1;  // Actualisation de la position du pion du joueur 'actif'
+                                        move := move - 1;  // Diminition du nombre de déplacements restants
                                     end;
 				        	end;
-				        RIGHT : {Déplacement à droite}
+				        RIGHT : // Déplacement à droite
                             begin
-                                co[1] := joueurs[j_actif].pos[1] + 1;
+                                co[1] := joueurs[j_actif].pos[1] + 1;  // Coordonnées de la case située à droite du joueur 'actif'
                                 co[2] := joueurs[j_actif].pos[2];
-                                if ((joueurs[j_actif].pos[1] + 1 <= 25) AND (plat.grille[joueurs[j_actif].pos[1] + 1][joueurs[j_actif].pos[2]] <> 1) AND (caseEstLibre(joueurs, plat, co)) AND (salle_act <> estDansLaSalle(plat, co))) then 
+                                // Vérification de la possibilité de déplacement sur la case co (que ce soit ni un mur, ni une case occupée par un autre joueur, ni une case de la salle dans laquelle le joueur 'actif' a commencé le tour si c'est le cas). Si la condition est vraie, le joueur 'actif' va se déplacer sur la case co
+                                if ((joueurs[j_actif].pos[1] + 1 <= 25) AND (plat.grille[joueurs[j_actif].pos[1] + 1][joueurs[j_actif].pos[2]] <> 1) AND (caseEstLibre(joueurs, plat, co)) AND (salle_act <> estDansLaSalle(plat, co))) then
 					                begin
-					        	        affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-                                        joueurs[j_actif].pos[1] := joueurs[j_actif].pos[1] + 1;
-                                        move := move - 1;
+					        	        affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
+                                        joueurs[j_actif].pos[1] := joueurs[j_actif].pos[1] + 1;  // Actualisation de la position du pion du joueur 'actif'
+                                        move := move - 1;  // Diminition du nombre de déplacements restants
                                     end;
 					        end;
                     end;
@@ -650,11 +702,11 @@ begin
         end;
         
     
-    placementSalle(joueurs, plat, j_actif);
-    affiche(joueurs[j_actif].pion, joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-    affichageDeplacement(move);
-    Delay(1000);
-    ClrScr;
+    placementSalle(joueurs, plat, j_actif);  // Appel de la procédure pour placer le joueur dans la salle dans laquelle il se trouve, si c'est le cas
+    affiche(joueurs[j_actif].pion, joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Affiche la position du pion du joueur 'actif' sur le plateau de jeu
+    affichageDeplacement(move);  // Appel de la procedure affichant le nombre de déplacements restants
+    Delay(1000);  // Le programme attend environ 1000 ms avant de continuer 
+    ClrScr;  // Le terminal est nettoyé
 end;
 
 
