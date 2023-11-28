@@ -1,42 +1,35 @@
-Voici les règles du Cluedo : 
+LES REGLES DU CLUEDO
 
-Introduction : A l’issue d’une réception dans sa villa, le Docteur LENOIR est trouvé assassiné. Le cadavre a été traîné au pied de l’escalier menant à la cave.
+A l’issue d’une réception dans son manoir, le Docteur LENOIR est trouvé assassiné. Le cadavre a été traîné au pied de l’escalier menant à la cave.
 But du jeu : Résoudre, par déductions, l’énigme posée par ce crime.
-Gagnant : Celui qui, le premier :désigne le meurtrier,trouve l’arme utilisée et situe le lieu du meurtre.
+Gagnant : Celui qui, le premier: désigne le meurtrier, trouve l’arme utilisée et situe le lieu du meurtre.
 Ces précisions doivent correspondre aux 3 cartes « ÉNIGMES » placées secrètement dans l’étui au début du jeu.
 
-SOMMAIRE
 
 I – MATÉRIEL
 
-II – L’ENQUÊTE
-
-(a) DÉPLACEMENTS
-(b) HYPOTHÈSES
-(c) NOTES
-(d) ASTUCES DU DÉTECTIVE
-(e) FAUX TÉMOINS
-(f) L’ACCUSATION
-
-I – MATÉRIEL
-6 Pions par mode : ils correspondent aux six personnes se trouvant dans la villa au moment du crime :
-Pion jaune : Colonel MOUTARDE / Cyril BREDEL
+6 Pions par mode : ils correspondent aux six personnes se trouvant dans le manoir/l'INSA au moment du crime :
+Pion jaune : Colonel MOUTARDE / Monsieur BREDEL
 Vert : Docteur OLIVE / Le Directeur
 Bleu : Madame PERVENCHE / Yohann LEPAILLEUR
 Rouge : Mademoiselle ROSE / Madame L'ARCHEVEQUE
 Blanc : Madame LEBLANC / L'Infirmière
 Violet : Professeur VIOLET / Monsieur THIBAULT
 
-6 Armes par mode : Poignard, Chandelier, Revolver, Corde, Matraque, Clef Anglaise / Seringue, Moteur 4 temps, Alteres, Flacon Acide, Ordi, Pouf Rouge. Cafete, Amphi_Tillon, Infirmerie, Vestiaires, Labo, DUBRJ11, Bureau_du_directeur, Toilettes, BU
+6 Armes par mode :  Poignard, Chandelier, Revolver, Corde, Matraque, Clef Anglaise 
+                    Seringue, Moteur 4 temps, Alteres, Flacon Acide, Ordi, Pouf Rouge 
 
-20 Cartes :
-5 cartes représentent les cinq suspects
-6 autres les armes
-9 différentes pièces de la villa.
-2 Dés.
+9 Pièces par mode : Grand salon, Salle à manger, Petit Salon, Véranda, Studio, Cuisine, Bureau, Bibliothèque, Hall
+                    Cafete, Amphi Tillon, Infirmerie, Vestiaires, Labo, DUBRJ11, Bureau du directeur, Toilettes, BU
+21 Cartes :
+6 Les six suspects
+6 Armes
+9 Différentes pièces
+2 Dés
 1 Etui où se trouve les 3 cartes de l’énigme.
 
 IV – L’ENQUÊTE
+
 (a) DÉPLACEMENTS
 Choix du Pion : Chacun choisit son pion. Quelles que soient les cartes qu’ il a en main ce pion représente son personnage durant toute la partie.
 Avancer : Celui qui joue lance les dés et avance dans le couloir, vers la pièce de son choix, d’autant de cases que les dés marquent de points.
@@ -45,9 +38,8 @@ Déplacements orthogonaux : Il avance ou recule verticalement ou horizontalement
 Il peut rester sur place aussi longtemps qu’il le désire.
 Entrer dans une pièce : Il n’est pas obligé de faire un nombre exact de points pour entrer dans une pièce.
 Exemple : S’il se trouve à 5 cases d’une pièce et qu’il fait 8, il peut y pénétrer mais n’aura le droit d’en repartir qu’au tour suivant, avec un autre jet des dés.
-Double 6 et Double 1 : S’il fait un double 6 ou un double 1, il va directement dans la pièce choisie. Cette pièce peut être déjà occupée par plusieurs armes et autres suspects.
 Passages secrets : Quatre passages secrets souterrains permettent de passer d’une pièce à une autre sans lancer les dés.
-Déplacement et Hypothèse : Le déplacement compte pour un coup mais le joueur peut, sans attendre son prochain tour, enquêter à partir du lieu où il est arrivé en formulant une « HYPOTHÈSE« .
+Déplacements et Hypothèses : Le déplacement compte pour un coup mais le joueur peut, sans attendre son prochain tour, enquêter à partir du lieu où il est arrivé en formulant une « HYPOTHÈSE« .
 
 (b) HYPOTHÈSES
 L’HYPOTHÈSE se fait de la façon suivante :
@@ -55,25 +47,20 @@ L’enquêteur fait venir dans la pièce où il se trouve, un suspect et une arm
 Il « appelle » son suspect dans le Bureau, y place le chandelier et dit :
 « Je crois que le meurtre a été commis par Madame LEBLANC, dans le Bureau,avec le Chandelier ! ».
 Il s’adresse ensuite aux témoins (les joueurs suivants).
-Il commence par le premier à gauche. Ce témoin, s’il possède l’une des 3 cartes de l’HYPOTHÈSE, doit la lui montrer sans que les autres ne la voient.
+Ce témoin, s’il possède l’une des 3 cartes de l’HYPOTHÈSE, doit la lui montrer sans que les autres ne la voient.
 S’il n’en a aucune, l’enquêteur interroge les témoins suivants jusqu’à ce qu’il ait obtenu satisfaction. (Précisons que le témoin interrogé, même s’il possède plusieurs cartes entrant dans l’HYPOTHÈSE, ne doit en montrer secrètement qu’UNE SEULE de son choix).
 
-(c) NOTES
-Bien entendu, l’enquêteur coche sur son carnet de notes, les noms des suspects, armes et lieux qu’il croit devoir éliminer.
-Ainsi, par éliminations successives arrivera-t-il à clore heureusement son enquête.
-Il peut, tout de suite après avoir fait une HYPOTHÈSE, formuler une ACCUSATION précise, sinon son tour est terminé.
-
-(d) ASTUCES DU DÉTECTIVE
+(c) ASTUCES DU DÉTECTIVE
 Remise en cause : Pour obtenir des indications précieuses sur le contenu de l’étui et pour égarer ses concurrents, il a le droit de mettre en cause un suspect, une arme et un lieu dont il possède la ou les cartes.
 Exemple 1 : Supposons qu’il se trouve dans la Véranda et qu’il possède, entre autres cartes, celles représentant le Docteur OLIVE et la Véranda.
 Il « appelle » dans la Véranda le Docteur OLIVE, avec la Corde par exemple. Si aucun témoin ne lui montre l’arme demandée, il est évident qu’elle se trouve dans l’Etui.
 Exemple 2 de bluff : l’enquêteur possède 2 ou 3 cartes d’hypothèse. Il les demande, sachant pertinemment qu’elles ne pourront pas être démenties et les témoins, abusés, se lancent sur une fausse piste en pensant qu’elles sont dans l’Etui.
 
-(e) L’ACCUSATION
+(d) L’ACCUSATION
 L’enquêteur qui croit connaître les trois cartes de l’énigme, en inscrit les noms sur une feuille de papier.
 Il compare ensuite secrètement son accusation avec le contenu de l’Etui :
 Si son accusation est juste, il le prouve en exposant les 3 cartes et son rapport. Il gagne la partie.
-Si son accusation est fausse, il remet les cartes dans l’Etui qu’il retourne au point X. Il reste en jeu pour démentir les « HYPOTHÈSES » éventuelles mais ne peut plus ni se déplacer, ni interroger, ni accuser.
+Si son accusation est fausse, il reste en jeu pour démentir les « HYPOTHÈSES » éventuelles mais ne peut plus ni se déplacer, ni interroger, ni accuser.
 Chaque enquêteur ne peut faire qu’une seule ACCUSATION. Qu’il la fasse donc à bon escient !
 
 Amusez-vous bien ! (pour retourner au menu appuyer sur Q)
