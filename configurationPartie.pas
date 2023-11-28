@@ -22,7 +22,7 @@ var c : Integer;
 
 begin 
     {Choix nouvelle / charger partie}
-    writeln('Voulez-vous creer une nouvelle partie ou charger une parite ? ');
+    writeln('Voulez-vous creer une nouvelle partie ou charger une partie ? ');
     writeln('   1 : Lancer une nouvelle partie');
     writeln('   2 : Charger une partie');
 

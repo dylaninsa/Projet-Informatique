@@ -150,7 +150,7 @@ begin
 	colorPerso(joueurs, j);
     write(joueurs[j].perso);
     TextColor(15);
-	writeln(', c''est a vous !');
+	writeln(', c''est a vous !  (Appuyer sur ''espace'')');
 
 	repeat
         continue := readKey();
