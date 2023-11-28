@@ -1166,7 +1166,9 @@ begin
     writeln('Vous allez formuler une hypothese !');
 
     repeat
-        write('Selon vous, qui pourrait-etre l''assassin ? ');
+        write('Selon vous, qui pourrait-etre l''assassin ? Voici les choix possibles : ');
+        for carte in perso do write(carte, ' ');
+        writeln();
         readln(g1);
         if not(g1 in perso) then
             writeln('La carte ne correspond pas a un personnage.')
@@ -1174,7 +1176,9 @@ begin
     hypo[1] := g1;
 
     repeat
-        write('Selon vous, quelle pourrait-etre l''arme du crime ? ');
+        write('Selon vous, quelle pourrait-etre l''arme du crime ? Voici les choix possibles : ');
+        for carte in arme do write(carte, ' ');
+        writeln();
         readln(g2);
         if not(g2 in arme) then
             writeln('La carte ne correspond pas a une arme')
