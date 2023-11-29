@@ -1134,7 +1134,7 @@ procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCa
 
 var g1, g2, reveal, carte : ListeCartes;
     perso, arme, temp : set of ListeCartes;
-    i, j, k, l, nb : Integer;
+    i, j, k, l, nb, saut : Integer;
     montrer : Boolean;
     commun : Array of ListeCartes;
 
@@ -1160,6 +1160,7 @@ begin
 
     ClrScr;
     affichageCartes(joueurs, j_actif);
+    saut := 0;
 
 
     {Enregistre les éléments de l'hypothèse}
@@ -1167,21 +1168,27 @@ begin
 
     repeat
         write('Selon vous, qui pourrait-etre l''assassin ? Voici les choix possibles : ');
-        for carte in perso do write(carte, ' ');
+        for carte in perso do write(ListeCartesToStr(carte), ' ');
         writeln();
         readln(g1);
         if not(g1 in perso) then
-            writeln('La carte ne correspond pas a un personnage.')
+            begin
+                writeln('La carte ne correspond pas a un personnage.');
+                Inc(saut);
+            end;
         until (g1 in perso);
     hypo[1] := g1;
 
     repeat
         write('Selon vous, quelle pourrait-etre l''arme du crime ? Voici les choix possibles : ');
-        for carte in arme do write(carte, ' ');
+        for carte in arme do write(ListeCartesToStr(carte), ' ');
         writeln();
         readln(g2);
         if not(g2 in arme) then
-            writeln('La carte ne correspond pas a une arme')
+            begin
+                writeln('La carte ne correspond pas a une arme');
+                Inc(saut);
+            end;
         until (g2 in arme);
     hypo[2] := g2;
 
@@ -1243,6 +1250,7 @@ begin
 
 
     {Affiche l'hypothèse en entière}
+    GotoXY(10, 14 + i);
     writeln('Votre hypothese est donc la suivante : ', hypo[1], ' ', hypo[2], ' ', hypo[3]);
     Delay(5000);
 

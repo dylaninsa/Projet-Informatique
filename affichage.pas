@@ -116,7 +116,7 @@ begin
 	{Affiche les carte du joueur j}
 	write('Voici vos cartes : ');
 	for carte in joueurs[j].cartes do
-		write(carte, ' ');
+		write(ListeCartesToStr(carte), ', ');
 	writeln();
 end;
 
@@ -158,7 +158,7 @@ begin
 
 	write('Voici les cartes en commun entre vos cartes et celles de l''hypothese acuelle : ');
 	for carte in ens do
-		write(carte, ' ');
+		write(ListeCartesToStr(carte), ', ');
 	writeln();
 
 	repeat
@@ -188,7 +188,7 @@ begin
 	colorPerso(joueurs, j);
     write(joueurs[j].perso);
     TextColor(15);
-	writeln(' vous montre est : ', reveal, ' (Appuyer sur ''espace'')');
+	writeln(' vous montre est : ', ListeCartesToStr(reveal), ' (Appuyer sur ''espace'')');
 
     repeat
         continue := readKey();
@@ -212,7 +212,7 @@ begin
 		Monsieur_Bredel : TextColor(3);
 		Madame_LArcheveque : TextColor(13);
 		Yohann_Lepailleur : TextColor(14);
-		Le_Directeur : TextColor(15);
+		Directeur : TextColor(15);
 		Infirmiere : TextColor(4);
 		Monsieur_Thibault : TextColor(11);
 	end;
@@ -226,67 +226,67 @@ begin
 	case salle of 
 		1 : begin
 				GotoXY(6, 7);
-				write('↓');
+				write('b');
 				GotoXY(13, 3);
-				write('↑');
+				write('h');
 			end;
 		2 : begin
 				GotoXY(21, 9);
-				write('↓');
+				write('b');
 				GotoXY(31, 9);
-				write('↑');
+				write('h');
 				GotoXY(19, 7);
-				write('←');
+				write('g');
 				GotoXY(33, 7);
-				write('→');
+				write('d');
 			end;
 		3 : begin
 				GotoXY(41, 5);
-				write('↓');
+				write('b');
 				GotoXY(45, 3);
-				write('↑');
+				write('h');
 			end;
 		4 : begin
 				GotoXY(17, 14);
-				write('→');
+				write('d');
 				GotoXY(15, 17);
-				write('↓');
+				write('b');
 			end;
 		5 : begin
 				GotoXY(47, 13);
-				write('↓');
+				write('b');
 				GotoXY(41, 11);
-				write('←');
+				write('d');
 			end;
 		6 : begin
 				GotoXY(40, 18);
-				write('←');
+				write('d');
 				GotoXY(43, 17);
-				write('↑');
+				write('h');
 			end;
 		7 : begin
 				GotoXY(9, 26);
-				write('↓');
+				write('b');
 				GotoXY(13, 22);
-				write('↑');
+				write('h');
 			end;
 		8 : begin
 				GotoXY(25, 21);
-				write('↓');
+				write('b');
 				GotoXY(17, 21);
-				write('↑');
+				write('h');
 				GotoXY(30, 22);
-				write('→');
+				write('d');
 			end;
 		9 : begin
 				GotoXY(45, 26);
-				write('↓');
+				write('b');
 				GotoXY(39, 24);
-				write('↑');
+				write('h');
 			end;
 		10 : begin
 				GotoXY(27, 17);
-				write('↓');
+				write('b');
 			end;
 	end;
 end;

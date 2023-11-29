@@ -200,7 +200,7 @@ begin
                                         joueurs[i].pos[2] := 2;
                                         joueurs[i].pion := 'A';
                                     end;
-                Le_Directeur :  begin
+                Directeur :  begin
                                         joueurs[i].pos[1] := 25;
                                         joueurs[i].pos[2] := 8;
                                         joueurs[i].pion := 'D';
