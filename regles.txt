@@ -21,11 +21,11 @@ Passages secrets : Quatre passages secrets souterrains permettent de passer d un
 Deplacements et Hypotheses : Le deplacement compte pour un coup mais le joueur peut, sans attendre son prochain tour, enqueter 
 a partir du lieu ou il est arrive en formulant une HYPOTHESE
 HYPOTHESES
-HYPOTHESE se fait de la façon suivante :
+HYPOTHESE se fait de la facon suivante :
 Enqueteur fait venir dans la piece ou il se trouve, un suspect avec une arme.
 Il s adresse ensuite aux temoins (les joueurs suivants).
 Ce temoin, s il possede l une des 3 cartes de HYPOTHESE, doit la lui montrer sans que les autres ne la voient.
-S il n’en a aucune, l enqueteur interroge les temoins suivants (Precisons que le temoin interroge ne doit en montrer secretement 
+S il n en a aucune, l enqueteur interroge les temoins suivants (Precisons que le temoin interroge ne doit en montrer secretement 
 qu UNE SEULE de son choix).
 ACCUSATION
 Enqueteur qui croit connaitre les trois cartes de l enigme, en inscrit les noms.
