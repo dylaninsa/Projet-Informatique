@@ -1,10 +1,10 @@
 MATERIEL
-6 Pions par mode : ils correspondent aux six personnes se trouvant dans le manoir/l'INSA au moment du crime :
+6 Pions par mode : ils correspondent aux six personnes se trouvant dans le manoir/INSA au moment du crime :
 Pion jaune : Colonel MOUTARDE / Monsieur BREDEL
-Vert : Docteur OLIVE / Le Directeur
+Vert : Docteur OLIVE / Directeur
 Bleu : Madame PERVENCHE / Yohann LEPAILLEUR
-Rouge : Mademoiselle ROSE / Madame L'ARCHEVEQUE
-Blanc : Madame LEBLANC / L'Infirmiere
+Rouge : Mademoiselle ROSE / Madame L ARCHEVEQUE
+Blanc : Madame LEBLANC / Infirmiere
 Violet : Professeur VIOLET / Monsieur THIBAULT
 
 6 Armes par mode :  Poignard, Chandelier, Revolver, Corde, Matraque, Clef Anglaise 
@@ -13,27 +13,26 @@ Violet : Professeur VIOLET / Monsieur THIBAULT
 9 Pieces par mode : Grand salon, Salle a manger, Petit Salon, Veranda, Studio, Cuisine, Bureau, Bibliotheque, Hall
                     Cafete, Amphi Tillon, Infirmerie, Vestiaires, Labo, DUBRJ11, Bureau du directeur, Toilettes, BU
 
-L’ENQUETE
-(a) DEPLACEMENTS
-Avancer : Celui qui joue lance les des et avance dans le couloir a l'aide des fleches du clavier.
-Cases occupees : Il ne peut pas s’arreter sur une case deja occupee ni sauter par-dessus un pion adverse.
-Entrer dans une piece : Il n’est pas oblige de faire un nombre exact de points pour entrer dans une piece.
-Passages secrets : Quatre passages secrets souterrains permettent de passer d’une piece à une autre sans lancer les des.
-Deplacements et Hypotheses : Le déplacement compte pour un coup mais le joueur peut, sans attendre son prochain tour, enqueter 
-à partir du lieu ou il est arrive en formulant une HYPOTHESE
-(b) HYPOTHESES
+DEPLACEMENTS
+Avancer : Celui qui joue lance les des et avance dans le couloir a l aide des fleches du clavier.
+Cases occupees : Il ne peut pas s arreter sur une case deja occupee ni sauter par-dessus un pion adverse.
+Entrer dans une piece : Il n est pas oblige de faire un nombre exact de points pour entrer dans une piece.
+Passages secrets : Quatre passages secrets souterrains permettent de passer d une piece a une autre sans lancer les des.
+Deplacements et Hypotheses : Le deplacement compte pour un coup mais le joueur peut, sans attendre son prochain tour, enqueter 
+a partir du lieu ou il est arrive en formulant une HYPOTHESE
+HYPOTHESES
 HYPOTHESE se fait de la façon suivante :
 Enqueteur fait venir dans la piece ou il se trouve, un suspect avec une arme.
 Il s adresse ensuite aux temoins (les joueurs suivants).
-Ce temoin, s’il possede l’une des 3 cartes de HYPOTHESE, doit la lui montrer sans que les autres ne la voient.
-S’il n’en a aucune, l’enqueteur interroge les temoins suivants (Precisons que le temoin interroge ne doit en montrer secretement 
-qu’UNE SEULE de son choix).
-(c) L’ACCUSATION
-Enqueteur qui croit connaitre les trois cartes de l’enigme, en inscrit les noms sur une feuille de papier.
+Ce temoin, s il possede l une des 3 cartes de HYPOTHESE, doit la lui montrer sans que les autres ne la voient.
+S il n’en a aucune, l enqueteur interroge les temoins suivants (Precisons que le temoin interroge ne doit en montrer secretement 
+qu UNE SEULE de son choix).
+ACCUSATION
+Enqueteur qui croit connaitre les trois cartes de l enigme, en inscrit les noms.
 Il compare ensuite secretement son accusation avec le contenu de Etui :
-Si son accusation est juste, il le prouve en exposant les 3 cartes et son rapport. Il gagne la partie.
+Si son accusation est juste, le jeu le prouve en exposant les 3 cartes et son rapport. Il gagne la partie.
 Si son accusation est fausse, il reste en jeu pour dementir les HYPOTHESES eventuelles mais ne peut plus ni se deplacer, 
 ni interroger, ni accuser.
-Chaque enqueteur ne peut faire qu’une seule ACCUSATION. Qu’il la fasse donc à bon escient !
+Chaque enqueteur ne peut faire qu une seule ACCUSATION. Qu il la fasse donc a bon escient !
 
 Amusez-vous bien ! (pour retourner au menu appuyer sur Q)
