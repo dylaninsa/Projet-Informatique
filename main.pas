@@ -9,7 +9,7 @@ procedure menu(var c : Integer);
 begin
     writeln('Que voulez-vous faire :');
     writeln('   1 : Lancer une partie');
-    writeln('   2 : Afficher les règles du jeu');
+    writeln('   2 : Afficher les regles du jeu');
     writeln('   3 : Quitter');
     repeat
         write('Votre choix est : ');
