@@ -23,7 +23,7 @@ var c : Integer;
 begin 
     {Choix nouvelle / charger partie}
     writeln('Voulez-vous creer une nouvelle partie ou charger une partie ? ');
-    writeln('   1 : Lancer une nouvelle partie');
+    writeln('   1 : Creer nouvelle partie');
     writeln('   2 : Charger une partie');
 
     repeat
@@ -150,7 +150,7 @@ begin
     for i := 1 to nb_j do
         begin
             write('Quel est le personnage du joueur ', i, ' ? Voici les choix possibles : ');
-            for carte in personnages do write(carte, ' ');
+            for carte in personnages do write(ListeCartesToStr(carte), ' ');
             writeln();
             repeat
                 readln(p);
