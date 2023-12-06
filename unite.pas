@@ -53,7 +53,6 @@ Implementation
 function StrToListeCartes(carteAChanger: String): ListeCartes;
 
 begin
-    write(carteAChanger);
     carteAChanger := StringReplace(carteAChanger, '_', ' ', [rfReplaceAll, rfIgnoreCase]);
 
     case LowerCase(carteAChanger) of 
@@ -100,7 +99,7 @@ begin
         'dubrj11' : StrToListeCartes := DUBRJ11;
         'labo': StrToListeCartes := Labo;
         'bu': StrToListeCartes := BU;
-        'accueil': StrToListeCartes := Accueil;
+        'accueil': StrToListeCartes := Accueil
     end;
 end;
 

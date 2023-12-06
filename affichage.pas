@@ -138,6 +138,7 @@ var continue : Char;
 	ens : set of ListeCartes;
 	carte : ListeCartes;
 	i : Integer;
+	carteStr : String;
 
 begin
 	{Délcaration et implémentation des cartes en commun dans un ensemble}
@@ -163,7 +164,8 @@ begin
 
 	repeat
         write('Quelle carte voulez-vous montrer ? ');
-		readln(reveal);
+		readln(carteStr);
+		reveal := StrToListeCartes(carteStr);
         if not(reveal in ens) then
             writeln('La carte ne correspond pas aux cartes en commun.')
         until (reveal in ens);

@@ -150,7 +150,7 @@ begin
     for i := 1 to nb_j do
         begin
             write('Quel est le personnage du joueur ', i, ' ? Voici les choix possibles : ');
-            for carte in personnages do write(ListeCartesToStr(carte), ' ');
+            for carte in personnages do write(ListeCartesToStr(carte), ', ');
             writeln();
             repeat
                 readln(p);
@@ -330,7 +330,7 @@ begin
             joueurs[i].pos[2] := StrToInt(ligne);
             
             readln(sauvegarde, ligne);
-            joueurs[i].perso :=StrToListeCartes(ligne);
+            joueurs[i].perso := StrToListeCartes(ligne);
            
             readln(sauvegarde, ligne);
             joueurs[i].pion := ligne[1];

@@ -293,6 +293,7 @@ begin
                                     end;
                             end;
                             until (bouge);
+                        affichagePlateau(plat, joueurs);
                     end;
                 2 :  // Le joueur 'actif' se trouve dans la salle 2
                     begin
@@ -355,6 +356,7 @@ begin
                                     end;
                             end;
                             until (bouge);
+                        affichagePlateau(plat, joueurs);
                     end;
                 3 :  // Le joueur 'actif' se trouve dans la salle 3
                     begin
@@ -388,6 +390,7 @@ begin
                                     end;
                             end;
                             until (bouge);
+                        affichagePlateau(plat, joueurs);
                     end;
                 4 :  // Le joueur 'actif' se trouve dans la salle 4
                     begin
@@ -424,6 +427,7 @@ begin
                                     end;
                             end;
                             until (bouge);
+                        affichagePlateau(plat, joueurs);
                     end;
                 5 :  // Le joueur 'actif' se trouve dans la salle 5
                     begin
@@ -460,6 +464,7 @@ begin
                                     end;
                             end;
                             until (bouge);
+                        affichagePlateau(plat, joueurs);
                     end;
                 6 :  // Le joueur 'actif' se trouve dans la salle 6
                     begin
@@ -496,6 +501,7 @@ begin
                                     end;
                             end;
                             until (bouge);
+                        affichagePlateau(plat, joueurs);
                     end;
                 7 :  // Le joueur 'actif' se trouve dans la salle 7
                     begin
@@ -529,6 +535,7 @@ begin
                                     end;
                             end;
                             until (bouge);
+                        affichagePlateau(plat, joueurs);
                     end;
                 8 :  // Le joueur 'actif' se trouve dans la salle 8
                     begin 
@@ -578,6 +585,7 @@ begin
                                     end;
                             end;
                             until (bouge);
+                        affichagePlateau(plat, joueurs);
                     end;
                 9 :  // Le joueur 'actif' se trouve dans la salle 9
                     begin
@@ -611,6 +619,7 @@ begin
                                     end;
                             end;
                             until (bouge);
+                        affichagePlateau(plat, joueurs);
                     end;
                 10 :  // Le joueur 'actif' se trouve dans la salle 10
                     begin
@@ -634,6 +643,7 @@ begin
                                     end;
                             end;
                             until (bouge);
+                        affichagePlateau(plat, joueurs);
                     end;
             end;
         end;
@@ -1137,6 +1147,7 @@ var g1, g2, reveal, carte : ListeCartes;
     i, j, k, l, nb, saut : Integer;
     montrer : Boolean;
     commun : Array of ListeCartes;
+    carteStr : String;
 
 begin 
     {Déclaration et remplissage des ensembles personnage et arme propre à l'envrionnement}
@@ -1168,9 +1179,11 @@ begin
 
     repeat
         write('Selon vous, qui pourrait-etre l''assassin ? Voici les choix possibles : ');
-        for carte in perso do write(ListeCartesToStr(carte), ' ');
+        for carte in perso do write(ListeCartesToStr(carte), ', ');
         writeln();
-        readln(g1);
+        readln(carteStr);
+        g1 := StrToListeCartes(carteStr);
+        writeln(g1);
         if not(g1 in perso) then
             begin
                 writeln('La carte ne correspond pas a un personnage.');
@@ -1181,9 +1194,10 @@ begin
 
     repeat
         write('Selon vous, quelle pourrait-etre l''arme du crime ? Voici les choix possibles : ');
-        for carte in arme do write(ListeCartesToStr(carte), ' ');
+        for carte in arme do write(ListeCartesToStr(carte), ', ');
         writeln();
-        readln(g2);
+        readln(carteStr);
+        g2 := StrToListeCartes(carteStr);
         if not(g2 in arme) then
             begin
                 writeln('La carte ne correspond pas a une arme');
@@ -1327,6 +1341,7 @@ var guess : Array [1..3] of ListeCartes;
     g1, g2, g3, carte : ListeCartes;
     perso, arme, lieu : set of ListeCartes;
     i : Integer;
+    carteStr : String;
 
 begin 
     {Déclaration et remplissage des ensembles personnage et arme propre à l'envrionnement}
@@ -1362,7 +1377,8 @@ begin
 
     repeat
         write('Selon vous, qui est l''assassin ? ');
-        readln(g1);
+        readln(carteStr);
+        g1 := StrToListeCartes(carteStr);
         if not(g1 in perso) then
             writeln('La carte ne correspond pas a un personnage.')
         until (g1 in perso);
@@ -1370,7 +1386,8 @@ begin
 
     repeat
         write('Selon vous, quelle est l''arme du crime ? ');
-        readln(g2);
+        readln(carteStr);
+        g2 := StrToListeCartes(carteStr);
         if not(g2 in arme) then
             writeln('La carte ne correspond pas a une arme')
         until (g2 in arme);
@@ -1378,7 +1395,8 @@ begin
 
     repeat
         write('Selon vous, dans quelle salle l''assassinat a-t-il eu lieu ? ');
-        readln(g3);
+        readln(carteStr);
+        g3 := StrToListeCartes(carteStr);
         if not(g3 in lieu) then
             writeln('La carte ne correspond pas a un lieu')
         until (g3 in lieu);
