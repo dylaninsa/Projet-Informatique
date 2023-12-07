@@ -47,9 +47,9 @@ procedure nouvellePartie(var joueurs : ListeJoueurs; var etui : Array of ListeCa
 
 var nb_j, i, j, k, l, c, r1, r2, r3, r : Integer;
     cartes, personnages : set of ListeCartes;
-    carte : ListeCartes;
     liste_cartes : Array of ListeCartes;
-    personnage, p, mem : ListeCartes;
+    personnage, p, mem, carte: ListeCartes;
+    carteStr : String;
 
 begin
     Randomize;
@@ -153,10 +153,17 @@ begin
             for carte in personnages do write(ListeCartesToStr(carte), ', ');
             writeln();
             repeat
-                readln(p);
-                if not(p in personnages) then
-                    writeln('Ce personnage n''est pas disponible.')
-            until (p in personnages);
+                readln(carteStr);
+                if StrCorrect(carteStr) then
+                    begin
+                        p := StrToListeCartes(carteStr);
+                        if not(p in personnages) then
+                            writeln('Ce personnage n''est pas disponible.');
+                    end
+                else
+                    writeln('La saisie est incorrecte.')
+            until ((p in personnages) AND StrCorrect(carteStr));
+
             joueurs[i].perso := p;
             Exclude(personnages, joueurs[i].perso);
             case p of

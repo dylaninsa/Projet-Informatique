@@ -45,6 +45,7 @@ end;
 
 function StrToListeCartes(carteAChanger: String): ListeCartes;
 function ListeCartesToStr(carte : ListeCartes) : String;
+function StrCorrect(carteStr : String) : Boolean;
 
 
 Implementation
@@ -153,6 +154,63 @@ begin
         Labo : ListeCartesToStr := 'labo';
         BU : ListeCartesToStr := 'BU';
         Accueil : ListeCartesToStr := 'accueil';
+    end;
+end;
+
+
+
+function StrCorrect(carteStr : String) : Boolean;
+
+begin
+    carteStr := StringReplace(carteStr, '_', ' ', [rfReplaceAll, rfIgnoreCase]);
+
+    StrCorrect := False;
+
+    case LowerCase(carteStr) of 
+        'colonel moutarde' : StrCorrect := True;
+        'docteur olive': StrCorrect := True;
+        'madame pervenche' : StrCorrect := True;
+        'mademoiselle rose': StrCorrect := True;
+        'professeur violet' : StrCorrect := True;
+        'madame leblanc': StrCorrect := True;
+        'poignard' : StrCorrect := True;
+        'chandelier' : StrCorrect := True;
+        'revolver': StrCorrect := True;
+        'corde': StrCorrect := True;
+        'matraque' : StrCorrect := True;
+        'clef anglaise': StrCorrect := True;
+        'cuisine': StrCorrect := True;
+        'grand salon' : StrCorrect := True;
+        'petit salon': StrCorrect := True;
+        'salle a manger': StrCorrect := True;
+        'bureau': StrCorrect := True;
+        'bibliotheque': StrCorrect := True;
+        'veranda': StrCorrect := True;
+        'hall': StrCorrect := True;
+        'studio' : StrCorrect := True;
+        'cluedo' : StrCorrect := True;
+        'monsieur bredel': StrCorrect := True;
+        'madame l''archeveque' : StrCorrect := True;
+        'directeur': StrCorrect := True;
+        'yohann lepailleur' : StrCorrect := True;
+        'monsieur thibault': StrCorrect := True;
+        'infirmiere': StrCorrect := True;
+        'seringue': StrCorrect := True;
+        'moteur 4 temps': StrCorrect := True;
+        'alteres': StrCorrect := True;
+        'flacon d''acide': StrCorrect := True;
+        'ordi': StrCorrect := True;
+        'pouf rouge': StrCorrect := True;
+        'cafete': StrCorrect := True;
+        'amphi tillon': StrCorrect := True;
+        'infirmerie': StrCorrect := True;
+        'bureau du directeur': StrCorrect := True;
+        'vestiaires': StrCorrect := True;
+        'toilettes': StrCorrect := True;
+        'dubrj11' : StrCorrect := True;
+        'labo': StrCorrect := True;
+        'bu': StrCorrect := True;
+        'accueil': StrCorrect := True;
     end;
 end;
 

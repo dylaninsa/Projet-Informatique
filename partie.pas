@@ -1182,14 +1182,21 @@ begin
         for carte in perso do write(ListeCartesToStr(carte), ', ');
         writeln();
         readln(carteStr);
-        g1 := StrToListeCartes(carteStr);
-        writeln(g1);
-        if not(g1 in perso) then
+        if StrCorrect(carteStr) then
             begin
-                writeln('La carte ne correspond pas a un personnage.');
-                Inc(saut);
+                g1 := StrToListeCartes(carteStr);
+                if not(g1 in perso) then
+                    begin
+                        writeln('La carte ne correspond pas a un personnage.');
+                        Inc(saut, 2);
+                    end;
+            end
+        else
+            begin
+                writeln('La saisie est incorrecte.');
+                Inc(saut, 2);
             end;
-        until (g1 in perso);
+        until ((g1 in perso) AND StrCorrect(carteStr));
     hypo[1] := g1;
 
     repeat
@@ -1197,13 +1204,21 @@ begin
         for carte in arme do write(ListeCartesToStr(carte), ', ');
         writeln();
         readln(carteStr);
-        g2 := StrToListeCartes(carteStr);
-        if not(g2 in arme) then
+        if StrCorrect(carteStr) then
             begin
-                writeln('La carte ne correspond pas a une arme');
-                Inc(saut);
+                g2 := StrToListeCartes(carteStr);
+                if not(g2 in arme) then
+                    begin
+                        writeln('La carte ne correspond pas a une arme.');
+                        Inc(saut, 2);
+                    end;
+            end
+        else
+            begin
+                writeln('La saisie est incorrecte.');
+                Inc(saut, 2);
             end;
-        until (g2 in arme);
+        until ((g2 in arme) AND StrCorrect(carteStr));
     hypo[2] := g2;
 
     hypo[3] := plat.salles[estDansLaSalle(plat, joueurs[j_actif].pos)].nom;
@@ -1378,28 +1393,43 @@ begin
     repeat
         write('Selon vous, qui est l''assassin ? ');
         readln(carteStr);
-        g1 := StrToListeCartes(carteStr);
-        if not(g1 in perso) then
-            writeln('La carte ne correspond pas a un personnage.')
-        until (g1 in perso);
+        if StrCorrect(carteStr) then
+            begin
+                g1 := StrToListeCartes(carteStr);
+                if not(g1 in perso) then
+                    writeln('La carte ne correspond pas a un personnage.');
+            end
+        else
+            writeln('La saisie est incorrecte.');
+        until ((g1 in perso) AND StrCorrect(carteStr));
     guess[1] := g1;
 
     repeat
         write('Selon vous, quelle est l''arme du crime ? ');
         readln(carteStr);
-        g2 := StrToListeCartes(carteStr);
-        if not(g2 in arme) then
-            writeln('La carte ne correspond pas a une arme')
-        until (g2 in arme);
+        if StrCorrect(carteStr) then
+            begin
+                g2 := StrToListeCartes(carteStr);
+                if not(g2 in arme) then
+                    writeln('La carte ne correspond pas a une arme.');
+            end
+        else
+            writeln('La saisie est incorrecte.');
+        until ((g2 in arme) AND StrCorrect(carteStr));
     guess[2] := g2;
 
     repeat
         write('Selon vous, dans quelle salle l''assassinat a-t-il eu lieu ? ');
         readln(carteStr);
-        g3 := StrToListeCartes(carteStr);
-        if not(g3 in lieu) then
-            writeln('La carte ne correspond pas a un lieu')
-        until (g3 in lieu);
+        if StrCorrect(carteStr) then
+            begin
+                g3 := StrToListeCartes(carteStr);
+                if not(g3 in lieu) then
+                    writeln('La carte ne correspond pas a un lieu.');
+            end
+        else
+            writeln('La saisie est incorrecte.');
+        until ((g3 in lieu) AND StrCorrect(carteStr));
     guess[3] := g3;
 
        

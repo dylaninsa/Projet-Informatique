@@ -165,10 +165,15 @@ begin
 	repeat
         write('Quelle carte voulez-vous montrer ? ');
 		readln(carteStr);
-		reveal := StrToListeCartes(carteStr);
-        if not(reveal in ens) then
-            writeln('La carte ne correspond pas aux cartes en commun.')
-        until (reveal in ens);
+		if StrCorrect(carteStr) then
+			begin
+				reveal := StrToListeCartes(carteStr);
+				if not(reveal in ens) then
+					writeln('La carte ne correspond pas aux cartes en commun.')
+			end
+		else
+			writeln('La saisie est incorrecte.');
+		until ((reveal in ens) AND StrCorrect(carteStr));
 	
 
 	{Montre la carte choisie par j au j_actif}
