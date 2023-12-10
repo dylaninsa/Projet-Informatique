@@ -1,6 +1,6 @@
 Manoir
 3
-TRUE
+FALSE
 6
 Professeur_Violet
 Madame_Leblanc
@@ -8,8 +8,8 @@ Poignard
 Chandelier
 Grand_Salon
 Salle_a_manger
-13
-19
+14
+15
 Colonel_Moutarde
 M
 TRUE
@@ -20,11 +20,11 @@ Clef_Anglaise
 Petit_Salon
 Veranda
 Studio
-16
+14
 19
 Madame_Pervenche
 P
-TRUE
+FALSE
 6
 Colonel_Moutarde
 Madame_Pervenche
@@ -32,8 +32,8 @@ Corde
 Cuisine
 Bureau
 Bibliotheque
-14
-19
+13
+15
 Professeur_Violet
 V
 Mademoiselle_Rose
