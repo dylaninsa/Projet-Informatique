@@ -1146,7 +1146,7 @@ procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCa
 
 var g1, g2, reveal, carte : ListeCartes;
     perso, arme, temp : set of ListeCartes;
-    i, j, k, l, nb, saut : Integer;
+    i, j, k, l, nb : Integer;
     montrer : Boolean;
     commun : Array of ListeCartes;
     carteStr : String;
@@ -1173,8 +1173,6 @@ begin
     ClrScr;
     affichageCartes(joueurs, j_actif);  // Appel de la procédure permettant d'afficher les cartes du joueur 'actif'
 
-    saut := 0;  // Initialisation de la variable comptant le nombre de lignes a sauter avant d'ecrire l'hypothese globale
-
 
     writeln('Vous allez formuler une hypothese !');
 
@@ -1189,13 +1187,11 @@ begin
                 if not(g1 in perso) then  // Verification de la presence de la carte dans l'ensemble perso
                     begin
                         writeln('La carte ne correspond pas a un personnage.');
-                        Inc(saut, 2);
                     end;
             end
         else
             begin
                 writeln('La saisie est incorrecte.');
-                Inc(saut, 2);
             end;
         until ((g1 in perso) AND StrCorrect(carteStr));
     hypo[1] := g1;  // La premiere valeur du tableau hypo est le personnage que le joueur 'actif' soupçonne d'etre l'assassin
@@ -1212,13 +1208,11 @@ begin
                 if not(g2 in arme) then  // Verification de la presence de la carte dans l'ensemble arme
                     begin
                         writeln('La carte ne correspond pas a une arme.');
-                        Inc(saut, 2);
                     end;
             end
         else
             begin
                 writeln('La saisie est incorrecte.');
-                Inc(saut, 2);
             end;
         until ((g2 in arme) AND StrCorrect(carteStr));
     hypo[2] := g2;  // La deuxieme valeur du tableau hypo est l'arme que le joueur 'actif' soupçonne d'etre l'arme du crime
@@ -1227,8 +1221,9 @@ begin
     hypo[3] := plat.salles[estDansLaSalle(plat, joueurs[j_actif].pos)].nom;  // La troisieme valeur du tableau hypo est le lieu que le joueur 'actif' soupçonne d'etre le lieu du crime
 
 
-    i := 1;
+    i := 0;
     repeat  // Boucle se repetant tant que le joueur suspecté par le joueur 'actif' n'ai pas ete deplace dans la meme salle que ce dernier
+        Inc(i);
         if (hypo[1] = joueurs[i].perso) then  // Verification de la correspondance entre le joueur i et le joueur suspecte
             begin
                 affiche(' ', joueurs[i].pos[1], joueurs[i].pos[2]);  // Appel de la procédure pour enlever le pion du joueur i du plateau
@@ -1270,18 +1265,15 @@ begin
                             joueurs[i].pos[2] := 23;
                         end;
                 end;
-                placementSalle(joueurs, plat, i);  // Appel de la procedure pour placer le joueur suspecte dans la salle 
-                affiche(joueurs[i].pion, joueurs[i].pos[1], joueurs[i].pos[2]);  // Appel de la procédure pour afficher le pion du joueur suspecte sur le plateau
             end;
-        Inc(i);
         until ((i = length(joueurs) + 1) OR (hypo[1] = joueurs[i-1].perso));
     
 
-    GotoXY(10, 14 + i);
+    writeln();
     writeln('Votre hypothese est donc la suivante : ', hypo[1], ' ', hypo[2], ' ', hypo[3]);  // Affiche l'hypothèse en entière
     Delay(5000);
 
-
+    placementSalle(joueurs, plat, i);  // Appel de la procedure Placement salle pour placer correctement le joueur soupçonne dans la meme salle que le joueur 'actif'
     ClrScr;
     montrer := False;
     j := j_actif;
