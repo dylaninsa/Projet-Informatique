@@ -158,7 +158,7 @@ begin
                 else  // Si le joueur 'actif' ne peut pas sortir de la salle
                     begin
                         writeln('Vous ne pouvez pas sortir de cette salle actuellement. Vous allez donc formuler une hypothèse. (Appuyer sur ''espace'')');
-                        repeat  // Boucle s'assurant que le joueur 'actif' ai prit connaissance de la situation en appuyant sur 'espcace'
+                        repeat  // Boucle s'assurant que le joueur 'actif' ai prit connaissance de la situation en appuyant sur 'espace'
                             continue := readKey();
                             until (continue = SPACE);
                         faireHypothese(joueurs, hypo, plat, j_actif, environnement);  // Appel de la procedure faireHypothese pour formuler une hypothèse
@@ -194,7 +194,7 @@ begin
                                                 faireAccusation(etui, joueurs, accusation, j_actif, environnement, plat);  // Appel de la procedure faireAccusation pour formuler une accusation
                                         end;
                                 end;
-                            2 : begin  // Choix : Formulation d'une accisation
+                            2 : begin  // Choix : Formulation d'une accusation
                                     faireAccusation(etui, joueurs, accusation, j_actif, environnement, plat);  // Appel de la procedure faireAccusation pour formuler une accusation
                                 end;
                         end;
@@ -202,7 +202,7 @@ begin
                 else  // Si le joueur 'actif' ne peut pas sortir de la salle
                     begin
                         writeln('Vous ne pouvez pas sortir de cette salle actuellement. Vous allez donc formuler une accusation. (Appuyer sur ''espace'')');
-                        repeat  // Boucle s'assurant que le joueur 'actif' ai prit connaissance de la situation en appuyant sur 'espcace'
+                        repeat  // Boucle s'assurant que le joueur 'actif' ai prit connaissance de la situation en appuyant sur 'espace'
                             continue := readKey();
                             until (continue = SPACE);
                         faireAccusation(etui, joueurs, accusation, j_actif, environnement, plat);  // Appel de la procedure faireAccusation pour formuler une accusation
