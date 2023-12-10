@@ -1269,7 +1269,6 @@ begin
                         end;
                 end;
             placementSalle(joueurs, plat, i);
-            affiche(joueurs[i].pion, joueurs[i].pos[1], joueurs[i].pos[2]);
         end;
         i := i + 1;
         until ((i = length(joueurs) + 1) OR (hypo[1] = joueurs[i-1].perso));
