@@ -722,415 +722,416 @@ end;
 
 
 procedure placementSalle(var joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer);
+{Procedure qui place correctement les joueurs dans les salles}
 
 var co : Coords;
     i : Integer;
 
 begin
-    i := 1;
+    i := 1;  // Initialisation de la variable définissant la position d'arrivee du joueur 'actif'
 
 
-	if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then
+	if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then  // Verification de la présence le joueur 'actif' dans une salle avant de le placer
         begin
-            affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);
-			case estDansLaSalle(plat, joueurs[j_actif].pos) of
-                1 : 
+            affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Appel de la procédure pour enlever le pion du joueur 'actif' du plateau
+			case estDansLaSalle(plat, joueurs[j_actif].pos) of  // Instruction permettant de traiter les différents cas en fonction des valeurs de la salle dans laquelle le joueur 'actif' se trouve
+                1 :  // Le joueur 'actif' se trouve dans la salle 1
                     begin
-                        repeat
-                            case i of
-                                1 : begin
-                                        co[1] := 3;
+                        repeat  // Boucle se repetant tant que le joueur 'actif' n'est pas sur une nouvelle case
+                            case i of  // Instruction permettant de traiter les différents cas en fonction des valeurs de la variable i
+                                1 : begin  // i vaut 1
+                                        co[1] := 3;  // Coordonnees de la case 1
                                         co[2] := 5;
                                     end;
-                                2 : begin
-                                        co[1] := 4;
+                                2 : begin  // i vaut 2
+                                        co[1] := 4;  // Coordonnees de la case 2
                                         co[2] := 5;
                                     end;
-                                3 : begin
-                                        co[1] := 5;
+                                3 : begin  // i vaut 3
+                                        co[1] := 5;  // Coordonnees de la case 3
                                         co[2] := 5;
                                     end;
-                                4 : begin
-                                        co[1] := 3;
+                                4 : begin  // i vaut 4
+                                        co[1] := 3;  // Coordonnees de la case 4
                                         co[2] := 6;
                                     end;
-                                5 : begin
-                                        co[1] := 4;
+                                5 : begin  // i vaut 5
+                                        co[1] := 4;  // Coordonnees de la case 5
                                         co[2] := 6;
                                     end;
-                                6 : begin
-                                        co[1] := 5;
+                                6 : begin  // i vaut 6
+                                        co[1] := 5;  // Coordonnees de la case 6
                                         co[2] := 6;
                                     end;
                             end;
 
-                            if caseEstLibre(joueurs, plat, co) then
+                            if caseEstLibre(joueurs, plat, co) then  // Verification de l'absence de joueur sur la case i
                                 begin
-                                    joueurs[j_actif].pos[1] := co[1];
+                                    joueurs[j_actif].pos[1] := co[1];  // Mise a jour de la position du joueur 'actif' si la case i est libre
 						            joueurs[j_actif].pos[2] := co[2];
-                                end;
-
-                            i := i + 1;
+                                end
+                            else
+                                i := i + 1;  // Sinon on passe a la case suivante
 
                             until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;                                
-                2 : 
+                2 :  // Le joueur 'actif' se trouve dans la salle 2
                     begin
-                        repeat
-                            case i of
-                                1 : begin
-                                        co[1] := 12;
+                        repeat  // Boucle se repetant tant que le joueur 'actif' n'est pas sur une nouvelle case
+                            case i of  // Instruction permettant de traiter les différents cas en fonction des valeurs de la variable i
+                                1 : begin  // i vaut 1
+                                        co[1] := 12;  // Coordonnees de la case 1
                                         co[2] := 6;
                                     end;
-                                2 : begin
-                                        co[1] := 13;
+                                2 : begin  // i vaut 2
+                                        co[1] := 13;  // Coordonnees de la case 2
                                         co[2] := 6;
                                     end;
-                                3 : begin
-                                        co[1] := 14;
+                                3 : begin  // i vaut 3
+                                        co[1] := 14;  // Coordonnees de la case 3
                                         co[2] := 6;
                                     end;
-                                4 : begin
-                                        co[1] := 15;
+                                4 : begin  // i vaut 4
+                                        co[1] := 15;  // Coordonnees de la case 4
                                         co[2] := 6;
                                     end;
-                                5 : begin
-                                        co[1] := 13;
+                                5 : begin  // i vaut 5
+                                        co[1] := 13;  // Coordonnees de la case 5
                                         co[2] := 7;
                                     end;
-                                6 : begin
-                                        co[1] := 14;
+                                6 : begin  // i vaut 6
+                                        co[1] := 14;  // Coordonnees de la case 6
                                         co[2] := 7;
                                     end;
                             end;
 
-                            if caseEstLibre(joueurs, plat, co) then
+                            if caseEstLibre(joueurs, plat, co) then  // Verification de l'absence de joueur sur la case i
                                 begin
-                                    joueurs[j_actif].pos[1] := co[1];
+                                    joueurs[j_actif].pos[1] := co[1];  // Mise a jour de la position du joueur 'actif' si la case i est libre
 						            joueurs[j_actif].pos[2] := co[2];
-                                end;
-
-                            i := i + 1;
+                                end
+                            else
+                                i := i + 1;  // Sinon on passe a la case suivante
 
                             until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;
-                3 : 
+                3 :  // Le joueur 'actif' se trouve dans la salle 3
                     begin
-                        repeat
-                            case i of
-                                1 : begin
-                                        co[1] := 22;
+                        repeat  // Boucle se repetant tant que le joueur 'actif' n'est pas sur une nouvelle case
+                            case i of  // Instruction permettant de traiter les différents cas en fonction des valeurs de la variable i
+                                1 : begin  // i vaut 1
+                                        co[1] := 22;  // Coordonnees de la case 1
                                         co[2] := 4;
                                     end;
-                                2 : begin
-                                        co[1] := 23;
+                                2 : begin  // i vaut 2
+                                        co[1] := 23;  // Coordonnees de la case 2
                                         co[2] := 4;
                                     end;
-                                3 : begin
-                                        co[1] := 24;
+                                3 : begin  // i vaut 3
+                                        co[1] := 24;  // Coordonnees de la case 3
                                         co[2] := 4;
                                     end;
-                                4 : begin
-                                        co[1] := 22;
+                                4 : begin  // i vaut 4
+                                        co[1] := 22;  // Coordonnees de la case 4
                                         co[2] := 5;
                                     end;
-                                5 : begin
-                                        co[1] := 23;
+                                5 : begin  // i vaut 5
+                                        co[1] := 23;  // Coordonnees de la case 5
                                         co[2] := 5;
                                     end;
-                                6 : begin
-                                        co[1] := 24;
+                                6 : begin  // i vaut 6
+                                        co[1] := 24;  // Coordonnees de la case 6
                                         co[2] := 5;
                                     end;
                             end;
 
-                            if caseEstLibre(joueurs, plat, co) then
+                            if caseEstLibre(joueurs, plat, co) then  // Verification de l'absence de joueur sur la case i
                                 begin
-                                    joueurs[j_actif].pos[1] := co[1];
+                                    joueurs[j_actif].pos[1] := co[1];  // Mise a jour de la position du joueur 'actif' si la case i est libre
 						            joueurs[j_actif].pos[2] := co[2];
-                                end;
-
-                            i := i + 1;
+                                end
+                            else
+                                i := i + 1;  // Sinon on passe a la case suivante
 
                             until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;
-                4 : 
+                4 :  // Le joueur 'actif' se trouve dans la salle 4
                     begin
-                        repeat
-                            case i of
-                                1 : begin
-                                        co[1] := 4;
+                        repeat  // Boucle se repetant tant que le joueur 'actif' n'est pas sur une nouvelle case
+                            case i of  // Instruction permettant de traiter les différents cas en fonction des valeurs de la variable i
+                                1 : begin  // i vaut 1
+                                        co[1] := 4;  // Coordonnees de la case 1
                                         co[2] := 14;
                                     end;
-                                2 : begin
-                                        co[1] := 5;
+                                2 : begin  // i vaut 2
+                                        co[1] := 5;  // Coordonnees de la case 2
                                         co[2] := 14;
                                     end;
-                                3 : begin
-                                        co[1] := 6;
+                                3 : begin  // i vaut 3
+                                        co[1] := 6;  // Coordonnees de la case 3
                                         co[2] := 14;
                                     end;
-                                4 : begin
-                                        co[1] := 7;
+                                4 : begin  // i vaut 4
+                                        co[1] := 7;  // Coordonnees de la case 4
                                         co[2] := 14;
                                     end;
-                                5 : begin
-                                        co[1] := 5;
+                                5 : begin  // i vaut 5
+                                        co[1] := 5;  // Coordonnees de la case 5
                                         co[2] := 15;
                                     end;
-                                6 : begin
-                                        co[1] := 6;
+                                6 : begin  // i vaut 6
+                                        co[1] := 6;  // Coordonnees de la case 6
                                         co[2] := 15;
                                     end;
                             end;
 
-                            if caseEstLibre(joueurs, plat, co) then
+                            if caseEstLibre(joueurs, plat, co) then  // Verification de l'absence de joueur sur la case i
                                 begin
-                                    joueurs[j_actif].pos[1] := co[1];
+                                    joueurs[j_actif].pos[1] := co[1];  // Mise a jour de la position du joueur 'actif' si la case i est libre
 						            joueurs[j_actif].pos[2] := co[2];
-                                end;
-
-                            i := i + 1;
+                                end
+                            else
+                                i := i + 1;  // Sinon on passe a la case suivante
 
                             until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;
-                5 : 
+                5 :  // Le joueur 'actif' se trouve dans la salle 5
                     begin
-                        repeat
-                            case i of
-                                1 : begin
-                                        co[1] := 22;
+                        repeat  // Boucle se repetant tant que le joueur 'actif' n'est pas sur une nouvelle case
+                            case i of  // Instruction permettant de traiter les différents cas en fonction des valeurs de la variable i
+                                1 : begin  // i vaut 1
+                                        co[1] := 22;  // Coordonnees de la case 1
                                         co[2] := 12;
                                     end;
-                                2 : begin
-                                        co[1] := 23;
+                                2 : begin  // i vaut 2
+                                        co[1] := 23;  // Coordonnees de la case 2
                                         co[2] := 12;
                                     end;
-                                3 : begin
-                                        co[1] := 24;
+                                3 : begin  // i vaut 3
+                                        co[1] := 24;  // Coordonnees de la case 3
                                         co[2] := 12;
                                     end;
-                                4 : begin
-                                        co[1] := 22;
+                                4 : begin  // i vaut 4
+                                        co[1] := 22;  // Coordonnees de la case 4
                                         co[2] := 13;
                                     end;
-                                5 : begin
-                                        co[1] := 23;
+                                5 : begin  // i vaut 5
+                                        co[1] := 23;  // Coordonnees de la case 5
                                         co[2] := 13;
                                     end;
-                                6 : begin
-                                        co[1] := 24;
+                                6 : begin  // i vaut 6
+                                        co[1] := 24;  // Coordonnees de la case 6
                                         co[2] := 13;
                                     end;
                             end;
 
-                            if caseEstLibre(joueurs, plat, co) then
+                            if caseEstLibre(joueurs, plat, co) then  // Verification de l'absence de joueur sur la case i
                                 begin
-                                    joueurs[j_actif].pos[1] := co[1];
+                                    joueurs[j_actif].pos[1] := co[1];  // Mise a jour de la position du joueur 'actif' si la case i est libre
 						            joueurs[j_actif].pos[2] := co[2];
-                                end;
-
-                            i := i + 1;
+                                end
+                            else
+                                i := i + 1;  // Sinon on passe a la case suivante
 
                             until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;
-                6 : 
+                6 :  // Le joueur 'actif' se trouve dans la salle 6
                     begin
-                        repeat
-                            case i of
-                                1 : begin
-                                        co[1] := 22;
+                        repeat  // Boucle se repetant tant que le joueur 'actif' n'est pas sur une nouvelle case
+                            case i of  // Instruction permettant de traiter les différents cas en fonction des valeurs de la variable i
+                                1 : begin  // i vaut 1
+                                        co[1] := 22;  // Coordonnees de la case 1
                                         co[2] := 17;
                                     end;
-                                2 : begin
-                                        co[1] := 23;
+                                2 : begin  // i vaut 2
+                                        co[1] := 23;  // Coordonnees de la case 2
                                         co[2] := 17;
                                     end;
-                                3 : begin
-                                        co[1] := 24;
+                                3 : begin  // i vaut 3
+                                        co[1] := 24;  // Coordonnees de la case 3
                                         co[2] := 17;
                                     end;
-                                4 : begin
-                                        co[1] := 22;
+                                4 : begin  // i vaut 4
+                                        co[1] := 22;  // Coordonnees de la case 4
                                         co[2] := 18;
                                     end;
-                                5 : begin
-                                        co[1] := 23;
+                                5 : begin  // i vaut 5
+                                        co[1] := 23;  // Coordonnees de la case 5
                                         co[2] := 18;
                                     end;
-                                6 : begin
-                                        co[1] := 24;
+                                6 : begin  // i vaut 6
+                                        co[1] := 24;  // Coordonnees de la case 6
                                         co[2] := 18;
                                     end;
                             end;
 
-                            if caseEstLibre(joueurs, plat, co) then
+                            if caseEstLibre(joueurs, plat, co) then  // Verification de l'absence de joueur sur la case i
                                 begin
-                                    joueurs[j_actif].pos[1] := co[1];
+                                    joueurs[j_actif].pos[1] := co[1];  // Mise a jour de la position du joueur 'actif' si la case i est libre
 						            joueurs[j_actif].pos[2] := co[2];
-                                end;
-
-                            i := i + 1;
+                                end
+                            else
+                                i := i + 1;  // Sinon on passe a la case suivante
 
                             until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;
-                7 : 
+                7 :  // Le joueur 'actif' se trouve dans la salle 7
                     begin
-                        repeat
-                            case i of
-                                1 : begin
-                                        co[1] := 3;
+                        repeat  // Boucle se repetant tant que le joueur 'actif' n'est pas sur une nouvelle case
+                            case i of  // Instruction permettant de traiter les différents cas en fonction des valeurs de la variable i
+                                1 : begin  // i vaut 1
+                                        co[1] := 3;  // Coordonnees de la case 1
                                         co[2] := 24;
                                     end;
-                                2 : begin
-                                        co[1] := 4;
+                                2 : begin  // i vaut 2
+                                        co[1] := 4;  // Coordonnees de la case 2
                                         co[2] := 24;
                                     end;
-                                3 : begin
-                                        co[1] := 5;
+                                3 : begin  // i vaut 3
+                                        co[1] := 5;  // Coordonnees de la case 3
                                         co[2] := 24;
                                     end;
-                                4 : begin
-                                        co[1] := 6;
+                                4 : begin  // i vaut 4
+                                        co[1] := 6;  // Coordonnees de la case 4
                                         co[2] := 24;
                                     end;
-                                5 : begin
-                                        co[1] := 4;
+                                5 : begin  // i vaut 5
+                                        co[1] := 4;  // Coordonnees de la case 5
                                         co[2] := 25;
                                     end;
-                                6 : begin
-                                        co[1] := 5;
+                                6 : begin  // i vaut 6
+                                        co[1] := 5;  // Coordonnees de la case 6
                                         co[2] := 25;
                                     end;
                             end;
 
-                            if caseEstLibre(joueurs, plat, co) then
+                            if caseEstLibre(joueurs, plat, co) then  // Verification de l'absence de joueur sur la case i
                                 begin
-                                    joueurs[j_actif].pos[1] := co[1];
+                                    joueurs[j_actif].pos[1] := co[1];  // Mise a jour de la position du joueur 'actif' si la case i est libre
 						            joueurs[j_actif].pos[2] := co[2];
-                                end;
-
-                            i := i + 1;
+                                end
+                            else
+                                i := i + 1;  // Sinon on passe a la case suivante
 
                             until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;
-                8 : 
+                8 :  // Le joueur 'actif' se trouve dans la salle 8
                     begin
-                        repeat
-                            case i of
-                                1 : begin
-                                        co[1] := 13;
+                        repeat  // Boucle se repetant tant que le joueur 'actif' n'est pas sur une nouvelle case
+                            case i of  // Instruction permettant de traiter les différents cas en fonction des valeurs de la variable i
+                                1 : begin  // i vaut 1
+                                        co[1] := 13;  // Coordonnees de la case 1
                                         co[2] := 22;
                                     end;
-                                2 : begin
-                                        co[1] := 14;
+                                2 : begin  // i vaut 2
+                                        co[1] := 14;  // Coordonnees de la case 2
                                         co[2] := 22;
                                     end;
-                                3 : begin
-                                        co[1] := 13;
+                                3 : begin  // i vaut 3
+                                        co[1] := 13;  // Coordonnees de la case 3
                                         co[2] := 23;
                                     end;
-                                4 : begin
-                                        co[1] := 14;
+                                4 : begin  // i vaut 4
+                                        co[1] := 14;  // Coordonnees de la case 4
                                         co[2] := 23;
                                     end;
-                                5 : begin
-                                        co[1] := 13;
+                                5 : begin  // i vaut 5
+                                        co[1] := 13;  // Coordonnees de la case 5
                                         co[2] := 24;
                                     end;
-                                6 : begin
-                                        co[1] := 14;
+                                6 : begin  // i vaut 6
+                                        co[1] := 14;  // Coordonnees de la case 6
                                         co[2] := 24;
                                     end;
                             end;
 
-                            if caseEstLibre(joueurs, plat, co) then
+                            if caseEstLibre(joueurs, plat, co) then  // Verification de l'absence de joueur sur la case i
                                 begin
-                                    joueurs[j_actif].pos[1] := co[1];
+                                    joueurs[j_actif].pos[1] := co[1];  // Mise a jour de la position du joueur 'actif' si la case i est libre
 						            joueurs[j_actif].pos[2] := co[2];
-                                end;
-
-                            i := i + 1;
+                                end
+                            else
+                                i := i + 1;  // Sinon on passe a la case suivante
 
                             until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;
-                9 : 
+                9 :  // Le joueur 'actif' se trouve dans la salle 9
                     begin
-                        repeat
-                            case i of
-                                1 : begin
-                                        co[1] := 21;
+                        repeat  // Boucle se repetant tant que le joueur 'actif' n'est pas sur une nouvelle case
+                            case i of  // Instruction permettant de traiter les différents cas en fonction des valeurs de la variable i
+                                1 : begin  // i vaut 1
+                                        co[1] := 21;  // Coordonnees de la case 1
                                         co[2] := 25;
                                     end;
-                                2 : begin
-                                        co[1] := 22;
+                                2 : begin  // i vaut 2
+                                        co[1] := 22;  // Coordonnees de la case 2
                                         co[2] := 25;
                                     end;
-                                3 : begin
-                                        co[1] := 23;
+                                3 : begin  // i vaut 3
+                                        co[1] := 23;  // Coordonnees de la case 3
                                         co[2] := 25;
                                     end;
-                                4 : begin
-                                        co[1] := 24;
+                                4 : begin  // i vaut 4
+                                        co[1] := 24;  // Coordonnees de la case 4
                                         co[2] := 25;
                                     end;
-                                5 : begin
-                                        co[1] := 22;
+                                5 : begin  // i vaut 5
+                                        co[1] := 22;  // Coordonnees de la case 5
                                         co[2] := 26;
                                     end;
-                                6 : begin
-                                        co[1] := 23;
+                                6 : begin  // i vaut 6
+                                        co[1] := 23;  // Coordonnees de la case 6
                                         co[2] := 26;
                                     end;
                             end;
 
-                            if caseEstLibre(joueurs, plat, co) then
+                            if caseEstLibre(joueurs, plat, co) then  // Verification de l'absence de joueur sur la case i
                                 begin
-                                    joueurs[j_actif].pos[1] := co[1];
+                                    joueurs[j_actif].pos[1] := co[1];  // Mise a jour de la position du joueur 'actif' si la case i est libre
 						            joueurs[j_actif].pos[2] := co[2];
-                                end;
-
-                            i := i + 1;
+                                end
+                            else
+                                i := i + 1;  // Sinon on passe a la case suivante
 
                             until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;
-                10 : 
+                10 :  // Le joueur 'actif' se trouve dans la salle 10
                     begin
-                        repeat
-                            case i of
-                                1 : begin
-                                        co[1] := 13;
+                        repeat  // Boucle se repetant tant que le joueur 'actif' n'est pas sur une nouvelle case
+                            case i of  // Instruction permettant de traiter les différents cas en fonction des valeurs de la variable i
+                                1 : begin  // i vaut 1
+                                        co[1] := 13;  // Coordonnees de la case 1
                                         co[2] := 15;
                                     end;
-                                2 : begin
-                                        co[1] := 14;
+                                2 : begin  // i vaut 2
+                                        co[1] := 14;  // Coordonnees de la case 2
                                         co[2] := 15;
                                     end;
-                                3 : begin
-                                        co[1] := 15;
+                                3 : begin  // i vaut 3
+                                        co[1] := 15;  // Coordonnees de la case 3
                                         co[2] := 15;
                                     end;
-                                4 : begin
-                                        co[1] := 13;
+                                4 : begin  // i vaut 4
+                                        co[1] := 13;  // Coordonnees de la case 4
                                         co[2] := 16;
                                     end;
-                                5 : begin
-                                        co[1] := 14;
+                                5 : begin  // i vaut 5
+                                        co[1] := 14;  // Coordonnees de la case 5
                                         co[2] := 16;
                                     end;
-                                6 : begin
-                                        co[1] := 15;
+                                6 : begin  // i vaut 6
+                                        co[1] := 15;  // Coordonnees de la case 6
                                         co[2] := 16;
                                     end;
                             end;
 
-                            if caseEstLibre(joueurs, plat, co) then
+                            if caseEstLibre(joueurs, plat, co) then  // Verification de l'absence de joueur sur la case i
                                 begin
-                                    joueurs[j_actif].pos[1] := co[1];
+                                    joueurs[j_actif].pos[1] := co[1];  // Mise a jour de la position du joueur 'actif' si la case i est libre
 						            joueurs[j_actif].pos[2] := co[2];
-                                end;
-
-                            i := i + 1;
+                                end
+                            else
+                                i := i + 1;  // Sinon on passe a la case suivante
 
                             until((joueurs[j_actif].pos[1] = co[1]) AND (joueurs[j_actif].pos[2] = co[2]));
                     end;
@@ -1141,6 +1142,7 @@ end;
 
 
 procedure faireHypothese(var joueurs : ListeJoueurs; var hypo : array of ListeCartes; plat : Plateau; j_actif : Integer; environnement : Enviro);
+{Procedure permettant au joueur 'actif' de formuler une hypothese}
 
 var g1, g2, reveal, carte : ListeCartes;
     perso, arme, temp : set of ListeCartes;
@@ -1150,17 +1152,16 @@ var g1, g2, reveal, carte : ListeCartes;
     carteStr : String;
 
 begin 
-    {Déclaration et remplissage des ensembles personnage et arme propre à l'envrionnement}
-    perso := [];
-    arme := [];
-    if environnement = Manoir then
+    perso := [];  // Initialisation de l'ensemble des personnages 
+    arme := [];  // Initialisation de l'ensemble des armes
+    if environnement = Manoir then  // Remplissage des ensembles perso et arme dans le cas de l'environnement Manoir
         begin
             for carte := Colonel_Moutarde to Madame_Leblanc do
                 Include(perso, carte);
             for carte := Poignard to Clef_Anglaise do
                 Include(arme, carte);
         end
-    else
+    else  // Remplissage des ensembles perso et arme dans le cas de l'environnement INSA
         begin
             for carte := Monsieur_Bredel to Infirmiere do
                 Include(perso, carte);
@@ -1170,22 +1171,22 @@ begin
 
 
     ClrScr;
-    affichageCartes(joueurs, j_actif);
-    saut := 0;
+    affichageCartes(joueurs, j_actif);  // Appel de la procédure permettant d'afficher les cartes du joueur 'actif'
+
+    saut := 0;  // Initialisation de la variable comptant le nombre de lignes a sauter avant d'ecrire l'hypothese globale
 
 
-    {Enregistre les éléments de l'hypothèse}
     writeln('Vous allez formuler une hypothese !');
 
-    repeat
+    repeat  // Boucle se repetant tant que le joueur 'actif' n'a pas rentré une carte valide
         write('Selon vous, qui pourrait-etre l''assassin ? Voici les choix possibles : ');
-        for carte in perso do write(ListeCartesToStr(carte), ', ');
+        for carte in perso do write(ListeCartesToStr(carte), ', ');  // Affchage de toutes les cartes dans l'ensemble perso
         writeln();
         readln(carteStr);
-        if StrCorrect(carteStr) then
+        if StrCorrect(carteStr) then  // Verification de la bonne saisie de la carte
             begin
                 g1 := StrToListeCartes(carteStr);
-                if not(g1 in perso) then
+                if not(g1 in perso) then  // Verification de la presence de la carte dans l'ensemble perso
                     begin
                         writeln('La carte ne correspond pas a un personnage.');
                         Inc(saut, 2);
@@ -1197,17 +1198,18 @@ begin
                 Inc(saut, 2);
             end;
         until ((g1 in perso) AND StrCorrect(carteStr));
-    hypo[1] := g1;
+    hypo[1] := g1;  // La premiere valeur du tableau hypo est le personnage que le joueur 'actif' soupçonne d'etre l'assassin
 
-    repeat
+
+    repeat  // Boucle se repetant tant que le joueur 'actif' n'a pas rentré une carte valide
         write('Selon vous, quelle pourrait-etre l''arme du crime ? Voici les choix possibles : ');
-        for carte in arme do write(ListeCartesToStr(carte), ', ');
+        for carte in arme do write(ListeCartesToStr(carte), ', ');  // Affchage de toutes les cartes dans l'ensemble arme
         writeln();
         readln(carteStr);
-        if StrCorrect(carteStr) then
+        if StrCorrect(carteStr) then  // Verification de la bonne saisie de la carte
             begin
                 g2 := StrToListeCartes(carteStr);
-                if not(g2 in arme) then
+                if not(g2 in arme) then  // Verification de la presence de la carte dans l'ensemble arme
                     begin
                         writeln('La carte ne correspond pas a une arme.');
                         Inc(saut, 2);
@@ -1219,118 +1221,110 @@ begin
                 Inc(saut, 2);
             end;
         until ((g2 in arme) AND StrCorrect(carteStr));
-    hypo[2] := g2;
-
-    hypo[3] := plat.salles[estDansLaSalle(plat, joueurs[j_actif].pos)].nom;
+    hypo[2] := g2;  // La deuxieme valeur du tableau hypo est l'arme que le joueur 'actif' soupçonne d'etre l'arme du crime
 
 
-    {Déplace le joueur accusé si il fait partie des joueurs}
+    hypo[3] := plat.salles[estDansLaSalle(plat, joueurs[j_actif].pos)].nom;  // La troisieme valeur du tableau hypo est le lieu que le joueur 'actif' soupçonne d'etre le lieu du crime
+
+
     i := 1;
-    repeat
-        if (hypo[1] = joueurs[i].perso) then
+    repeat  // Boucle se repetant tant que le joueur suspecté par le joueur 'actif' n'ai pas ete deplace dans la meme salle que ce dernier
+        if (hypo[1] = joueurs[i].perso) then  // Verification de la correspondance entre le joueur i et le joueur suspecte
             begin
-                affiche(' ', joueurs[i].pos[1], joueurs[i].pos[2]);
-                case estDansLaSalle(plat, joueurs[j_actif].pos) of
-                    1 : begin
-                            joueurs[i].pos[1] := 6;
+                affiche(' ', joueurs[i].pos[1], joueurs[i].pos[2]);  // Appel de la procédure pour enlever le pion du joueur i du plateau
+                case estDansLaSalle(plat, joueurs[j_actif].pos) of  // Instruction permettant de traiter les différents cas en fonction des valeurs de la salle dans laquelle le joueur 'actif' se trouve
+                    1 : begin  // Le joueur 'actif' se trouve dans la salle 1
+                            joueurs[i].pos[1] := 6;  // Coordonnees de la salle 1
                             joueurs[i].pos[2] := 8;
                         end;
-                    2 : begin
-                            joueurs[i].pos[1] := 11;
+                    2 : begin  // Le joueur 'actif' se trouve dans la salle 2
+                            joueurs[i].pos[1] := 11;  // Coordonnees de la salle 2
                             joueurs[i].pos[2] := 9;
                         end;
-                    3 : begin
-                            joueurs[i].pos[1] := 21;
+                    3 : begin  // Le joueur 'actif' se trouve dans la salle 3
+                            joueurs[i].pos[1] := 21;  // Coordonnees de la salle 3
                             joueurs[i].pos[2] := 6;
                         end;
-                    4 : begin
-                            joueurs[i].pos[1] := 9;
+                    4 : begin  // Le joueur 'actif' se trouve dans la salle 4
+                            joueurs[i].pos[1] := 9;  // Coordonnees de la salle 4
                             joueurs[i].pos[2] := 14;
                         end;
-                    5 : begin
-                            joueurs[i].pos[1] := 24;
+                    5 : begin  // Le joueur 'actif' se trouve dans la salle 5
+                            joueurs[i].pos[1] := 24;  // Coordonnees de la salle 5
                             joueurs[i].pos[2] := 14;
                         end;
-                    6 : begin
-                            joueurs[i].pos[1] := 22;
+                    6 : begin  // Le joueur 'actif' se trouve dans la salle 6
+                            joueurs[i].pos[1] := 22;  // Coordonnees de la salle 
                             joueurs[i].pos[2] := 16;
                         end;
-                    7 : begin
-                            joueurs[i].pos[1] := 7;
+                    7 : begin  // Le joueur 'actif' se trouve dans la salle 7
+                            joueurs[i].pos[1] := 7;  // Coordonnees de la salle 7
                             joueurs[i].pos[2] := 21;
                         end;
-                    8 : begin
-                            joueurs[i].pos[1] := 13;
+                    8 : begin  // Le joueur 'actif' se trouve dans la salle 8
+                            joueurs[i].pos[1] := 13;  // Coordonnees de la salle 8
                             joueurs[i].pos[2] := 20;
                         end;
-                    9 : begin
-                            joueurs[i].pos[1] := 20;
+                    9 : begin  // Le joueur 'actif' se trouve dans la salle 9
+                            joueurs[i].pos[1] := 20;  // Coordonnees de la salle 9
                             joueurs[i].pos[2] := 23;
                         end;
                 end;
-            placementSalle(joueurs, plat, i);
-            affiche(joueurs[i].pion, joueurs[i].pos[1], joueurs[i].pos[2]);
-        end;
-        i := i + 1;
+                placementSalle(joueurs, plat, i);  // Appel de la procedure pour placer le joueur suspecte dans la salle 
+                affiche(joueurs[i].pion, joueurs[i].pos[1], joueurs[i].pos[2]);  // Appel de la procédure pour afficher le pion du joueur suspecte sur le plateau
+            end;
+        Inc(i);
         until ((i = length(joueurs) + 1) OR (hypo[1] = joueurs[i-1].perso));
     
 
-
-
-
-    {Affiche l'hypothèse en entière}
     GotoXY(10, 14 + i);
-    writeln('Votre hypothese est donc la suivante : ', hypo[1], ' ', hypo[2], ' ', hypo[3]);
+    writeln('Votre hypothese est donc la suivante : ', hypo[1], ' ', hypo[2], ' ', hypo[3]);  // Affiche l'hypothèse en entière
     Delay(5000);
 
 
-    {Demande aux joueurs suivants si il possède une des cartes de l'hypothèse formulée}
     ClrScr;
     montrer := False;
     j := j_actif;
     i := 1;
 
 
-    {Répète la demande au joueur en stockant les cartes en commun entre le joueur j et l'hypothèse formulée jusqu'à ce qu'une carte coincide ou que tout les joueurs aient été interrogés}
-    repeat 
-        if (j + 1 > length(joueurs)) then
-            j := (j + 1) mod length(joueurs)
-        else
+    repeat   // Boucle se repetant jusqu'a ce qu'un joueur ait montre une de ses cartes au joueur 'actif' ou qu'aucun des joueurs de la partie n'ait de carte de l'hypothese
+        if (j + 1 > length(joueurs)) then  // Verification du non depassement de la liste de joueur
+            j := (j + 1) mod length(joueurs)  // Si c'est le cas, le joueur 'actif' interroge le premier joueur
+        else  // Sinon il interroge le joueur suivant
             j := j + 1;
 
-
-        temp := [];
-        for k := 1 to 3 do
+        temp := [];  // Initialisation de l'ensemble stockant les cartes en commun entre le joueur j et les cartes de l'hypothese
+        for k := 1 to 3 do  // Boucle qui parcours toutes les cartes de l'hypothese
             begin
-                if (hypo[k] in joueurs[j].cartes) then
+                if (hypo[k] in joueurs[j].cartes) then  // Verification de la presence de la carte hypo[k] dans les cartes du joueur j
                     begin
-                        Include(temp, hypo[k]);
+                        Include(temp, hypo[k]);  // Si c'est le cas, ajout de la carte hypo[k] dans l'ensemble temp
                     end;
             end;
 
-
-        if (temp <> []) then
+        if (temp <> []) then  // Verification de la presence de cartes dans l'ensemble temp
             begin
-                nb := 0;
-                for carte in temp do
+                nb := 0;  // Initialisation de la variable stockant le nombre de carte dans l'ensemble temp
+                for carte in temp do  // Boucle qui parcours toutes les cartes de l'hypothese et incremente la variable nb a chaque carte 
                     begin
-                        nb := nb + 1;
+                        Inc(nb);
                     end;
                 
-                SetLength(commun, nb);
+                SetLength(commun, nb);  // Initialisation de la longueur du tableau commun 
                 l := 1;
-                for carte in temp do
+                for carte in temp do  // Boucle qui parcours toutes les cartes de l'ensemble temp et qui, pour chaque carte, la place a l'emplacement l (incremente a chaque occuration) du tableau commun
                     begin
                         commun[l] := carte;
                         l := l + 1;
                     end;
 
-                affichageMontrerCartes(commun, joueurs, j, j_actif, reveal);
-                montrer := True;
-                SetLength(commun, 0);
+                affichageMontrerCartes(commun, joueurs, j, j_actif, reveal);  // Appel de la procedure affichant au joueur j les cartes en commun avec l'hypothese et lui demandant quelle carte montrer
+                montrer := True;  // Un joueur a montrer une de ses cartes
+                SetLength(commun, 0);  // Liberation de l'espace memoire
             end
-        else
-            begin
+        else  // Sinon, affichage au joueur 'actif' que le joueur j ne possede aucune des cartes de son hypothese
+            begin  
                 colorPerso(joueurs, j);
                 write(joueurs[j].perso);
                 TextColor(15);
@@ -1338,19 +1332,20 @@ begin
                 Delay(1000);
             end;
 
-        i := i + 1;
+        Inc(i);
 
         until (montrer OR (i = length(joueurs)));
 
 
     {Affiche au j_actif qu'aucun des joueurs ne possède les cartes de l'hypothèse si c'est le cas}
-    if not(montrer) then
-        writeln('Aucun des enqueteurs ne possede une carte de votre hypothese !');    
+    if not(montrer) then  // Verfication du fait qu'un aucun joueur n'ait montre une de ses cartes
+        writeln('Aucun des enqueteurs ne possede une carte de votre hypothese !');  // Si c'est le cas, affichage au joueur 'actif' que personne ne possede une carte de son hypothese
 end;
 
 
 
 procedure faireAccusation(var etui : Array of ListeCartes; var joueurs : ListeJoueurs; var accusation : Boolean; j_actif : Integer; environnement : Enviro; plat : Plateau);
+{Procedure permettant au joueur 'actif' de formuler une accusation}
 
 var guess : Array [1..3] of ListeCartes;
     g1, g2, g3, carte : ListeCartes;
@@ -1359,11 +1354,10 @@ var guess : Array [1..3] of ListeCartes;
     carteStr : String;
 
 begin 
-    {Déclaration et remplissage des ensembles personnage et arme propre à l'envrionnement}
-    perso := [];
-    arme := [];
-    lieu := [];
-    if environnement = Manoir then
+    perso := [];  // Initialisation de l'ensemble des personnages 
+    arme := [];  // Initialisation de l'ensemble des armes
+    lieu := [];  // Initialisation de l'ensemble des lieux
+    if environnement = Manoir then  // Remplissage des ensembles perso, arme et lieu dans le cas de l'environnement Manoir
         begin
             for carte := Colonel_Moutarde to Madame_Leblanc do
                 Include(perso, carte);
@@ -1372,7 +1366,7 @@ begin
             for carte := Cuisine to Studio do
                 Include(lieu, carte);
         end
-    else
+    else  // Remplissage des ensembles perso, arme et lieu dans le cas de l'environnement INSA
         begin  
             for carte := Monsieur_Bredel to Infirmiere do
                 Include(perso, carte);
@@ -1384,78 +1378,75 @@ begin
 
 
     ClrScr;
-    affichageCartes(joueurs, j_actif);
+    affichageCartes(joueurs, j_actif);  // Appel de la procédure permettant d'afficher les cartes du joueur 'actif'
 
 
-    {Enregistre les éléments de l'accusation}
     writeln('Vous allez formuler une accusation !');
 
-    repeat
+    repeat  // Boucle se repetant tant que le joueur 'actif' n'a pas rentré une carte valide
         write('Selon vous, qui est l''assassin ? ');
         readln(carteStr);
-        if StrCorrect(carteStr) then
+        if StrCorrect(carteStr) then  // Verification de la bonne saisie de la carte
             begin
                 g1 := StrToListeCartes(carteStr);
-                if not(g1 in perso) then
+                if not(g1 in perso) then  // Verification de la presence de la carte dans l'ensemble perso
                     writeln('La carte ne correspond pas a un personnage.');
             end
         else
             writeln('La saisie est incorrecte.');
         until ((g1 in perso) AND StrCorrect(carteStr));
-    guess[1] := g1;
+    guess[1] := g1;  // La premiere valeur du tableau guess est le personnage que le joueur 'actif' soupçonne d'etre l'assassin
 
-    repeat
+    repeat  // Boucle se repetant tant que le joueur 'actif' n'a pas rentré une carte valide
         write('Selon vous, quelle est l''arme du crime ? ');
         readln(carteStr);
-        if StrCorrect(carteStr) then
+        if StrCorrect(carteStr) then  // Verification de la bonne saisie de la carte
             begin
                 g2 := StrToListeCartes(carteStr);
-                if not(g2 in arme) then
+                if not(g2 in arme) then  // Verification de la presence de la carte dans l'ensemble arme
                     writeln('La carte ne correspond pas a une arme.');
             end
         else
             writeln('La saisie est incorrecte.');
         until ((g2 in arme) AND StrCorrect(carteStr));
-    guess[2] := g2;
+    guess[2] := g2;  // La deuxieme valeur du tableau guess est l'arme que le joueur 'actif' soupçonne d'etre l'arme du crime
 
-    repeat
+    repeat  // Boucle se repetant tant que le joueur 'actif' n'a pas rentré une carte valide
         write('Selon vous, dans quelle salle l''assassinat a-t-il eu lieu ? ');
         readln(carteStr);
-        if StrCorrect(carteStr) then
+        if StrCorrect(carteStr) then  // Verification de la bonne saisie de la carte
             begin
-                g3 := StrToListeCartes(carteStr);
+                g3 := StrToListeCartes(carteStr);  // Verification de la presence de la carte dans l'ensemble lieu
                 if not(g3 in lieu) then
                     writeln('La carte ne correspond pas a un lieu.');
             end
         else
             writeln('La saisie est incorrecte.');
         until ((g3 in lieu) AND StrCorrect(carteStr));
-    guess[3] := g3;
+    guess[3] := g3;  // La deuxieme valeur du tableau guess est le lieu que le joueur 'actif' soupçonne d'etre le lieu du crime
 
        
-       
-        {Déplace le joueur accusé si il fait partie des joueurs}
     i := 1;
-    repeat
-        if (guess[1] = joueurs[i].perso) then
+    repeat  // Boucle se repetant tant que le joueur suspecté par le joueur 'actif' n'ai pas ete deplace dans la meme salle que ce dernier
+        if (guess[1] = joueurs[i].perso) then  // Verification de la correspondance entre le joueur i et le joueur suspecte
             begin
-                affiche(' ', joueurs[i].pos[1], joueurs[i].pos[2]);
-                joueurs[i].pos[1] := 14;
+                affiche(' ', joueurs[i].pos[1], joueurs[i].pos[2]);  // Appel de la procédure pour enlever le pion du joueur i du plateau
+                joueurs[i].pos[1] := 14;  // Coordonnees de la salle 10
                 joueurs[i].pos[2] := 18;     
-                placementSalle(joueurs, plat, i);
-                affiche(joueurs[i].pion, joueurs[i].pos[1], joueurs[i].pos[2]);
+                placementSalle(joueurs, plat, i);  // Appel de la procedure pour placer le joueur suspecte dans la salle 
+                affiche(joueurs[i].pion, joueurs[i].pos[1], joueurs[i].pos[2]);  // Appel de la procédure pour afficher le pion du joueur suspecte sur le plateau
             end;
-        i := i + 1;
+        Inc(i);
         until ((i = length(joueurs) + 1) OR (guess[1] = joueurs[i-1].perso));
    
    
    
     {Vérifie que les ensembles de l'accusation et de l'étui coincident, sinon le joueur du tour meurt}
-    if ((etui[1] = guess[1]) AND (etui[2] = guess[2]) AND (etui[3] = guess[3])) then
-        accusation := True
+    if ((etui[1] = guess[1]) AND (etui[2] = guess[2]) AND (etui[3] = guess[3])) then  // Verification de la coincidence entre l'accusation et l'etui
+        accusation := True  // L'accusation est vraie
     else
         begin
-            joueurs[j_actif].enVie := False;
+            joueurs[j_actif].enVie := False;  // Sinon le joueur meurt
             ClrScr;
             write('Malheuresement, l''accusation de ');
             colorPerso(joueurs, j_actif);
@@ -1468,10 +1459,9 @@ end;
 
 
 procedure finPartie(joueurs : ListeJoueurs; accusation : Boolean; var j_actif : Integer; var etui : Array of ListeCartes);
-
+{Procedure mettant fin a la partie}
 begin
-    {Si l'accusation est vérifiée alors affiche le gagnant, sinon annonce affiche la défaite de tous}
-    if accusation then
+    if accusation then  // Verification que l'accusation soit vraie, et si c'est le cas, le gagnant et les elements de l'etui sont affiches
         begin
             if (j_actif - 1 = 0) then
                 j_actif := length(joueurs)
@@ -1486,7 +1476,7 @@ begin
             writeln(' !');
             write('Voici les elements du meurtre : ', etui[1], ' ', etui[2], ' ', etui[3], '.');
         end
-    else
+    else  // Sinon, l'enquete n'est pas resolue car tous les enqueteurs sont morts, donc les elements de l'etui sont affiches
         begin
             writeln('Aucun des enqueteurs n''est parvenu a resoudre ce meurtre. La partie est finie.');
             writeln('Voici les elements du meurtre : ', etui[1], ' ', etui[2], ' ', etui[3], '.');
@@ -1496,6 +1486,7 @@ end;
 
 
 procedure quitterSauvegarder(var joueurs : ListeJoueurs; var etui : Array of ListeCartes; j_actif : Integer; environnement : Enviro);
+{Procedure permmettant de sauvegarder la partie}
 
 var nomFichier : String;
     nb_cartes, i, c : Integer;
@@ -1504,209 +1495,206 @@ var nomFichier : String;
     continue : Boolean;
 
 begin
-    writeln('Voulez-vous sauvegarder la partie en cours ?');
+    writeln('Voulez-vous sauvegarder la partie en cours ?');  // Demande si il faut sauvegarder la partie
     writeln('   1 : Oui');
     writeln('   2 : Non');
-    repeat
+    repeat  // Lecture du choix et vérification que l'action soit possible}
         write('Votre choix est : ');
         readln(c);
         if not((c >= 1) AND (c <= 2)) then
             writeln('Ce choix n''est pas valide.')
     until ((c >= 1) AND (c <= 2));
 
-    if (c = 1) then
+    if (c = 1) then  // On choisit de sauvegarder
         begin
-            {Création du fichier sauvegarde}
-            write('Comment souhaitez-vous nommer votre sauvegarde (avec .txt en extension) : ');
+            write('Comment souhaitez-vous nommer votre sauvegarde (avec .txt en extension) : ');  // Demande le nom de fichier sauvegarde voulu
             continue := False;
-            repeat
+            repeat  // Boucle se repetant jusqu'a ce que le nom fichier puisse etre valide
                 readln(nomFichier);
-                if FileExists(nomFichier) then
+                if FileExists(nomFichier) then  // Verfication de l'existance du fichier
                     begin
-                        repeat
+                        repeat  // Boucle se repetant jusqu'a ce que la variable c soit valide
                             writeln('Ce fichier existe deja. Voulez l''ecraser ou rentrer un autre nom ? ');
                             writeln('   1 : Ecraser');
                             writeln('   2 : Changer de nom');
                             write('Votre choix est : ');
-                            if not((c >= 1) AND (c <= 2)) then
+                            readln(c);
+                            if not((c >= 1) AND (c <= 2)) then  // Verification de la validite de la variable c
                                 writeln('Ce choix n''est pas valide.');
                             until ((c >= 1) AND (c <= 2));
 
-                        if (c = 1) then
+                        if (c = 1) then  // Si on choisie d'ecraser le fichier deja exisant, le nom  du fichier devient valide
                             continue := True;
                     end
-                else
+                else  // Sinon, le nom du fichier est valide
                     continue := True;
                 until (continue);
 
-            assign(sauvegarde, nomFichier);
-            rewrite(sauvegarde);
 
-            {Environnement de la partie}
-            writeln(sauvegarde, environnement);
+            assign(sauvegarde, nomFichier);  // Assignation du fichier sauvegarde
+            rewrite(sauvegarde);  // Ecriture dans le dichier sauvegarde
 
 
-            {Nombre de joueurs dans la partie}
-            writeln(sauvegarde, length(joueurs)); 
-
-
-            {Initialisation des joueurs, de leurs propriétés et de leurs cartes}
-            for i := 1 to length(joueurs) do
+            writeln(sauvegarde, environnement);  // Ecriture de l'environnement
+            writeln(sauvegarde, length(joueurs));  // Ecriture du nombre de joueurs
+            
+            for i := 1 to length(joueurs) do  // Boucle parcourant tout les joueurs
                 begin
-                    writeln(sauvegarde, joueurs[i].enVie);
+                    writeln(sauvegarde, joueurs[i].enVie);  // Ecriture de l'etat de vie du joueur i
            
                     nb_cartes:= 0;
-                    for carte in joueurs[i].cartes do
+                    for carte in joueurs[i].cartes do  // Boucle comptant le nombre de carte du joueur i
                     nb_cartes:=nb_cartes + 1;
 
-                    writeln(sauvegarde, nb_cartes);
-                    for carte in joueurs[i].cartes do
-                        writeln(sauvegarde, carte);
+                    writeln(sauvegarde, nb_cartes);  // Ecriture du nombre de carte du joueur i
+                    for carte in joueurs[i].cartes do  // Boucle parcourant les cartes du joueurs i
+                        writeln(sauvegarde, carte);  // Ecriture des cartes du joueur i
            
-            
-                    writeln(sauvegarde, joueurs[i].pos[1]);
+                    writeln(sauvegarde, joueurs[i].pos[1]);  // Ecriture de l'a position du joueur i
                     writeln(sauvegarde, joueurs[i].pos[2]);
 
-                    writeln(sauvegarde,  joueurs[i].perso);
+                    writeln(sauvegarde,  joueurs[i].perso);  // Ecriture du personnage du joueur i
                     writeln(sauvegarde,  joueurs[i].pion);
                 end;
     
-            for i := 1 to 3 do
-                writeln(sauvegarde, etui[i]);
+            for i := 1 to 3 do  // Boucle parcourant les elements de l'etui
+                writeln(sauvegarde, etui[i]);  // Ecriture de l'etui
 
-            writeln(sauvegarde, j_actif);
+            writeln(sauvegarde, j_actif);  // Ecriture du joueur 'actif'
 
-            {fermeture du fichier}
-            close(sauvegarde);
+
+            close(sauvegarde);  // Fermeture du fichier
         end;
 end;
 
 
 
 function estDansLaSalle(plat : Plateau; coordonnees : Coords) : Integer;
+{Fonction renvoyant la salle correspondant aux coordonnes saisies}
 
 var co : Coords;
     i : Integer;
 
 begin
-    {Renvoie la salle dans laquelle le joueur se trouve}
-    i := 1;
+    i := 1;  // Initialisation de la variable correspondant aux numeros des salles
     estDansLaSalle := 0;
-    repeat
-        for co in plat.salles[i].cases do
+    repeat  // Boucle se repetant jusqu'a ce que toute les salles aient ete verifiees ou qu'une salle corresponde
+        for co in plat.salles[i].cases do  // Boucle parcourant les cases de la salle i
             begin
-                if ((co[1] = coordonnees[1]) AND (co[2] = coordonnees[2])) then
-                    estDansLaSalle := i;
+                if ((co[1] = coordonnees[1]) AND (co[2] = coordonnees[2])) then  // Verification de la correspondance entre les coordonnees saisies et celle de la salle i
+                    estDansLaSalle := i;  // Si c'est le cas, la fonction renvoie la valeur de la salle correspondante
             end;
-        i := i + 1;
+        Inc(i);
         until ((i = 11) OR (estDansLaSalle = i - 1));        
 end;
 
 
 
 function joueursEnVie(joueurs : ListeJoueurs) : Integer;
+{Fonction renvoyant le nombre de joueur en vie}
 
 var i : Integer;
 
 begin
     {Renvoie le nombre de joueurs en vie}
     joueursEnVie := 0;
-    for i := 0 to length(joueurs) do
+    for i := 1 to length(joueurs) do  //Boucle parcourant le tableau joueurs
         begin
-            if (joueurs[i].enVie) then
-                joueursEnVie := joueursEnVie + 1;
+            if (joueurs[i].enVie) then  // Verification de l'état de vie du joueur i
+                joueursEnVie := joueursEnVie + 1;  // Si c'est le cas, le nombre total est incremente
         end;
 end;
 
 
 
 function caseEstLibre(joueurs : ListeJoueurs; plat : Plateau; co : Coords) : Boolean;
+{Fonction renvoyant un booleen renseignant sur l'etat de liberte d'une case}
 
 var i : Integer;
 
 begin
-    {Renvoie True si la case est libre, False sinon}
     caseEstLibre := True;
-    for i := 1 to length(joueurs) do
+    for i := 1 to length(joueurs) do  // Boucle parcourant le tableau joueurs
         begin
-            if ((co[1] = joueurs[i].pos[1]) AND (co[2] = joueurs[i].pos[2])) then
-                caseEstLibre := False;
+            if ((co[1] = joueurs[i].pos[1]) AND (co[2] = joueurs[i].pos[2])) then  // Verification de la correspondance entre la case renseignee et celle du joueur i
+                caseEstLibre := False;  // Si c'est le cas, la case est occupee, donc pas disponible
         end;
 end;
 
 
 
 function sortieSallePossible(joueurs : ListeJoueurs; plat : Plateau; j_actif : Integer) : Boolean;
+{Fonction renvoyant une boolean renseignant sur la possibilite de sortir d'une salle}
 
 var co1, co2, co3, co4 : Coords;
 
 begin
     sortieSallePossible := True;
-    case estDansLaSalle(plat, joueurs[j_actif].pos) of
-        2 : begin
-                co1[1] := 11;
+    case estDansLaSalle(plat, joueurs[j_actif].pos) of  // Instruction permettant de traiter les différents cas en fonction des valeurs de la salle dans laquelle le joueur 'actif' se trouve
+        2 : begin  // Le joueur 'actif' est dans la salle 2
+                co1[1] := 11;  // Coordonnees de la sortie 1
                 co1[2] := 10;
 
-                co2[1] := 16;
+                co2[1] := 16;  // Coordonnees de la sortie 2
                 co2[2] := 10;
 
-                co3[1] := 9;
+                co3[1] := 9;  // Coordonnees de la sortie 3
                 co3[2] := 7;
 
-                co4[1] := 18;
+                co4[1] := 18;  // Coordonnees de la sortie 4
                 co4[2] := 7;
 
-                if not((caseEstLibre(joueurs, plat, co1) AND caseEstLibre(joueurs, plat, co2) AND caseEstLibre(joueurs, plat, co3) AND caseEstLibre(joueurs, plat, co4))) then
+                if not((caseEstLibre(joueurs, plat, co1) AND caseEstLibre(joueurs, plat, co2) AND caseEstLibre(joueurs, plat, co3) AND caseEstLibre(joueurs, plat, co4))) then  // Verification de la liberte de chaque sortie de la salle
                     sortieSallePossible := False;
             end;
-        4 : begin
-                co1[1] := 8;
+        4 : begin  // Le joueur 'actif' est dans la salle 4
+                co1[1] := 8;  // Coordonnees de la sortie 1
                 co1[2] := 18;
 
-                co2[1] := 10;
+                co2[1] := 10;  // Coordonnees de la sortie 2
                 co2[2] := 14;
 
-                if not((caseEstLibre(joueurs, plat, co1) AND caseEstLibre(joueurs, plat, co2))) then
+                if not((caseEstLibre(joueurs, plat, co1) AND caseEstLibre(joueurs, plat, co2))) then  // Verification de la liberte de chaque sortie de la salle
                     sortieSallePossible := False;
             end;
-        5 : begin
-                co1[1] := 24;
+        5 : begin  // Le joueur 'actif' est dans la salle 5
+                co1[1] := 24;  // Coordonnees de la sortie 1
                 co1[2] := 15;
 
-                co2[1] := 19;
+                co2[1] := 19;  // Coordonnees de la sortie 2
                 co2[2] := 11;
 
-                if not((caseEstLibre(joueurs, plat, co1) AND caseEstLibre(joueurs, plat, co2))) then
+                if not((caseEstLibre(joueurs, plat, co1) AND caseEstLibre(joueurs, plat, co2))) then  // Verification de la liberte de chaque sortie de la salle
                     sortieSallePossible := False;
             end;
-        6 : begin
-                co1[1] := 22;
+        6 : begin  // Le joueur 'actif' est dans la salle 6
+                co1[1] := 22;  // Coordonnees de la sortie 1
                 co1[2] := 15;
 
-                co2[1] := 18;
+                co2[1] := 18;  // Coordonnees de la sortie 2
                 co2[2] := 18;
 
-                if not((caseEstLibre(joueurs, plat, co1) AND caseEstLibre(joueurs, plat, co2))) then
+                if not((caseEstLibre(joueurs, plat, co1) AND caseEstLibre(joueurs, plat, co2))) then  // Verification de la liberte de chaque sortie de la salle
                     sortieSallePossible := False;
             end;
-        8 : begin
-                co1[1] := 14;
+        8 : begin  // Le joueur 'actif' est dans la salle 8
+                co1[1] := 14;  // Coordonnees de la sortie 1
                 co1[2] := 19;
 
-                co2[1] := 13;
+                co2[1] := 13;  // Coordonnees de la sortie 2
                 co2[2] := 19;
 
-                co3[1] := 17;
+                co3[1] := 17;  // Coordonnees de la sortie 3
                 co3[2] := 22;
 
-                if not((caseEstLibre(joueurs, plat, co1) AND caseEstLibre(joueurs, plat, co2) AND caseEstLibre(joueurs, plat, co3))) then
+                if not((caseEstLibre(joueurs, plat, co1) AND caseEstLibre(joueurs, plat, co2) AND caseEstLibre(joueurs, plat, co3))) then  // Verification de la liberte de chaque sortie de la salle
                     sortieSallePossible := False;
             end;
-        10 : begin
-                co1[1] := 14;
+        10 : begin  // Le joueur 'actif' est dans la salle 10
+                co1[1] := 14;  // Coordonnees de la sortie 1
                 co1[2] := 19;
 
-                if not(caseEstLibre(joueurs, plat, co1)) then
+                if not(caseEstLibre(joueurs, plat, co1)) then  // Verification de la liberte de chaque sortie de la salle
                     sortieSallePossible := False;
             end;
     end;
