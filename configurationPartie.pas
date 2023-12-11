@@ -44,7 +44,7 @@ end;
 
 
 procedure nouvellePartie(var joueurs : ListeJoueurs; var etui : Array of ListeCartes; var environnement : Enviro; var j_actif : Integer);
-{Procedure parametrant les parametres du jeu d'une nouvelle partie}
+{Procedure initialisant les parametres du jeu d'une nouvelle partie}
 
 var nb_j, i, j, k, l, c, r1, r2, r3, r : Integer;
     cartes, personnages : set of ListeCartes;
@@ -139,7 +139,7 @@ begin
         if not((nb_j >= 2) AND (nb_j <= 6)) then
             writeln('Ce choix est invalide.')
         until ((nb_j >= 2) AND (nb_j <= 6));
-    SetLength(joueurs, nb_j); 
+    SetLength(joueurs, nb_j);   // Longueur du tableau dynamique joueurs definit a nb_j
 
 
     for i := 1 to nb_j do  // Boucle demandant les proprietes de chaque joueur
@@ -223,8 +223,8 @@ begin
                                         joueurs[i].pion := 'T';  // Initialisation du pion
                                     end;
             end;
-            joueurs[i].enVie := True;
-            joueurs[i].cartes := [];
+            joueurs[i].enVie := True;  // Initialisation de l'etat de vie du joueur i 
+            joueurs[i].cartes := [];  // Initialisation de l'ensemble de cartes du joueur i
         end;
 
 
@@ -245,10 +245,9 @@ begin
     Delay(5000);}
 
 
-    {Distribution des cartes}
-    for l := 0 to length(liste_cartes)-1 do
+    for l := 0 to length(liste_cartes)-1 do  // Boucle parcourant les cartes de liste_cartes pour les distribuer aux joueurs
         begin
-            case l mod nb_j of
+            case l mod nb_j of  // Instruction permettant de traiter les différents cas en fonction du reste de la division euclidienne de l par le nombre de joueurs
                 0 : Include(joueurs[1].cartes, liste_cartes[l]);
                 1 : Include(joueurs[2].cartes, liste_cartes[l]);
                 2 : Include(joueurs[3].cartes, liste_cartes[l]);
@@ -258,8 +257,8 @@ begin
             end;
         end; 
     
-    {Libération espace mémoire}
-    SetLength(liste_cartes, 0);
+
+    SetLength(liste_cartes, 0);  // Liberation de l'espace memoire
 
 
 
@@ -277,6 +276,7 @@ end;
 
 
 procedure chargerPartie(var joueurs : ListeJoueurs; var etui : Array of ListeCartes; var environnement : Enviro; var j_actif : Integer);
+{Procedure chargeant les parametres d'une sauvegarde}
 
 var nomFichier : String;
     sauvegarde : Text;
@@ -284,76 +284,72 @@ var nomFichier : String;
     nb_j, nb_cartes, i, j : Integer;
 
 begin
-
-    {Choix du fichier à lancer}
-    repeat
+    repeat  // Boucle se repetant jusqu'a ce que le fichier saisi existe
         write('Entrer le nom de la partie a lancer (avec .txt en extension) : ');
         readln(nomFichier);
-        if not(FileExists(nomFichier)) then
+        if not(FileExists(nomFichier)) then  // Verification de l'existance du fichier
             writeln('Ce fichier n''existe pas ou est invalide.')
         until FileExists(nomFichier);
-    assign(sauvegarde, nomFichier);
-    reset(sauvegarde);
+    assign(sauvegarde, nomFichier);  // Liaison entre la variable sauvegarde et le fichier nomFichier
+    reset(sauvegarde);  // Lecture du fichier
 
-    readln(sauvegarde, ligne);
+    readln(sauvegarde, ligne);  // Lecture de l'environnement
     if (ligne='Manoir') then
-        environnement:=Manoir
+        environnement:=Manoir  // Initialisation de l'environnement Manoir 
     else 
-        environnement:=INSA;
+        environnement:=INSA;  // Initialisation de l'environnement INSA 
 
 
-    {Nombre de joueurs dans la partie}
-    readln(sauvegarde,ligne);
+    readln(sauvegarde,ligne);  // Lecture du nombre de joueurs dans la partie
     nb_j:=strtoInt(ligne);
-    SetLength(joueurs, nb_j); 
+    SetLength(joueurs, nb_j);  // Longueur du tableau dynamique joueurs definit a nb_j
 
 
-    {Initialisation des joueurs, de leurs propriétés et de leurs cartes}
-    for i := 1 to nb_j do
+    for i := 1 to nb_j do  // Boucle se repetant nb_j fois
         begin
-            readln(sauvegarde, ligne);
+            readln(sauvegarde, ligne);  // Lecture de l'etat de vie du joueur i
             if (ligne='TRUE') then 
-                joueurs[i].enVie:=True
+                joueurs[i].enVie:=True  // Initialisation de l'etat de vie du joueur i
             else 
                 joueurs[i].enVie:=False;
            
-            joueurs[i].cartes := [];
-            readln(sauvegarde, ligne);
-            for j:=1 to StrToInt(ligne) do
+            joueurs[i].cartes := [];  // Initialisation de l'ensemble de cartes du joueur i
+            readln(sauvegarde, ligne);  // Lecture du nombre de cartes du joueur i
+            for j:=1 to StrToInt(ligne) do  // Boucle se repetant le nombre de cartes du joueur i fois
                 begin
-                    readln(sauvegarde, ligne);
-                    Include(joueurs[i].cartes, StrToListeCartes(ligne));
+                    readln(sauvegarde, ligne);  // Lecture de la carte j
+                    Include(joueurs[i].cartes, StrToListeCartes(ligne));  // Inclusion de la carte j a l'ensemnle de cartes du joueur i
                 end;
            
             
-            readln(sauvegarde, ligne);
-            joueurs[i].pos[1] := StrToInt(ligne);
-            readln(sauvegarde, ligne);
-            joueurs[i].pos[2] := StrToInt(ligne);
+            readln(sauvegarde, ligne);  // Lecture de la position X du joueur i
+            joueurs[i].pos[1] := StrToInt(ligne);  // Initialisation de la position X du joueur i
+            readln(sauvegarde, ligne);  // Lecture de la position Y du joueur i
+            joueurs[i].pos[2] := StrToInt(ligne);  // Initialisation de la position Y du joueur i
             
-            readln(sauvegarde, ligne);
-            joueurs[i].perso := StrToListeCartes(ligne);
+            readln(sauvegarde, ligne);  // Lecture du personnage du joueur i
+            joueurs[i].perso := StrToListeCartes(ligne);  // Initialisation du personnage du joueur i
            
-            readln(sauvegarde, ligne);
-            joueurs[i].pion := ligne[1];
+            readln(sauvegarde, ligne);  // Lecture du pion du joueur i
+            joueurs[i].pion := ligne[1];  // Initialisation du pion du joueur i
         end;
     
-    for i := 1 to 3 do
+    for i := 1 to 3 do  // Boucle se repetant 3 fois pour lire les 3 elements de l'etui
         begin
-            readln(sauvegarde, ligne);
-            etui[i] := StrToListeCartes(ligne);
+            readln(sauvegarde, ligne);  // Lecture de la carte i de l'etui
+            etui[i] := StrToListeCartes(ligne);  // Initialisation de la carte i de l'etui
         end;
 
-    readln(sauvegarde,ligne);
-    j_actif:=StrToInt(ligne);
+    readln(sauvegarde,ligne);  // Lecture du joueur 'actif'
+    j_actif:=StrToInt(ligne);  // Initialisation du joueur 'actif'
 
-    {fermeture du fichier}
-    close(sauvegarde);
+    close(sauvegarde);  // Fermeture du fichier
 end;
 
 
 
 procedure creerPlateau(var plat : Plateau; environnement : Enviro);
+{Procedure creant le plateau de jeu a partir de l'environnement}
 
 var fic	: Text;
    i, j : Integer;
@@ -363,70 +359,69 @@ var fic	: Text;
 
 begin
     {Chargement de la grille}
-    assign(fic, 'cluedo.txt');
-    reset(fic);
-    for j := 1 to 28 do
+    assign(fic, 'cluedo.txt');  // Liaison entre la variable fic et le fichier 'cluedo.txt'
+    reset(fic);  // Lecture du fichier
+    for j := 1 to 28 do  // Boucle parcourant les lignes du plateau
         begin
-	        readln(fic,str);
-	        for i := 1 to 26 do
+	        readln(fic,str);  // Lecture d'un ligne du plateau
+	        for i := 1 to 26 do  // Boucle parcourant les colonnes du plateau
 		        case str[i] of
-			        '0' : plat.grille[i][j] := 0;
-			        '1' : plat.grille[i][j] := 1;
-                    '2' : plat.grille[i][j] := 2;
-                    '3' : plat.grille[i][j] := 3;
+			        '0' : plat.grille[i][j] := 0;  // Cas d'une case sur laquelle on peut se deplacer
+			        '1' : plat.grille[i][j] := 1;  // Cas d'un mur
+                    '2' : plat.grille[i][j] := 2;  // Cas d'un passage secret 1
+                    '3' : plat.grille[i][j] := 3;  // Cas d'un passage secret 2
 	            end;
         end;
     
 
-    {Chargement des cases des salles}
-    readln(fic, space);
-    for i := 1 to 10 do
+    readln(fic, space);  // Lecture d'un retour a la ligne dans le fichier
+    for i := 1 to 10 do  // Boucle se repetant autant de fois que le nombre de salle qu'il y a sur le plateau
         begin
-            readln(fic, str);
-            for j := 1 to StrToInt(str) do
+            readln(fic, str);  // Lecture du nombre de cases dans la salle i
+            for j := 1 to StrToInt(str) do  // Boucle se repetant autant de fois que le nombre de cases dans la salle i
                 begin
-                    readln(fic, co);
-                    if (co[2] = ' ') then
+                    readln(fic, co);  // Lecture des coordonnees de la case j
+                    if (co[2] = ' ') then  // Cas d'une coordonnee de la forme 'X_.. '
                         begin
-                            x := Copy(co, 1, 1);
-                            if (co[4] = ' ') then
-                                y := Copy(co, 3, 1)
-                            else
-                                y := Copy(co, 3, 2);
+                            x := Copy(co, 1, 1);  // Copiage de la coordonne x de la chaine de caractere co
+                            if (co[4] = ' ') then  // Cas d'une coordonnee de la forme 'X_Y '
+                                y := Copy(co, 3, 1)  // Copiage de la coordonne y de la chaine de caractere co
+                            else  // Cas d'une coordonnee de la forme 'X_YY '
+                                y := Copy(co, 3, 2);  // Copiage de la coordonne y de la chaine de caractere co
                         end
-                    else
+                    else  // Cas d'une coordonnee de la forme 'XX_.. '
                         begin
-                            x := Copy(co, 1, 2);
-                            if (co[5] = ' ') then
-                                y := Copy(co, 4, 1)
-                            else
-                                y := Copy(co, 4, 2);
+                            x := Copy(co, 1, 2);  // Copiage de la coordonne x de la chaine de caractere co
+                            if (co[5] = ' ') then  // Cas d'une coordonnee de la forme 'XX_Y '
+                                y := Copy(co, 4, 1)  // Copiage de la coordonne y de la chaine de caractere co
+                            else  // Cas d'une coordonnee de la forme 'XX_YY '
+                                y := Copy(co, 4, 2);  // Copiage de la coordonne y de la chaine de caractere co
                         end;
-                    plat.salles[i].cases[j][1] := StrToInt(x);
-                    plat.salles[i].cases[j][2] := StrToInt(y);
+                    plat.salles[i].cases[j][1] := StrToInt(x);  // Initialisation de la coordonnee x de la case j de la salle i
+                    plat.salles[i].cases[j][2] := StrToInt(y);  // Initialisation de la coordonnee y de la case j de la salle i
                 end;
-            readln(fic, space);
+            readln(fic, space);  // Lecture d'un retour a la ligne dans le fichier
         end;
 
 
     {Chargement des noms des salles}
     i := 1;
-    if environnement = Manoir then
-        for carte := Cuisine to Cluedo do
+    if environnement = Manoir then  // Verification du choix Manoir pour l'environnement
+        for carte := Cuisine to Cluedo do  // Boucle parcourant les cartes salle de l'environnement Manoir
             begin
-                plat.salles[i].nom := carte;
-                i := i+1;
+                plat.salles[i].nom := carte;  // Initialisation du nom de la salle i
+                Inc(i);
             end
-    else
-        for carte := Cafete to Accueil do
+    else  // Verification du choix INSA pour l'environnement
+        for carte := Cafete to Accueil do  // Boucle parcourant les cartes salle de l'environnement INSA
             begin
-                plat.salles[i].nom := carte;
-                i := i+1;
+                plat.salles[i].nom := carte;  // Initialisation du nom de la salle i
+                Inc(i);
             end;
 
     
-    {fermeture du fichier}
-    close(fic);
+    
+    close(fic);  // Fermeture du fichier
 
 
     {Tests : Affichage des salles
