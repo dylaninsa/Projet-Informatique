@@ -107,7 +107,7 @@ begin
         continue := readKey();
         until (continue = SPACE);
     
-    case estDansLaSalle(plat, joueurs[j_actif].pos) of
+    case estDansLaSalle(plat, joueurs[j_actif].pos) of  // Instruction permettant de traiter les différents cas en fonction des valeurs de la salle dans laquelle le joueur 'actif' se trouve
         0 : // Le joueur 'actif' n'est dans aucune salle au début du tour
             begin  
                 lancerDes(lancer);  // Appel de la procedure lancerDes qui va définir le nombre de déplacement possible du joueur 'actif' pour le tour actuel
