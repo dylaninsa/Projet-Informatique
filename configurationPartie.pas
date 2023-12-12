@@ -133,8 +133,8 @@ begin
         end;
 
 
+    writeln('Combien y a-t-il de joueurs ?');
     repeat  // Demande a l'utilisateur le nombre de joueurs de la partie
-        writeln('Combien y a-t-il de joueurs ?');
         readln(nb_j);
         if not((nb_j >= 2) AND (nb_j <= 6)) then
             writeln('Ce choix est invalide.')
@@ -284,8 +284,8 @@ var nomFichier : String;
     nb_j, nb_cartes, i, j : Integer;
 
 begin
+    write('Entrer le nom de la partie a lancer (avec .txt en extension) : ');
     repeat  // Boucle se repetant jusqu'a ce que le fichier saisi existe
-        write('Entrer le nom de la partie a lancer (avec .txt en extension) : ');
         readln(nomFichier);
         if not(FileExists(nomFichier)) then  // Verification de l'existance du fichier
             writeln('Ce fichier n''existe pas ou est invalide.')

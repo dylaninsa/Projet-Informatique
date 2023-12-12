@@ -163,8 +163,8 @@ begin
 		write(ListeCartesToStr(carte), ', ');
 	writeln();
 
+	write('Quelle carte voulez-vous montrer ? ');
 	repeat
-        write('Quelle carte voulez-vous montrer ? ');
 		readln(carteStr);
 		if StrCorrect(carteStr) then
 			begin

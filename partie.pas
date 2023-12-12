@@ -1178,11 +1178,10 @@ begin
 
 
     writeln('Vous allez formuler une hypothese !');
-
+    write('Selon vous, qui pourrait-etre l''assassin ? Voici les choix possibles : ');
+    for carte in perso do write(ListeCartesToStr(carte), ', ');  // Affchage de toutes les cartes dans l'ensemble perso
+    writeln();
     repeat  // Boucle se repetant tant que le joueur 'actif' n'a pas rentré une carte valide
-        write('Selon vous, qui pourrait-etre l''assassin ? Voici les choix possibles : ');
-        for carte in perso do write(ListeCartesToStr(carte), ', ');  // Affchage de toutes les cartes dans l'ensemble perso
-        writeln();
         readln(carteStr);
         if StrCorrect(carteStr) then  // Verification de la bonne saisie de la carte
             begin
@@ -1200,10 +1199,10 @@ begin
     hypo[1] := g1;  // La premiere valeur du tableau hypo est le personnage que le joueur 'actif' soupçonne d'etre l'assassin
 
 
+    write('Selon vous, quelle pourrait-etre l''arme du crime ? Voici les choix possibles : ');
+    for carte in arme do write(ListeCartesToStr(carte), ', ');  // Affchage de toutes les cartes dans l'ensemble arme
+    writeln();
     repeat  // Boucle se repetant tant que le joueur 'actif' n'a pas rentré une carte valide
-        write('Selon vous, quelle pourrait-etre l''arme du crime ? Voici les choix possibles : ');
-        for carte in arme do write(ListeCartesToStr(carte), ', ');  // Affchage de toutes les cartes dans l'ensemble arme
-        writeln();
         readln(carteStr);
         if StrCorrect(carteStr) then  // Verification de la bonne saisie de la carte
             begin
@@ -1381,9 +1380,8 @@ begin
 
 
     writeln('Vous allez formuler une accusation !');
-
+    write('Selon vous, qui est l''assassin ? ');
     repeat  // Boucle se repetant tant que le joueur 'actif' n'a pas rentré une carte valide
-        write('Selon vous, qui est l''assassin ? ');
         readln(carteStr);
         if StrCorrect(carteStr) then  // Verification de la bonne saisie de la carte
             begin
@@ -1396,8 +1394,8 @@ begin
         until (StrCorrect(carteStr) AND (g1 in perso));
     guess[1] := g1;  // La premiere valeur du tableau guess est le personnage que le joueur 'actif' soupçonne d'etre l'assassin
 
+    write('Selon vous, quelle est l''arme du crime ? ');
     repeat  // Boucle se repetant tant que le joueur 'actif' n'a pas rentré une carte valide
-        write('Selon vous, quelle est l''arme du crime ? ');
         readln(carteStr);
         if StrCorrect(carteStr) then  // Verification de la bonne saisie de la carte
             begin
@@ -1410,8 +1408,8 @@ begin
         until (StrCorrect(carteStr) AND (g2 in arme));
     guess[2] := g2;  // La deuxieme valeur du tableau guess est l'arme que le joueur 'actif' soupçonne d'etre l'arme du crime
 
+    write('Selon vous, dans quelle salle l''assassinat a-t-il eu lieu ? ');
     repeat  // Boucle se repetant tant que le joueur 'actif' n'a pas rentré une carte valide
-        write('Selon vous, dans quelle salle l''assassinat a-t-il eu lieu ? ');
         readln(carteStr);
         if StrCorrect(carteStr) then  // Verification de la bonne saisie de la carte
             begin
