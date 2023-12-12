@@ -90,9 +90,10 @@ begin
 
     write('C''est a ');  // Indique le joueur qui va jouer
     colorPerso(joueurs, j_actif);  // Appel de la procédure pour la coloration de l'encre pour l'écriture du nom du personnage
-    write(joueurs[j_actif].perso);
+    write(ListeCartesToStr(joueurs[j_actif].perso));
     TextColor(15);  // Rétablie la couleur de l'encre d'origine : blanc
-    writeln(' de jouer ! (Appuyer sur ''espace'')');
+    writeln(' de jouer !'); 
+    writeln('(Appuyer sur ''espace'')');
 
     repeat  // Boucle s'assurant que le joueur 'actif' soit prêt à jouer en appuyant sur 'espcace'
         continue := readKey();
@@ -103,7 +104,7 @@ begin
 
 
     if (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0) then  // Affiche la salle dans laquelle le joueur 'actif' se trouve, si il est dans une salle
-        writeln('Vous etes actuellement dans la salle : ', plat.salles[estDansLaSalle(plat, joueurs[j_actif].pos)].nom, '.');
+        writeln('Vous etes actuellement dans la salle : ', ListeCartesToStr(plat.salles[estDansLaSalle(plat, joueurs[j_actif].pos)].nom), '.');
     writeln('(Appuyer sur ''espace'')');
 
     repeat  // Boucle s'assurant que le joueur 'actif' ai prit connaissance de ses cartes et de la salle dans laquelle il se trouve en appuyant sur 'espcace'
@@ -160,7 +161,8 @@ begin
                     end
                 else  // Si le joueur 'actif' ne peut pas sortir de la salle
                     begin
-                        writeln('Vous ne pouvez pas sortir de cette salle actuellement. Vous allez donc formuler une hypothèse. (Appuyer sur ''espace'')');
+                        writeln('Vous ne pouvez pas sortir de cette salle actuellement. Vous allez donc formuler une hypothèse.');
+                        writeln('(Appuyer sur ''espace'')');
                         repeat  // Boucle s'assurant que le joueur 'actif' ai prit connaissance de la situation en appuyant sur 'espace'
                             continue := readKey();
                             until (continue = SPACE);
@@ -204,7 +206,8 @@ begin
                     end
                 else  // Si le joueur 'actif' ne peut pas sortir de la salle
                     begin
-                        writeln('Vous ne pouvez pas sortir de cette salle actuellement. Vous allez donc formuler une accusation. (Appuyer sur ''espace'')');
+                        writeln('Vous ne pouvez pas sortir de cette salle actuellement. Vous allez donc formuler une accusation.');
+                        writeln('(Appuyer sur ''espace'')');
                         repeat  // Boucle s'assurant que le joueur 'actif' ai prit connaissance de la situation en appuyant sur 'espace'
                             continue := readKey();
                             until (continue = SPACE);
@@ -213,10 +216,6 @@ begin
             end;
     end;
 end;
-
-
-
-    
 
 
 
@@ -714,7 +713,7 @@ begin
 		        until ((move = 0) OR (estDansLaSalle(plat, joueurs[j_actif].pos) <> 0));
         end;
         
-    
+    affiche(' ', joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Efface l'ancienne position du pion du joueur 'actif' sur le plateau de jeu
     placementSalle(joueurs, plat, j_actif);  // Appel de la procédure pour placer le joueur dans la salle dans laquelle il se trouve, si c'est le cas
     affiche(joueurs[j_actif].pion, joueurs[j_actif].pos[1], joueurs[j_actif].pos[2]);  // Affiche la position du pion du joueur 'actif' sur le plateau de jeu
     affichageDeplacement(move);  // Appel de la procedure affichant le nombre de déplacements restants
@@ -1197,7 +1196,7 @@ begin
             begin
                 writeln('La saisie est incorrecte.');
             end;
-        until ((g1 in perso) AND StrCorrect(carteStr));
+        until (StrCorrect(carteStr) AND (g1 in perso));
     hypo[1] := g1;  // La premiere valeur du tableau hypo est le personnage que le joueur 'actif' soupçonne d'etre l'assassin
 
 
@@ -1218,19 +1217,27 @@ begin
             begin
                 writeln('La saisie est incorrecte.');
             end;
-        until ((g2 in arme) AND StrCorrect(carteStr));
+        until (StrCorrect(carteStr) AND (g2 in arme));
     hypo[2] := g2;  // La deuxieme valeur du tableau hypo est l'arme que le joueur 'actif' soupçonne d'etre l'arme du crime
 
 
     hypo[3] := plat.salles[estDansLaSalle(plat, joueurs[j_actif].pos)].nom;  // La troisieme valeur du tableau hypo est le lieu que le joueur 'actif' soupçonne d'etre le lieu du crime
+    
 
+    writeln();
+    writeln('Votre hypothese est donc la suivante : ', ListeCartesToStr(hypo[1]), ' ', ListeCartesToStr(hypo[2]), ' ', ListeCartesToStr(hypo[3]), '.');
+    writeln('(Appuyer sur ''espace'')');  // Affiche l'hypothèse en entière
+    repeat
+        key := readKey();
+        until (key = SPACE);
+
+    ClrScr;
 
     i := 0;
     repeat  // Boucle se repetant tant que le joueur suspecté par le joueur 'actif' n'ai pas ete deplace dans la meme salle que ce dernier
         Inc(i);
         if (hypo[1] = joueurs[i].perso) then  // Verification de la correspondance entre le joueur i et le joueur suspecte
             begin
-                affiche(' ', joueurs[i].pos[1], joueurs[i].pos[2]);  // Appel de la procédure pour enlever le pion du joueur i du plateau
                 case estDansLaSalle(plat, joueurs[j_actif].pos) of  // Instruction permettant de traiter les différents cas en fonction des valeurs de la salle dans laquelle le joueur 'actif' se trouve
                     1 : begin  // Le joueur 'actif' se trouve dans la salle 1
                             joueurs[i].pos[1] := 6;  // Coordonnees de la salle 1
@@ -1269,17 +1276,11 @@ begin
                             joueurs[i].pos[2] := 23;
                         end;
                 end;
+                placementSalle(joueurs, plat, i);  // Appel de la procedure Placement salle pour placer correctement le joueur soupçonne dans la meme salle que le joueur 'actif'
             end;
         until ((i = length(joueurs) + 1) OR (hypo[1] = joueurs[i-1].perso));
     
-
-    writeln();
-    writeln('Votre hypothese est donc la suivante : ', hypo[1], ' ', hypo[2], ' ', hypo[3], '. (Appuyer sur ''espace'')');  // Affiche l'hypothèse en entière
-    repeat
-        key := readKey();
-        until (key = SPACE);
-
-    placementSalle(joueurs, plat, i);  // Appel de la procedure Placement salle pour placer correctement le joueur soupçonne dans la meme salle que le joueur 'actif'
+    
     ClrScr;
     montrer := False;
     j := j_actif;
@@ -1324,7 +1325,7 @@ begin
         else  // Sinon, affichage au joueur 'actif' que le joueur j ne possede aucune des cartes de son hypothese
             begin  
                 colorPerso(joueurs, j);
-                write(joueurs[j].perso);
+                write(ListeCartesToStr(joueurs[j].perso));
                 TextColor(15);
                 writeln(' n''as aucune des cartes de votre hypothese.');
                 Delay(1000);
@@ -1392,7 +1393,7 @@ begin
             end
         else
             writeln('La saisie est incorrecte.');
-        until ((g1 in perso) AND StrCorrect(carteStr));
+        until (StrCorrect(carteStr) AND (g1 in perso));
     guess[1] := g1;  // La premiere valeur du tableau guess est le personnage que le joueur 'actif' soupçonne d'etre l'assassin
 
     repeat  // Boucle se repetant tant que le joueur 'actif' n'a pas rentré une carte valide
@@ -1406,7 +1407,7 @@ begin
             end
         else
             writeln('La saisie est incorrecte.');
-        until ((g2 in arme) AND StrCorrect(carteStr));
+        until (StrCorrect(carteStr) AND (g2 in arme));
     guess[2] := g2;  // La deuxieme valeur du tableau guess est l'arme que le joueur 'actif' soupçonne d'etre l'arme du crime
 
     repeat  // Boucle se repetant tant que le joueur 'actif' n'a pas rentré une carte valide
@@ -1420,7 +1421,7 @@ begin
             end
         else
             writeln('La saisie est incorrecte.');
-        until ((g3 in lieu) AND StrCorrect(carteStr));
+        until (StrCorrect(carteStr) AND (g3 in lieu));
     guess[3] := g3;  // La deuxieme valeur du tableau guess est le lieu que le joueur 'actif' soupçonne d'etre le lieu du crime
 
        
@@ -1428,11 +1429,9 @@ begin
     repeat  // Boucle se repetant tant que le joueur suspecté par le joueur 'actif' n'ai pas ete deplace dans la meme salle que ce dernier
         if (guess[1] = joueurs[i].perso) then  // Verification de la correspondance entre le joueur i et le joueur suspecte
             begin
-                affiche(' ', joueurs[i].pos[1], joueurs[i].pos[2]);  // Appel de la procédure pour enlever le pion du joueur i du plateau
                 joueurs[i].pos[1] := 14;  // Coordonnees de la salle 10
                 joueurs[i].pos[2] := 18;     
                 placementSalle(joueurs, plat, i);  // Appel de la procedure pour placer le joueur suspecte dans la salle 
-                affiche(joueurs[i].pion, joueurs[i].pos[1], joueurs[i].pos[2]);  // Appel de la procédure pour afficher le pion du joueur suspecte sur le plateau
             end;
         Inc(i);
         until ((i = length(joueurs) + 1) OR (guess[1] = joueurs[i-1].perso));
@@ -1448,7 +1447,7 @@ begin
             ClrScr;
             write('Malheuresement, l''accusation de ');
             colorPerso(joueurs, j_actif);
-            write(joueurs[j_actif].perso);
+            write(ListeCartesToStr(joueurs[j_actif].perso));
             TextColor(15);
             writeln(' n''etait pas la bonne. Il ne fait donc plus partie de l''enquete.');
         end;
@@ -1464,10 +1463,10 @@ begin
             writeln('La partie est terminee ! Un enqueteur a trouve le meurtrier, l''arme du crime et le lieu de l''assassinnat.');
             write('Et cet en enqueteur est ');
             colorPerso(joueurs, j_actif);
-            write(joueurs[j_actif].perso);
+            write(ListeCartesToStr(joueurs[j_actif].perso));
             TextColor(15); 
             writeln(' !');
-            write('Voici les elements du meurtre : ', ListeCartesToStr(etui[1]), ', ', ListeCartesToStr(etui[2]), ', ', ListeCartesToStr(etui[3]), '.');
+            writeln('Voici les elements du meurtre : ', ListeCartesToStr(etui[1]), ', ', ListeCartesToStr(etui[2]), ', ', ListeCartesToStr(etui[3]), '.');
         end
     else  // Sinon, l'enquete n'est pas resolue car tous les enqueteurs sont morts, donc les elements de l'etui sont affiches
         begin

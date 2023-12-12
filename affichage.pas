@@ -74,25 +74,25 @@ begin
 
 	{Affichage du nom des salles}
 	GotoXY(4, 3);
-	write(plat.salles[1].nom);
+	write(ListeCartesToStr(plat.salles[1].nom));
 	GotoXY(21, 5);
-	write(plat.salles[2].nom);
+	write(ListeCartesToStr(plat.salles[2].nom));
 	GotoXY(40, 3);
-	write(plat.salles[3].nom);
+	write(ListeCartesToStr(plat.salles[3].nom));
 	GotoXY(2, 13);
-	write(plat.salles[4].nom);
+	write(ListeCartesToStr(plat.salles[4].nom));
 	GotoXY(42, 11);
-	write(plat.salles[5].nom);
+	write(ListeCartesToStr(plat.salles[5].nom));
 	GotoXY(40, 19);
-	write(plat.salles[6].nom);
+	write(ListeCartesToStr(plat.salles[6].nom));
 	GotoXY(5, 22);
-	write(plat.salles[7].nom);
+	write(ListeCartesToStr(plat.salles[7].nom));
 	GotoXY(25, 26);
-	write(plat.salles[8].nom);
+	write(ListeCartesToStr(plat.salles[8].nom));
 	GotoXY(43, 24);
-	write(plat.salles[9].nom);
+	write(ListeCartesToStr(plat.salles[9].nom));
 	GotoXY(25, 13);
-	write(plat.salles[10].nom);
+	write(ListeCartesToStr(plat.salles[10].nom));
 
 
 	{Affichage des pions des joueurs sur le plateau}
@@ -149,9 +149,10 @@ begin
 
 	{Montre les cartes en commun entre le joueur j et l'hypothèse formulée pendant le tour et lui demande quelle carte montrer}
 	colorPerso(joueurs, j);
-    write(joueurs[j].perso);
+    write(ListeCartesToStr(joueurs[j].perso));
     TextColor(15);
-	writeln(', c''est a vous !  (Appuyer sur ''espace'')');
+	writeln(', c''est a vous !');
+	writeln('(Appuyer sur ''espace'')');
 
 	repeat
         continue := readKey();
@@ -179,13 +180,14 @@ begin
 	{Montre la carte choisie par j au j_actif}
     ClrScr;
 	colorPerso(joueurs, j_actif);
-    write(joueurs[j_actif].perso);
+    write(ListeCartesToStr(joueurs[j_actif].perso));
     TextColor(15);
     write(', ');
 	colorPerso(joueurs, j);
-    write(joueurs[j].perso);
+    write(ListeCartesToStr(joueurs[j].perso));
     TextColor(15);
-	writeln(' vous montre une de ses cartes. Etes-vous pret ?  (Appuyer sur ''espace'')');
+	writeln(' vous montre une de ses cartes. Etes-vous pret ?');
+	writeln('(Appuyer sur ''espace'')');
 
     repeat
         continue := readKey();
@@ -193,9 +195,10 @@ begin
 
     write('La carte que ');
 	colorPerso(joueurs, j);
-    write(joueurs[j].perso);
+    write(ListeCartesToStr(joueurs[j].perso));
     TextColor(15);
-	writeln(' vous montre est : ', ListeCartesToStr(reveal), ' (Appuyer sur ''espace'')');
+	writeln(' vous montre est : ', ListeCartesToStr(reveal));
+	writeln('(Appuyer sur ''espace'')');
 
     repeat
         continue := readKey();
@@ -230,6 +233,7 @@ end;
 procedure affichageSortieSalle(salle : Integer);
 
 begin
+	TextBackground(8);
 	case salle of 
 		1 : begin
 				GotoXY(6, 7);
@@ -296,6 +300,7 @@ begin
 				write('b');
 			end;
 	end;
+	TextColor(15);
 end;
 
 
