@@ -37,8 +37,6 @@ begin
 		'D' : TextColor(15);  // Coloration de la police en blanc
 		'I' : TextColor(4);  // Coloration de la police en rouge
 		'T' : TextColor(11);  // Coloration de la police en cyan clair
-	else
-		TextBackground(0);  // Coloration de la police en noir
 	end;
 	GotoXY(2 * posX - 1, posY);  // Va a la position saisie
 	write(c);  // Ecriture du caractere

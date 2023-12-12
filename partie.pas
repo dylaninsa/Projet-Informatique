@@ -1350,6 +1350,7 @@ var guess : Array [1..3] of ListeCartes;
     perso, arme, lieu : set of ListeCartes;
     i : Integer;
     carteStr : String;
+    key : Char;
 
 begin 
     perso := [];  // Initialisation de l'ensemble des personnages 
@@ -1448,6 +1449,10 @@ begin
             write(ListeCartesToStr(joueurs[j_actif].perso));
             TextColor(15);
             writeln(' n''etait pas la bonne. Il ne fait donc plus partie de l''enquete.');
+            writeln('(Appuyer sur ''espace'')');
+            repeat  // Boucle se repetant jusqu'a ce que les joueurs appuient sur 'espace'
+                key := readKey();
+                until (key = SPACE);
         end;
 end;
 
@@ -1455,6 +1460,7 @@ end;
 
 procedure finPartie(joueurs : ListeJoueurs; accusation : Boolean; var j_actif : Integer; var etui : Array of ListeCartes);
 {Procedure mettant fin a la partie}
+
 begin
     if accusation then  // Verification que l'accusation soit vraie, et si c'est le cas, le gagnant et les elements de l'etui sont affiches
         begin   
