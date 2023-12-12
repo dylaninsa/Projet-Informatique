@@ -307,31 +307,37 @@ begin
 
     for i := 1 to nb_j do  // Boucle se repetant nb_j fois
         begin
+            writeln('test1');
             readln(sauvegarde, ligne);  // Lecture de l'etat de vie du joueur i
             if (ligne='TRUE') then 
-                joueurs[i].enVie:=True  // Initialisation de l'etat de vie du joueur i
+                joueurs[i].enVie := True  // Initialisation de l'etat de vie du joueur i
             else 
-                joueurs[i].enVie:=False;
-           
+                joueurs[i].enVie := False;
+            writeln('test2');
             joueurs[i].cartes := [];  // Initialisation de l'ensemble de cartes du joueur i
             readln(sauvegarde, ligne);  // Lecture du nombre de cartes du joueur i
+            writeln('test2.1');
             for j:=1 to StrToInt(ligne) do  // Boucle se repetant le nombre de cartes du joueur i fois
                 begin
+                    writeln('test2.2');
                     readln(sauvegarde, ligne);  // Lecture de la carte j
+                    writeln('test2.3');
                     Include(joueurs[i].cartes, StrToListeCartes(ligne));  // Inclusion de la carte j a l'ensemnle de cartes du joueur i
+                    writeln('test2.4');
                 end;
-           
-            
+            writeln('test3');
             readln(sauvegarde, ligne);  // Lecture de la position X du joueur i
             joueurs[i].pos[1] := StrToInt(ligne);  // Initialisation de la position X du joueur i
             readln(sauvegarde, ligne);  // Lecture de la position Y du joueur i
             joueurs[i].pos[2] := StrToInt(ligne);  // Initialisation de la position Y du joueur i
-            
+            writeln('test4');
             readln(sauvegarde, ligne);  // Lecture du personnage du joueur i
             joueurs[i].perso := StrToListeCartes(ligne);  // Initialisation du personnage du joueur i
-           
+            writeln('test5');
             readln(sauvegarde, ligne);  // Lecture du pion du joueur i
             joueurs[i].pion := ligne[1];  // Initialisation du pion du joueur i
+            writeln(i, ' ', joueurs[i].pion);
+            Delay(1000);
         end;
     
     for i := 1 to 3 do  // Boucle se repetant 3 fois pour lire les 3 elements de l'etui

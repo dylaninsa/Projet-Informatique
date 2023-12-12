@@ -25,12 +25,12 @@ Y
 TRUE
 4
 Monsieur_Bredel
-Le_Directeur
+Directeur
 Infirmiere
 Amphi_Tillon
 17
 19
-Le_Directeur
+Directeur
 D
 TRUE
 4
@@ -43,6 +43,6 @@ DUBRJ11
 Infirmiere
 I
 Yohann_Lepailleur
-Flacon_Acide
+Flacon_DAcide
 Toilettes
 1
