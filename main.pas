@@ -24,6 +24,9 @@ procedure quitter();
 
 begin
     ClrScr;
+    writeln('Merci d''avoir joue !');
+    Delay(3000);
+    ClrScr;
     Halt;
 end;
 

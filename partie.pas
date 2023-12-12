@@ -38,29 +38,33 @@ begin
     ClrScr;  // Le terminal est nettoyé
     accusation := False;  // Boolean qui vaut False le temps que l'enquête n'as pas ete résolue
 
-    {Lance les tours pour chaque joueur jusqu'à ce que l'on quitte ou qu'il n'y ait plus assez de joueurs en vie ou que les éléments du meurtre aient été trouvés}
-    repeat 
+
+    repeat  // Boucle lançant les tours pour chaque joueur jusqu'à ce que l'on quitte ou qu'il n'y ait plus assez de joueurs en vie ou que les éléments du meurtre aient été trouvés
         if (joueurs[j_actif].enVie) then
             tour(plat, etui, joueurs, accusation, j_actif, environnement);  // Lance le tour du joueur 'actif' si il est en vie
             
 
-        {Vérifie si la partie est finie}
         if ((joueursEnVie(joueurs) < 1) OR (accusation)) then  // Si la partie est finie, le procédure finPartie est appelé
             begin
                 ClrScr;  // Le terminal est nettoyé
                 finPartie(joueurs, accusation, j_actif, etui);  
+                writeln('(Appuyer sur ''espace'')');
+                repeat 
+                    key := readKey();
+                    until (key = SPACE);
             end
-        else
-            {Sinon le joueur 'actif' est maintenant le joueur suivant}
+        else  // Sinon le joueur 'actif' est maintenant le joueur suivant
+            if (joueurs[j_actif].enVie) then  // Verification du lancement du tour du joueur 'actif' pour demander de quitter la partie
+                    begin
+                        writeln('Appuyer sur ''Q'' pour quitter ou sur n''importe quelle autre touche pour continuer.');  // Si la touche 'Q' est pressée, la partie s'arrête, sinon le tour d'après est lancé
+                        key := readKey();
+                    end;
+
             begin
                 if (j_actif = length(joueurs)) then  // Si le dernier joueur à avoir joué est le dernier de la liste de joueurs, le joueur 'actif' devient le permier de la liste
                     j_actif := 1  
                 else  // Sinon, c'est le joueur suivant qui devient le joueur 'actif'
                     j_actif := j_actif + 1;  
-
-
-                writeln('Appuyer sur ''Q'' pour quitter ou sur n''importe quelle autre touche pour continuer.');  // Si la touche 'Q' est pressée, la partie s'arrête, sinon le tour d'après est lancé
-                key := readKey();
             end;
 
 
@@ -84,8 +88,7 @@ var c, lancer : Integer;
 begin
     ClrScr;  // Le terminal est nettoyé
 
-    {Indique le joueur qui va jouer}
-    write('C''est a ');
+    write('C''est a ');  // Indique le joueur qui va jouer
     colorPerso(joueurs, j_actif);  // Appel de la procédure pour la coloration de l'encre pour l'écriture du nom du personnage
     write(joueurs[j_actif].perso);
     TextColor(15);  // Rétablie la couleur de l'encre d'origine : blanc
@@ -1150,6 +1153,7 @@ var g1, g2, reveal, carte : ListeCartes;
     montrer : Boolean;
     commun : Array of ListeCartes;
     carteStr : String;
+    key : Char;
 
 begin 
     perso := [];  // Initialisation de l'ensemble des personnages 
@@ -1270,8 +1274,10 @@ begin
     
 
     writeln();
-    writeln('Votre hypothese est donc la suivante : ', hypo[1], ' ', hypo[2], ' ', hypo[3]);  // Affiche l'hypothèse en entière
-    Delay(5000);
+    writeln('Votre hypothese est donc la suivante : ', hypo[1], ' ', hypo[2], ' ', hypo[3], '. (Appuyer sur ''espace'')');  // Affiche l'hypothèse en entière
+    repeat
+        key := readKey();
+        until (key = SPACE);
 
     placementSalle(joueurs, plat, i);  // Appel de la procedure Placement salle pour placer correctement le joueur soupçonne dans la meme salle que le joueur 'actif'
     ClrScr;
@@ -1454,24 +1460,19 @@ procedure finPartie(joueurs : ListeJoueurs; accusation : Boolean; var j_actif : 
 {Procedure mettant fin a la partie}
 begin
     if accusation then  // Verification que l'accusation soit vraie, et si c'est le cas, le gagnant et les elements de l'etui sont affiches
-        begin
-            if (j_actif - 1 = 0) then
-                j_actif := length(joueurs)
-            else
-                j_actif := j_actif - 1;
-    
+        begin   
             writeln('La partie est terminee ! Un enqueteur a trouve le meurtrier, l''arme du crime et le lieu de l''assassinnat.');
             write('Et cet en enqueteur est ');
             colorPerso(joueurs, j_actif);
             write(joueurs[j_actif].perso);
             TextColor(15); 
             writeln(' !');
-            write('Voici les elements du meurtre : ', etui[1], ' ', etui[2], ' ', etui[3], '.');
+            write('Voici les elements du meurtre : ', ListeCartesToStr(etui[1]), ', ', ListeCartesToStr(etui[2]), ', ', ListeCartesToStr(etui[3]), '.');
         end
     else  // Sinon, l'enquete n'est pas resolue car tous les enqueteurs sont morts, donc les elements de l'etui sont affiches
         begin
             writeln('Aucun des enqueteurs n''est parvenu a resoudre ce meurtre. La partie est finie.');
-            writeln('Voici les elements du meurtre : ', etui[1], ' ', etui[2], ' ', etui[3], '.');
+            writeln('Voici les elements du meurtre : ', ListeCartesToStr(etui[1]), ', ', ListeCartesToStr(etui[2]), ', ', ListeCartesToStr(etui[3]), '.');
         end;
 end;
 
