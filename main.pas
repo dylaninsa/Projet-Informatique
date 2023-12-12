@@ -69,7 +69,7 @@ begin
             1 : begin  // Cas de lancement d'une partie
                     configPartie(joueurs, plat, etui, environnement, j_actif);
                     jeu(etui, plat, joueurs, environnement, j_actif);
-                    {Libération espace mémoire}
+                    {Liberation espace memoire}
                     SetLength(joueurs, 0);
                 end;
             2 : afficherRegles();  // Cas de l'affichage des regles

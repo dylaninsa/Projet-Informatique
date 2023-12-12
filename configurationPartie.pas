@@ -67,7 +67,7 @@ begin
             writeln('Ce choix est invalide.')
     until ((c >= 1) AND (c <= 2));
 
-    case c of  // Instruction permettant de traiter les différents cas en fonction du choix de l'utilisateur
+    case c of  // Instruction permettant de traiter les differents cas en fonction du choix de l'utilisateur
         1 : environnement := Manoir;
         2 : environnement := INSA;
     end;
@@ -100,7 +100,7 @@ begin
         end;
 
 
-    {Tirage aléatoire de l'étui de l'étui}
+    {Tirage aleatoire de l'etui de l'etui}
     r1 := random(6) + 1;  // Tirage aleatoire d'un indice d'une carte personnage pour l'etui
     etui[1] := liste_cartes[r1];  // Affectation de la carte personnage a l'etui 
     Exclude(cartes, liste_cartes[r1]);  // Retrait de la carte personnage dans l'ensemble cartes
@@ -161,7 +161,7 @@ begin
 
             joueurs[i].perso := p;  // Affectation du personnage au joeur i
             Exclude(personnages, joueurs[i].perso);  // Exclusion du joeur choisi par le joueur i de l'ensemble personnages
-            case p of  // Instruction permettant de traiter les différents cas en fonction du personnage choisi par le joeur i
+            case p of  // Instruction permettant de traiter les differents cas en fonction du personnage choisi par le joeur i
                 Colonel_Moutarde :  begin
                                         joueurs[i].pos[1] := 2;  // Initialisation de la position 
                                         joueurs[i].pos[2] := 19;
@@ -228,8 +228,8 @@ begin
         end;
 
 
-    {Tests : affichage des cartes mélangées (à enlever plus tard)
-    writeln('Liste cartes mélangées');
+    {Tests : affichage des cartes melangees (a enlever plus tard)
+    writeln('Liste cartes melangees');
     j := 0;
     for carte in liste_cartes do 
         begin 
@@ -239,7 +239,7 @@ begin
     writeln();}
 
 
-    {Tests : affichage de l'étui (à enlever plus tard)
+    {Tests : affichage de l'etui (a enlever plus tard)
     writeln('Etui');
     for i := 1 to 3 do write(etui[i], ' ');
     Delay(5000);}
@@ -247,7 +247,7 @@ begin
 
     for l := 0 to length(liste_cartes)-1 do  // Boucle parcourant les cartes de liste_cartes pour les distribuer aux joueurs
         begin
-            case l mod nb_j of  // Instruction permettant de traiter les différents cas en fonction du reste de la division euclidienne de l par le nombre de joueurs
+            case l mod nb_j of  // Instruction permettant de traiter les differents cas en fonction du reste de la division euclidienne de l par le nombre de joueurs
                 0 : Include(joueurs[1].cartes, liste_cartes[l]);
                 1 : Include(joueurs[2].cartes, liste_cartes[l]);
                 2 : Include(joueurs[3].cartes, liste_cartes[l]);
@@ -262,7 +262,7 @@ begin
 
 
 
-    {Tests : affichage de tous les attributs de tout les joueurs (à enlever plus tard)
+    {Tests : affichage de tous les attributs de tout les joueurs (a enlever plus tard)
     for i := 1 to nb_j do
         begin
             writeln(joueurs[i].perso);
@@ -351,7 +351,7 @@ var fic	: Text;
    i, j : Integer;
    str, x, y, space, co : string;
    carte : ListeCartes;
-   test : Coords; // à enlever plus tard
+   test : Coords; // a enlever plus tard
 
 begin
     {Chargement de la grille}
