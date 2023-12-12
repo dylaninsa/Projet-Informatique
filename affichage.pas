@@ -197,7 +197,7 @@ begin
 	colorPerso(joueurs, j);
     write(ListeCartesToStr(joueurs[j].perso));
     TextColor(15);
-	writeln(' vous montre est : ', ListeCartesToStr(reveal));
+	writeln(' vous montre est : ', ListeCartesToStr(reveal), '.');
 	writeln('(Appuyer sur ''espace'')');
 
     repeat

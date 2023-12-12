@@ -1225,7 +1225,7 @@ begin
     
 
     writeln();
-    writeln('Votre hypothese est donc la suivante : ', ListeCartesToStr(hypo[1]), ' ', ListeCartesToStr(hypo[2]), ' ', ListeCartesToStr(hypo[3]), '.');
+    writeln('Votre hypothese est donc la suivante : ', ListeCartesToStr(hypo[1]), ', ', ListeCartesToStr(hypo[2]), ', ', ListeCartesToStr(hypo[3]), '.');
     writeln('(Appuyer sur ''espace'')');  // Affiche l'hypothèse en entière
     repeat
         key := readKey();
